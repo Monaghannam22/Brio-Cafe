@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>بريو | قهوتك لعندك استثنائية</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --em: #0D4F3C;
+      --em-light: #E9F3F0;
+      --gold: #D4A843;
+      --gold-light: #FFF9EB;
+      --soft: #F7F9F8;
+      --border: #E8F0ED;
+      --muted: #94A3B8;
+      --char: #1E293B;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+      background: var(--soft);
+      color: var(--char);
+      overflow-x: hidden;
+      direction: rtl;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: 260px;
+      background: white;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 100;
+      padding: 0 16px;
+    }
+
+    .sidebar-logo {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      margin-bottom: 4px;
+      border-radius: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: var(--soft);
+      color: var(--em);
+    }
+
+    .nav-item.active {
+      background: var(--em-light);
+      color: var(--em);
+    }
+
+    /* Top Nav */
+    #top-navbar {
+      height: 70px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      position: fixed;
+      left: 0;
+      right: 260px;
+      top: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .main-content {
+      margin-right: 260px;
+      margin-top: 70px;
+      padding: 24px;
+      width: 100%;
+      max-width: 1200px;
+      transition: all 0.3s;
+    }
+
+    /* Pages */
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Common Components */
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .btn-primary {
+      background: var(--em);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      background: var(--em-light);
+      color: var(--em);
+      border: 1.5px solid var(--em);
+      border-radius: 14px;
+      padding: 12px 20px;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Login Page */
+    #page-login {
+      position: fixed;
+      inset: 0;
+      background: var(--em);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: white;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 32px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .login-input {
+      width: 100%;
+      background: var(--soft);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      text-align: right;
+      outline: none;
+    }
+
+    .login-input:focus { border-color: var(--em); }
+
+    /* Mobile Bottom Nav */
+    #main-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: none; /* Desktop hidden */
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .mobile-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .mobile-tab.active {
+      color: var(--em);
+    }
+
+    /* Cart Bar */
+    #cart-bar {
+      position: fixed;
+      bottom: 85px;
+      left: 20px;
+      right: 20px;
+      background: var(--gold);
+      color: var(--em);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      z-index: 900;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.85);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 2000;
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      #sidebar { display: none !important; }
+      #top-navbar { left: 0; right: 0; height: 80px; padding: 0 16px; }
+      .main-content { margin-right: 0; margin-top: 80px; padding: 16px 16px 120px 16px; }
+      #main-nav { display: flex; height: 80px; background: white; border-top: 1px solid var(--border); box-shadow: 0 -5px 25px rgba(0,0,0,0.06); }
+      .desktop-only { display: none !important; }
+      
+      h1 { font-size: 32px !important; }
+      h2 { font-size: 20px !important; }
+      .card { padding: 24px; }
+      .btn-primary { padding: 18px 24px; font-size: 18px; }
+      .login-card { padding: 48px 24px; border-radius: 36px; }
+      .login-input { padding: 18px; font-size: 16px; }
+      .mobile-tab { font-size: 11px; }
+      .mobile-tab span { font-size: 24px !important; }
+    }
+
+    /* Confirmation UI */
+    .confirmed-hero {
+      text-align: center;
+      padding: 30px 0;
+    }
+
+    .check-anim {
+      width: 70px;
+      height: 70px;
+      background: var(--em);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+      animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Cafe Cards */
+    .cafe-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .cafe-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+  </style>
+</head>
+<body id="app-body">
+
+  <!-- DELIVERY NOTIFICATION -->
+  <div id="delivery-notif" style="
+    display: none;
+    position: fixed;
+    top: 80px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--em);
+    color: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    z-index: 1500;
+    width: calc(100% - 40px);
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    direction: rtl;
+    font-family: 'Tajawal', sans-serif;
+    align-items: center;
+    gap: 12px;">
+    
+    <div style="font-size: 28px;">☕</div>
+    <div style="flex:1;">
+      <div style="font-weight:800; font-size:15px; margin-bottom:3px;">
+        تم استلام طلبك!
+      </div>
+      <div style="font-size:12px; color:#9FD4C0;">
+        <span id="dn-cafe"></span> — 
+        رقم الطلب: <span id="dn-id"></span>
+      </div>
+    </div>
+    <button onclick="document.getElementById('delivery-notif').style.display='none'"
+      style="background:rgba(255,255,255,0.2); border:none;
+             color:white; border-radius:8px; padding:4px 10px;
+             font-size:18px; cursor:pointer;">
+      ✕
+    </button>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- LOGIN PAGE -->
+  <div id="page-login">
+    <div class="login-card">
+      <div style="font-size: 44px; margin-bottom: 16px;">☕</div>
+      <h1 style="font-size: 24px; font-weight: 900; color: var(--em); margin-bottom: 8px;">مرحباً بك في بريو</h1>
+      <p style="font-size: 13px; color: var(--muted); font-weight: 700; margin-bottom: 32px;">سجل دخولك لطلب قهوتك المفضلة</p>
+      
+      <input id="li-name" class="login-input" placeholder="اسمك الكامل" type="text" />
+      <input id="li-phone" class="login-input" placeholder="رقم الهاتف" type="tel" />
+      <input id="li-office" class="login-input" placeholder="رقم المكتب (مثلاً: A-102)" type="text" />
+      <select id="li-floor" class="login-input">
+        <option value="" disabled selected>اختر الطابق</option>
+        <option>الطابق 1</option>
+        <option>الطابق 2</option>
+        <option>الطابق 3</option>
+        <option>الطابق 4</option>
+        <option>الطابق 5</option>
+      </select>
+      
+      <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
+      
+      <button onclick="doLogin()" class="btn-primary" style="margin-bottom:12px;">ابدأ الطلب ←</button>
+      <button onclick="guestLogin()" style="background:transparent; border:none; color:var(--muted); font-weight:700; font-size:13px; cursor:pointer;">دخول سريع كزائر</button>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- SIDEBAR -->
+    <aside id="sidebar" style="display:none;">
+      <div class="sidebar-logo">
+        <div style="width:40px; height:40px; background:var(--gold); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px;">☕</div>
+        <div style="font-size:20px; font-weight:900; color:var(--em);">بريو</div>
+      </div>
+      
+      <div style="margin-top:20px; flex:1;">
+        <div class="nav-item active" id="side-page-home" onclick="navTo('page-home')">
+          <span style="font-size:20px;">🏠</span> الرئيسية
+        </div>
+        <div class="nav-item" id="side-page-cafes" onclick="navTo('page-drinks')">
+          <span style="font-size:20px;">☕</span> المشروبات
+        </div>
+        <div class="nav-item" id="side-page-orders" onclick="navTo('page-orders')">
+          <span style="font-size:20px;">📋</span> طلباتي
+        </div>
+        <div class="nav-item" id="side-page-settings" onclick="openSettings()">
+          <span style="font-size:20px;">⚙️</span> الإعدادات
+        </div>
+      </div>
+
+      <div class="nav-item" style="color:#E53935; margin-bottom:24px;" onclick="doLogout()">
+        <span style="font-size:20px;">🚪</span> تسجيل الخروج
+      </div>
+    </aside>
+
+    <div style="flex:1; width:100%;">
+      
+      <!-- TOP NAV -->
+      <nav id="top-navbar" style="display:none;">
+        <div style="display:flex; align-items:center; gap:8px;">
+           <div id="user-badge" style="width:36px; height:36px; background:var(--gold-light); color:var(--em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:1px solid var(--gold);">
+            أ
+           </div>
+           <div style="display:flex; flex-direction:column; line-height:1;">
+            <span id="user-display-name" style="font-size:13px; font-weight:800; color:var(--char);">...</span>
+            <span id="user-display-office" style="font-size:10px; color:var(--muted); font-weight:700;">طابق ...</span>
+           </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="desktop-only" style="background:var(--soft); padding:6px 12px; border-radius:10px; font-size:11px; font-weight:800; color:var(--em); border:1px solid var(--border);">
+            📍 مجمع عمال عمان
+          </div>
+          <div style="cursor:pointer; font-size:22px;" onclick="navTo('page-checkout')">🛒</div>
+        </div>
+      </nav>
+
+      <main class="main-content">
+
+        <!-- PAGE: HOME -->
+        <div id="page-home" class="page active">
+          <div style="background:var(--em); border-radius:24px; padding:32px 24px; color:white; margin-bottom:24px; position:relative; overflow:hidden;">
+            <div style="position:relative; z-index:2;">
+              <h1 style="font-size:28px; font-weight:900; margin-bottom:8px;">الجو بدو قهوة! ❄️</h1>
+              <p style="font-size:14px; opacity:0.8; font-weight:500; margin-bottom:24px; max-width:200px;">أفضل كوب قهوة بدقيقة واحدة يوصلك لمكتبك.</p>
+              <button onclick="openCafe('blk')" class="btn-primary" style="background:white; color:var(--em); width:auto; border-radius:12px; padding:10px 20px; font-size:14px;">اطلب هلق</button>
+            </div>
+            <div style="position:absolute; left:-20px; bottom:-20px; font-size:140px; opacity:0.1;">☕</div>
+          </div>
+
+          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:16px;">المشروبات المتاحة 🌟</h2>
+          <div id="cafe-menu-list-home"></div>
+        </div>
+
+        <!-- PAGE: DRINKS LIST -->
+        <div id="page-drinks" class="page">
+          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:16px;">قائمة المشروبات</h2>
+          <div id="drinks-full-list"></div>
+        </div>
+
+        <!-- PAGE: CHECKOUT -->
+        <div id="page-checkout" class="page">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+            <button onclick="navTo('page-home')" style="background:white; border:1px solid var(--border); border-radius:10px; width:40px; height:40px; font-size:18px; cursor:pointer;">→</button>
+            <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">سلة الطلبات</h2>
+          </div>
+          
+          <div id="checkout-cart-items"></div>
+          
+          <div class="card">
+            <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">تأكيد بيانات التوصيل</div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">رقم المكتب</label>
+              <input id="checkout-office-input" type="text" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+              
+              <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">الطابق</label>
+              <select id="checkout-floor-input" class="login-input" style="padding:10px 14px; background:var(--soft);">
+                <option>الطابق 1</option>
+                <option>الطابق 2</option>
+                <option>الطابق 3</option>
+                <option>الطابق 4</option>
+                <option>الطابق 5</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:13px; color:var(--muted); font-weight:700;">رسوم التوصيل</span>
+              <span style="font-size:13px; font-weight:700; color:var(--char);">مجاني 🎁</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:12px;">
+              <span style="font-size:16px; font-weight:900; color:var(--char);">الإجمالي</span>
+              <span id="checkout-total" style="font-size:18px; font-weight:900; color:var(--em);">0.00 د.أ</span>
+            </div>
+          </div>
+
+          <button onclick="confirmOrder()" class="btn-primary" style="margin-top:10px;">تأكيد الطلب</button>
+        </div>
+
+        <!-- PAGE: CONFIRMED -->
+        <div id="page-confirmed" class="page">
+          <div class="card" style="text-align:center; padding:40px 20px;">
+            <div class="check-anim">✓</div>
+            <h1 style="font-size:24px; font-weight:900; color:var(--em); margin-bottom:8px;">تم إرسال طلبك!</h1>
+            <p style="font-size:14px; color:var(--muted); font-weight:700; margin-bottom:24px;">سيصلك خلال 12–15 دقيقة</p>
+            
+            <div style="background:var(--em-light); border-radius:16px; padding:16px; text-align:right; margin-bottom:24px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <span id="conf-cafe" style="font-size:14px; font-weight:800; color:var(--em);">...</span>
+                <span id="conf-id" style="font-size:12px; color:var(--muted);">#...</span>
+              </div>
+              <div id="conf-items" style="font-size:12px; color:var(--char); font-weight:700; opacity:0.7;"></div>
+            </div>
+
+            <!-- QR CODE SECTION -->
+            <div id="qr-section">
+              <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:4px;">كود استلام طلبك</div>
+              <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">أظهر هذا الكود للمندوب عند التوصيل</div>
+              <div id="qr-code-display" style="display:flex; justify-content:center; margin-bottom:12px;"></div>
+              <div id="qr-order-number" style="font-size:20px; font-weight:800; color:var(--em); letter-spacing:3px; margin-bottom:10px;"></div>
+              <button onclick="downloadQR()" class="btn-secondary" style="border-radius:10px; padding:8px 18px; font-size:13px;">تحميل الكود 📥</button>
+            </div>
+
+            <button onclick="resetCartAndHome()" class="btn-primary" style="margin-top:24px;">العودة للرئيسية</button>
+          </div>
+        </div>
+
+        <!-- PAGE: ORDERS -->
+        <div id="page-orders" class="page">
+          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:16px;">طلباتي</h2>
+          
+          <div style="display:flex; background:white; border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:16px;">
+            <button id="tab-curr" onclick="showOrdersTab('curr')" style="flex:1; border:none; padding:10px; border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; background:var(--em); color:white;">الحالية</button>
+            <button id="tab-prev" onclick="showOrdersTab('prev')" style="flex:1; border:none; padding:10px; border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; background:transparent; color:var(--muted); cursor:pointer;">السابقة</button>
+          </div>
+
+          <div id="orders-list"></div>
+        </div>
+
+        <!-- PAGE: SETTINGS -->
+        <div id="page-settings" class="page">
+          <div style="background:var(--em); border-radius:16px; padding:20px; margin-bottom:16px; color:white; display:flex; align-items:center; gap:14px;">
+            <div id="set-avatar" style="width:56px;height:56px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--char);">أ</div>
+            <div>
+              <div id="settings-name" style="font-size:18px; font-weight:800;"></div>
+              <div id="settings-office-display" style="font-size:12px; color:#9FD4C0; margin-top:3px;"></div>
+            </div>
+          </div>
+
+          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+            <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px;">تعديل بيانات الحساب</div>
+            
+            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الاسم</label>
+            <input id="set-name-input" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            
+            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم الهاتف</label>
+            <input id="set-phone-input" type="tel" class="login-input" style="padding:10px 14px; background:var(--soft);">
+
+            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم المكتب</label>
+            <input id="set-office-input" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            
+            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الطابق</label>
+            <select id="set-floor-input" class="login-input" style="padding:10px 14px; background:var(--soft);">
+              <option>الطابق 1</option>
+              <option>الطابق 2</option>
+              <option>الطابق 3</option>
+              <option>الطابق 4</option>
+              <option>الطابق 5</option>
+            </select>
+            
+            <button onclick="saveSettings()" class="btn-primary" style="padding:12px; font-size:14px;">حفظ التعديلات ✔</button>
+          </div>
+
+          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+            <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:8px;">كود المنيو للعملاء</div>
+            <p style="font-size:11px; color:var(--muted); margin-bottom:14px;">شارك هذا الكود مع زملائك ليتمكنوا من الطلب مباشرة</p>
+            <div id="menu-qr-display" style="display:flex; justify-content:center; margin-bottom:12px; background:white; padding:10px; border-radius:12px;"></div>
+            <button onclick="downloadMenuQR()" class="btn-secondary" style="width:100%; border-radius:10px; padding:10px; font-size:13px;">تحميل كود المنيو 📥</button>
+          </div>
+
+          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; padding:10px 0;">
+              <span style="font-size:13px; font-weight:700; color:var(--char);">الإصدار</span>
+              <span style="font-size:13px; color:var(--muted);">بريو v1.0</span>
+            </div>
+          </div>
+
+          <button onclick="doLogout()" style="width:100%; background:white; border:2px solid #E53935; color:#E53935; border-radius:12px; padding:14px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:15px; cursor:pointer; margin-bottom:100px;">تسجيل الخروج</button>
+        </div>
+
+        <!-- PAGE: ADMIN -->
+        <div id="page-admin" class="page">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+            <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">لوحة التحكم</h2>
+            <button onclick="navTo('page-home')" style="background:white; border:1px solid var(--border); border-radius:8px; padding:4px 12px; font-size:12px; font-weight:800; cursor:pointer;">خروج</button>
+          </div>
+          <div id="admin-orders-table" style="overflow-x:auto;"></div>
+        </div>
+
+      </main>
+
+      <!-- MOBILE BOTTOM NAV -->
+      <nav id="main-nav">
+        <a onclick="navTo('page-home')" class="mobile-tab active" id="tab-page-home">
+          <span style="font-size:20px;">🏠</span>
+          الرئيسية
+        </a>
+        <a onclick="navTo('page-drinks')" class="mobile-tab" id="tab-page-drinks">
+          <span style="font-size:20px;">☕</span>
+          المشروبات
+        </a>
+        <a onclick="navTo('page-orders')" class="mobile-tab" id="tab-page-orders">
+          <span style="font-size:20px;">📋</span>
+          طلباتي
+        </a>
+        <a onclick="openSettings()" class="mobile-tab" id="tab-page-settings">
+          <span style="font-size:20px;">⚙️</span>
+          إعدادات
+        </a>
+      </nav>
+
+      <!-- CART BAR -->
+      <div id="cart-bar" onclick="navTo('page-checkout')">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="background:var(--em); color:white; width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900;" id="cart-count">0</div>
+          <div style="font-size:14px; font-weight:800;">سلة طلبك جاهزة!</div>
+        </div>
+        <div style="font-size:14px; font-weight:900;" id="cart-total-bar">0.00 د.أ</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- APP DATA ---
+    const MENU_ITEMS = [
+      {
+        id: 'turkish',
+        name: 'قهوة تركية',
+        icon: '☕',
+        basePrice: 0.50,
+        description: 'قهوة تركية أصيلة',
+        options: [
+          { label: 'سادة',   priceAdd: 0 },
+          { label: 'وسط',    priceAdd: 0 },
+          { label: 'حلوة',   priceAdd: 0 }
+        ]
+      },
+      {
+        id: 'nescafe',
+        name: 'نسكافيه',
+        icon: '🥛',
+        basePrice: 0.45,
+        description: 'نسكافيه كلاسيكي',
+        options: [
+          { label: 'بحليب',       priceAdd: 0    },
+          { label: 'سكر زيادة',   priceAdd: 0    },
+          { label: 'سكر خفيف',    priceAdd: 0    },
+          { label: 'بدون سكر',    priceAdd: 0    }
+        ]
+      },
+      {
+        id: 'water',
+        name: 'ماء',
+        icon: '💧',
+        basePrice: 0.25,
+        description: 'ماء معدني بارد',
+        options: [
+          { label: 'بارد',  priceAdd: 0    },
+          { label: 'عادي',  priceAdd: 0    }
+        ]
+      }
+    ];
+
+    // --- STATE ---
+    let currentUser = null;
+    let cart = { items: [] };
+    let orders = [];
+    let currentOrdersTab = 'curr';
+
+    // --- INIT ---
+    window.onload = () => {
+      try {
+        const savedUser = localStorage.getItem('brewoUser');
+        if (savedUser) {
+          currentUser = JSON.parse(savedUser);
+          document.getElementById('page-login').style.display = 'none';
+          document.getElementById('main-nav').style.display = 'flex';
+          document.getElementById('sidebar').style.display = 'flex';
+          document.getElementById('top-navbar').style.display = 'flex';
+          applyUser();
+          navTo('page-home');
+        } else {
+          document.getElementById('page-login').style.display = 'flex';
+        }
+
+        const savedOrders = localStorage.getItem('brewoOrders');
+        if (savedOrders) {
+          orders = JSON.parse(savedOrders);
+        }
+
+        renderMenuItems();
+      } catch(e) {
+        console.error('Local Storage Error', e);
+      }
+    };
+
+    // --- CORE LOGIC ---
+    function navTo(pageId) {
+      document.querySelectorAll('.page')
+        .forEach(p => {
+          p.style.display = 'none';
+          p.classList.remove('active');
+        });
+      const target = document.getElementById(pageId);
+      if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+      }
+      window.scrollTo(0, 0);
+      updateSidebarActive(pageId);
+
+      if (pageId === 'page-orders') renderOrdersPage();
+      if (pageId === 'page-admin') renderAdminPage();
+      if (pageId === 'page-checkout') renderCheckoutPage();
+      
+      updateCartBarVisibility(pageId);
+    }
+
+    function updateSidebarActive(pageId) {
+      // Sidebar
+      document.querySelectorAll('#sidebar .nav-item').forEach(i => i.classList.remove('active'));
+      const sideItem = document.getElementById('side-' + pageId);
+      if (sideItem) sideItem.classList.add('active');
+
+      // Bottom Nav
+      document.querySelectorAll('#main-nav .mobile-tab').forEach(i => i.classList.remove('active'));
+      const tabItem = document.getElementById('tab-' + pageId);
+      if (tabItem) tabItem.classList.add('active');
+    }
+
+    function doLogin() {
+      const name   = document.getElementById('li-name').value.trim();
+      const phone  = document.getElementById('li-phone').value.trim();
+      const office = document.getElementById('li-office').value.trim();
+      const floor  = document.getElementById('li-floor').value;
+
+      if (!name)   { showLoginErr('أدخل اسمك الكامل'); return; }
+      if (!phone)  { showLoginErr('أدخل رقم الهاتف'); return; }
+      if (!office) { showLoginErr('أدخل رقم المكتب'); return; }
+      if (!floor)  { showLoginErr('اختر الطابق'); return; }
+
+      currentUser = { name, phone, office, floor };
+      localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+
+      document.getElementById('page-login').style.display = 'none';
+      document.getElementById('main-nav').style.display = 'flex';
+      document.getElementById('top-navbar').style.display = 'flex';
+      document.getElementById('sidebar').style.display = 'flex';
+      
+      applyUser();
+      navTo('page-home');
+    }
+
+    function guestLogin() {
+      document.getElementById('li-name').value = 'زائر بريو';
+      document.getElementById('li-phone').value = '0770000000';
+      document.getElementById('li-office').value = 'مكتب 0';
+      document.getElementById('li-floor').selectedIndex = 1;
+      doLogin();
+    }
+
+    function doLogout() {
+      if (!confirm('تأكيد تسجيل الخروج من بريو؟')) return;
+      
+      currentUser = null;
+      cart = { items: [] };
+      orders = [];
+      
+      localStorage.removeItem('brewoUser');
+      localStorage.removeItem('brewoOrders');
+      
+      document.getElementById('main-nav').style.display = 'none';
+      document.getElementById('top-navbar').style.display = 'none';
+      document.getElementById('sidebar').style.display = 'none';
+      document.getElementById('cart-bar').style.display = 'none';
+
+      document.querySelectorAll('.page')
+        .forEach(p => p.style.display = 'none');
+      document.getElementById('page-login').style.display = 'flex';
+      
+      document.getElementById('li-name').value = '';
+      document.getElementById('li-phone').value = '';
+      document.getElementById('li-office').value = '';
+      document.getElementById('li-floor').value = '';
+    }
+
+    function applyUser() {
+      if (!currentUser) return;
+      document.getElementById('user-display-name').textContent = currentUser.name;
+      document.getElementById('user-display-office').textContent = currentUser.office + ' | ' + currentUser.floor;
+      document.getElementById('user-badge').textContent = currentUser.name.charAt(0);
+      document.getElementById('set-avatar').textContent = currentUser.name.charAt(0);
+      document.getElementById('settings-name').textContent = currentUser.name;
+      document.getElementById('settings-office-display').textContent = currentUser.office + ' — ' + currentUser.floor;
+    }
+
+    function showLoginErr(msg) {
+      const err = document.getElementById('login-err');
+      err.textContent = msg;
+      err.style.display = 'block';
+      setTimeout(() => { err.style.display = 'none'; }, 3000);
+    }
+
+    // --- MODALS ---
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    // --- MENU / DRINKS ---
+    function renderMenuItems() {
+      let html = '';
+      MENU_ITEMS.forEach(item => {
+        html += `
+        <div style="background: white; border: 1px solid var(--border); border-radius: 24px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
+            <div style="display:flex; gap:16px; align-items:center;">
+              <div style="font-size:40px; width:64px; height:64px; background:var(--soft); border-radius:18px; display:flex; align-items:center; justify-content:center;">${item.icon}</div>
+              <div>
+                <div style="font-size:20px; font-weight:900; color:var(--char);">${item.name}</div>
+                <div style="font-size:13px; color:var(--muted); margin-top:2px;">${item.description}</div>
+              </div>
+            </div>
+            <div style="font-size:22px; font-weight:900; color:var(--em); text-align:left;">${item.basePrice.toFixed(2)} <span style="font-size:12px;">د.أ</span></div>
+          </div>
+          <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:12px; border-top:1px solid var(--soft); padding-top:16px;">اختر النوع المفضل:</div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            ${item.options.map(opt => `
+              <button onclick="quickAddToCart('${item.name} — ${opt.label}', ${item.basePrice + opt.priceAdd})" class="btn-secondary" style="border-radius: 12px; padding: 12px 8px; font-size: 14px; width:100%; white-space:nowrap;">
+                ${opt.label} +
+              </button>
+            `).join('')}
+          </div>
+        </div>`;
+      });
+      document.getElementById('cafe-menu-list-home').innerHTML = html;
+      document.getElementById('drinks-full-list').innerHTML = html;
+    }
+
+    function quickAddToCart(itemName, price) {
+      const existing = cart.items.find(i => i.name === itemName);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.items.push({ name: itemName, price, qty: 1 });
+      }
+      
+      updateCartUI();
+      showToast('✅ تمت الإضافة: ' + itemName);
+    }
+
+    function updateCartUI() {
+      const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const count = cart.items.reduce((sum, item) => sum + item.qty, 0);
+      
+      document.getElementById('cart-count').textContent = count;
+      document.getElementById('cart-total-bar').textContent = total.toFixed(2) + ' د.أ';
+      
+      const activePage = document.querySelector('.page.active');
+      if (activePage) updateCartBarVisibility(activePage.id);
+    }
+
+    function updateCartBarVisibility(pageId) {
+      const bar = document.getElementById('cart-bar');
+      if (cart.items.length > 0 && pageId !== 'page-checkout' && pageId !== 'page-confirmed' && pageId !== 'page-login') {
+        bar.style.display = 'flex';
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+
+    // --- CHECKOUT & ORDERING ---
+    function renderCheckoutPage() {
+      if (!currentUser) return;
+      document.getElementById('checkout-office-input').value = currentUser.office;
+      document.getElementById('checkout-floor-input').value  = currentUser.floor;
+      
+      let html = '';
+      let total = 0;
+      cart.items.forEach((item, idx) => {
+        html += `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:white; padding:12px; border-radius:12px; border:1px solid var(--border);">
+            <div>
+              <div style="font-size:14px; font-weight:800; color:var(--em);">${item.name}</div>
+              <div style="font-size:12px; color:var(--muted); font-weight:700;">${item.qty} × ${item.price.toFixed(2)} د.أ</div>
+            </div>
+            <button onclick="removeFromCart(${idx})" style="border:none; background:transparent; font-size:18px; cursor:pointer; color:#E53935;">✕</button>
+          </div>
+        `;
+        total += item.price * item.qty;
+      });
+      
+      document.getElementById('checkout-cart-items').innerHTML = cart.items.length > 0 ? html : '<div style="text-align:center; padding:40px; color:var(--muted); font-weight:700;">سلتك فارغة</div>';
+      document.getElementById('checkout-total').textContent = total.toFixed(2) + ' د.أ';
+    }
+
+    function removeFromCart(idx) {
+      cart.items.splice(idx, 1);
+      updateCartUI();
+      renderCheckoutPage();
+    }
+
+    function confirmOrder() {
+      if (cart.items.length === 0) {
+        showToast('السلة فارغة!');
+        return;
+      }
+
+      const office = document.getElementById('checkout-office-input').value.trim() || currentUser.office;
+      const floor  = document.getElementById('checkout-floor-input').value || currentUser.floor;
+      
+      const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const order = {
+        id: 'BR' + Math.floor(1000 + Math.random() * 9000),
+        cafeName: 'بريو بريميم',
+        items: [...cart.items],
+        total: total,
+        office: office,
+        floor: floor,
+        user: currentUser.name,
+        time: new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' }),
+        status: 'new'
+      };
+      
+      orders.unshift(order);
+      saveOrders();
+      
+      // CONFIRM PAGE UI
+      document.getElementById('conf-cafe').textContent = order.cafeName;
+      document.getElementById('conf-id').textContent = '#' + order.id;
+      document.getElementById('conf-items').textContent = order.items.map(i => i.name).join('، ');
+      
+      generateQR(order);
+      
+      navTo('page-confirmed');
+      
+      // SIMULATE DELIVERY
+      setTimeout(() => {
+        const o = orders.find(x => x.id === order.id);
+        if (o) {
+          o.status = 'delivered';
+          o.deliveredTime = new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' });
+          saveOrders();
+          renderOrdersPage();
+          showDeliveryNotification(o);
+        }
+      }, 10000);
+    }
+
+    function generateQR(orderData) {
+      const qrContainer = document.getElementById('qr-code-display');
+      qrContainer.innerHTML = '';
+      
+      const qrText = JSON.stringify({
+        id:     orderData.id,
+        cafe:   orderData.cafeName,
+        office: orderData.office,
+        floor:  orderData.floor,
+        total:  orderData.total,
+        time:   orderData.time
+      });
+      
+      try {
+        new QRCode(qrContainer, {
+          text:          qrText,
+          width:         180,
+          height:        180,
+          colorDark:     '#0D4F3C',
+          colorLight:    '#ffffff',
+          correctLevel:  QRCode.CorrectLevel.H
+        });
+      } catch(e) {
+        qrContainer.innerHTML = '<div style="padding:20px;background:var(--em-light);border-radius:12px;font-size:13px;color:var(--em);font-weight:700">' + orderData.id + '</div>';
+      }
+      
+      document.getElementById('qr-order-number').textContent = orderData.id;
+    }
+
+    function downloadQR() {
+      const canvas = document.querySelector('#qr-code-display canvas');
+      if (!canvas) { 
+        showToast('QR Code غير متاح للتحميل'); 
+        return; 
+      }
+      const link = document.createElement('a');
+      link.download = 'brewo-order-' + document.getElementById('qr-order-number').textContent + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function resetCartAndHome() {
+      cart = { items: [] };
+      updateCartUI();
+      navTo('page-home');
+    }
+
+    function showDeliveryNotification(order) {
+      const notif = document.getElementById('delivery-notif');
+      document.getElementById('dn-cafe').textContent = order.cafeName;
+      document.getElementById('dn-id').textContent = order.id;
+      notif.style.display = 'flex';
+      
+      setTimeout(() => {
+        notif.style.display = 'none';
+      }, 6000);
+    }
+
+    // --- ORDERS PAGE ---
+    function renderOrdersPage() {
+      const container = document.getElementById('orders-list');
+      const filtered = orders.filter(o => currentOrdersTab === 'curr' ? (o.status !== 'delivered' && o.status !== 'cancelled') : (o.status === 'delivered' || o.status === 'cancelled'));
+      
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:60px 20px;"><div style="font-size:40px; margin-bottom:10px;">📋</div><div style="color:var(--muted); font-weight:700;">لا يوجد طلبات هنا بعد</div></div>';
+        return;
+      }
+      
+      let html = '';
+      filtered.forEach(o => {
+        const isCurr = currentOrdersTab === 'curr';
+        let statusLabel = '';
+        let statusIcon = '';
+        if (o.status === 'new') { statusLabel = 'جديد'; statusIcon = '🔔'; }
+        if (o.status === 'preparing') { statusLabel = 'تحضير'; statusIcon = '⏳'; }
+        if (o.status === 'onway') { statusLabel = 'في الطريق'; statusIcon = '🛵'; }
+        if (o.status === 'delivered') { statusLabel = 'تم التوصيل'; statusIcon = '✅'; }
+        if (o.status === 'cancelled') { statusLabel = 'ملغي'; statusIcon = '🔴'; }
+
+        html += `
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+               <div style="font-size:15px; font-weight:800; color:var(--em);">بريو بريميم</div>
+               <div style="display:flex; align-items:center; gap:6px;">
+                 <span style="font-size:16px;">${statusIcon}</span>
+                 <span style="font-size:12px; font-weight:800; color:var(--muted);">${statusLabel}</span>
+               </div>
+            </div>
+            <div style="font-size:12px; color:var(--char); font-weight:700; opacity:0.7; margin-bottom:12px;">${o.items.map(i => i.name).join('، ')}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
+              <div style="font-size:12px; color:var(--muted); font-weight:700;">${o.time} • ${o.total.toFixed(2)} د.أ</div>
+              ${o.status === 'delivered' ? `<div style="font-size:11px; color:var(--em); font-weight:800;">استلمت في ${o.deliveredTime || ''}</div>` : ''}
+              <div style="font-size:11px; color:var(--muted); font-weight:800;">#${o.id}</div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function showOrdersTab(tab) {
+      currentOrdersTab = tab;
+      document.getElementById('tab-curr').style.background = tab === 'curr' ? 'var(--em)' : 'transparent';
+      document.getElementById('tab-curr').style.color = tab === 'curr' ? 'white' : 'var(--muted)';
+      document.getElementById('tab-prev').style.background = tab === 'prev' ? 'var(--em)' : 'transparent';
+      document.getElementById('tab-prev').style.color = tab === 'prev' ? 'white' : 'var(--muted)';
+      renderOrdersPage();
+    }
+
+    // --- SETTINGS PAGE ---
+    function openSettings() {
+      if (!currentUser) return;
+      document.getElementById('set-name-input').value = currentUser.name;
+      document.getElementById('set-phone-input').value = currentUser.phone;
+      document.getElementById('set-office-input').value = currentUser.office;
+      document.getElementById('set-floor-input').value = currentUser.floor;
+      
+      generateMenuQR();
+      navTo('page-settings');
+    }
+
+    function generateMenuQR() {
+      const container = document.getElementById('menu-qr-display');
+      container.innerHTML = '';
+      const menuUrl = window.location.origin + window.location.pathname;
+      
+      try {
+        new QRCode(container, {
+          text:          menuUrl,
+          width:         150,
+          height:        150,
+          colorDark:     '#0D4F3C',
+          colorLight:    '#ffffff',
+          correctLevel:  QRCode.CorrectLevel.H
+        });
+      } catch(e) {
+        container.innerHTML = '<div style="font-size:12px;color:var(--muted);">تعذر إنشاء الكود حالياً</div>';
+      }
+    }
+
+    function downloadMenuQR() {
+      const canvas = document.querySelector('#menu-qr-display canvas');
+      if (!canvas) { showToast('الكود غير جاهز بعد'); return; }
+      const link = document.createElement('a');
+      link.download = 'brewo-menu-qr.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function saveSettings() {
+      const name   = document.getElementById('set-name-input').value.trim();
+      const phone  = document.getElementById('set-phone-input').value.trim();
+      const office = document.getElementById('set-office-input').value.trim();
+      const floor  = document.getElementById('set-floor-input').value;
+      
+      if (!name)   { showToast('أدخل اسمك'); return; }
+      if (!phone)  { showToast('أدخل رقم الهاتف'); return; }
+      if (!office) { showToast('أدخل رقم مكتبك'); return; }
+      
+      currentUser = { ...currentUser, name, phone, office, floor };
+      localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+      
+      applyUser();
+      showToast('✅ تم حفظ التعديلات بنجاح');
+    }
+
+    function saveOrders() {
+      localStorage.setItem('brewoOrders', JSON.stringify(orders));
+    }
+
+  </script>
+</body>
+</html>
