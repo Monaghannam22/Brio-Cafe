@@ -212,7 +212,7 @@
 
     .login-input:focus { border-color: var(--em); }
 
-    /* Mobile Bottom Nav */
+    /* Mobile bottom nav only — hidden whenever layout uses the sidebar (min-width: 901px) */
     #main-nav {
       position: fixed;
       bottom: 0;
@@ -221,7 +221,7 @@
       height: 70px;
       background: white;
       border-top: 1px solid var(--border);
-      display: none; /* Desktop hidden */
+      display: none !important;
       justify-content: space-around;
       align-items: center;
       z-index: 1000;
@@ -245,46 +245,442 @@
       color: var(--em);
     }
 
-    /* Cart Bar */
+    /* Cart Bar — physical left on all breakpoints */
     #cart-bar {
-      position: fixed;
-      bottom: 85px;
-      left: 20px;
-      right: 20px;
-      background: var(--gold);
-      color: var(--em);
-      border-radius: 16px;
-      padding: 16px 20px;
       display: none;
+      position: fixed;
+      bottom: 24px;
+      left: max(12px, env(safe-area-inset-left, 0px));
+      right: auto;
+      transform: none;
+      width: auto;
+      min-width: 260px;
+      max-width: 340px;
+      background: var(--gold);
+      color: var(--char);
+      border-radius: 40px;
+      padding: 10px 20px;
+      flex-direction: row;
+      justify-content: flex-start;
       align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      z-index: 900;
+      gap: 12px;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      z-index: 99;
       cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      white-space: nowrap;
     }
 
-    /* Toast */
+    /* Toast — side strip; never blocks taps on drinks below */
     #toast {
+      display: none;
       position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.85);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 13px;
+      top: calc(88px + env(safe-area-inset-top, 0px));
+      right: max(12px, env(safe-area-inset-right, 0px));
+      left: auto;
+      bottom: auto;
+      transform: none;
+      background: var(--char);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
       font-weight: 700;
       z-index: 2000;
-      display: none;
+      width: max-content;
+      max-width: min(300px, calc(100vw - 24px));
+      text-align: right;
+      line-height: 1.45;
+      white-space: normal;
+      word-break: break-word;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
 
-    /* Responsive */
+    /* --- Marketing home: hero slider --- */
+    .hero-slider-wrap {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      border-radius: 0;
+      overflow: hidden;
+      margin: 0 0 24px 0;
+    }
+    .hero-slider-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      pointer-events: none;
+    }
+    .hero-slide.active { opacity: 1; z-index: 2; pointer-events: auto; }
+    .hero-slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-slide-content { position: relative; z-index: 3; max-width: 320px; }
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0.12;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .hero-float-cup {
+      position: absolute;
+      width: 48px;
+      height: 56px;
+      border: 3px solid rgba(255,255,255,0.35);
+      border-radius: 0 0 18px 18px;
+      border-top: none;
+      z-index: 1;
+    }
+    .hero-float-cup::before {
+      content: '';
+      position: absolute;
+      right: -14px;
+      top: 14px;
+      width: 12px;
+      height: 18px;
+      border: 3px solid rgba(255,255,255,0.25);
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+    }
+    .hero-cup-1 { left: 12%; bottom: 18%; animation: floatUp 4s ease-in-out infinite; animation-delay: 0s; }
+    .hero-cup-2 { right: 15%; top: 22%; animation: floatUp 5.5s ease-in-out infinite; animation-delay: 0.8s; transform: scale(0.85); }
+    .hero-cup-3 { left: 42%; top: 12%; animation: floatUp 3.8s ease-in-out infinite; animation-delay: 0.3s; transform: scale(0.7); opacity: 0.5; }
+    .hero-slide-1-bg {
+      background:
+        radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(212,168,67,0.15) 0%, transparent 40%),
+        linear-gradient(160deg, #0a3026 0%, #0D4F3C 45%, #062a1f 100%);
+    }
+    .hero-slide-1-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 79, 60, 0.85);
+      z-index: 1;
+    }
+    .hero-slide-2-bg {
+      background:
+        radial-gradient(circle at 20% 50%, rgba(212,168,67,0.12) 0%, transparent 35%),
+        radial-gradient(circle at 70% 30%, rgba(139,90,43,0.2) 0%, transparent 40%),
+        repeating-radial-gradient(circle at 50% 50%, #2a1810 0px, #2a1810 2px, #1C0A00 3px, #1C0A00 8px);
+    }
+    .hero-slide-2-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(28, 10, 0, 0.8);
+      z-index: 1;
+    }
+    .hero-rotate-disc {
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      left: -20%;
+      top: -20%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 55%);
+      opacity: 0.08;
+      animation: slowRotate 120s linear infinite;
+      z-index: 0;
+    }
+    .hero-sparkle {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: rgba(255,255,255,0.25);
+      clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+      z-index: 2;
+      animation: sparkle 2.5s ease-in-out infinite;
+    }
+    .hero-sparkle.s1 { left: 18%; top: 28%; animation-delay: 0s; }
+    .hero-sparkle.s2 { right: 22%; bottom: 30%; animation-delay: 0.6s; }
+    @keyframes floatUp {
+      0%   { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+      50%  { transform: translateY(-20px) rotate(5deg); opacity: 1; }
+      100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+    }
+    @keyframes slowRotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes sparkle {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50%       { transform: scale(1.3); opacity: 1; }
+    }
+    .hero-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .hero-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .hero-dot.active { background: var(--gold); }
+    .home-section-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--em);
+      text-align: center;
+      margin: 0 0 6px 0;
+    }
+    .home-section-sub {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 0 18px 0;
+      font-weight: 700;
+    }
+    .info-cards-row {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 4px 0 16px 0;
+      margin-bottom: 8px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .info-cards-row::-webkit-scrollbar { height: 4px; }
+    @media (min-width: 720px) {
+      .info-cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        overflow: visible;
+      }
+      .info-card { min-width: 0 !important; }
+    }
+    .info-card {
+      min-width: 240px;
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px 18px;
+      text-align: center;
+    }
+    .info-card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .info-card-title { font-size: 16px; font-weight: 800; color: var(--char); }
+    .info-card-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 6px;
+    }
+    .how-steps { position: relative; padding: 0 8px 8px 8px; }
+    .how-step {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 12px 18px 52px;
+      margin-bottom: 0;
+    }
+    .how-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 26px;
+      top: 52px;
+      bottom: -8px;
+      width: 0;
+      border-right: 2px dashed var(--border);
+    }
+    .how-step-num {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--em);
+      opacity: 0.2;
+      line-height: 1;
+    }
+    .how-step-icon { font-size: 32px; flex-shrink: 0; }
+    .how-step-body { text-align: right; flex: 1; }
+    .how-step-title { font-size: 15px; font-weight: 800; color: var(--char); }
+    .how-step-text { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+
+    .cta-banner-home {
+      width: calc(100% - 36px);
+      margin: 0 auto 24px;
+      background: var(--em);
+      padding: 28px 20px;
+      border-radius: 20px;
+      text-align: center;
+    }
+
+    .drinks-page-header { padding: 8px 0 16px 0; }
+
+    /* Checkout: compact confirm button at bottom */
+    .btn-confirm-order {
+      width: 100%;
+      max-width: 280px;
+      margin: 14px auto 0;
+      display: block;
+      padding: 9px 16px !important;
+      font-size: 13px !important;
+      border-radius: 11px;
+    }
+    .drink-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
+      touch-action: manipulation;
+    }
+    .drink-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .drink-card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .drink-card-meta { flex: 1; text-align: right; }
+    .drink-card-name { font-size: 17px; font-weight: 900; color: var(--char); }
+    .drink-card-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+    .drink-card-price { font-size: 18px; font-weight: 900; color: var(--em); white-space: nowrap; }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .radio-pill input[type="radio"] { display: none; }
+    .radio-pill span {
+      display: block;
+      padding: 8px 18px;
+      background: var(--soft);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--char);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .radio-pill input[type="radio"]:checked + span {
+      background: var(--em);
+      border-color: var(--em);
+      color: white;
+    }
+    .radio-pill input[type="checkbox"] { display: none; }
+    .radio-pill input[type="checkbox"]:checked + span {
+      background: var(--em);
+      border-color: var(--em);
+      color: white;
+    }
+    .qty-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 14px 0 8px 0;
+    }
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      color: var(--em);
+      touch-action: manipulation;
+    }
+    .qty-val { font-size: 18px; font-weight: 900; min-width: 28px; text-align: center; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.45);
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-overlay-inner {
+      background: white;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Responsive: bottom nav only on small screens (mobile) */
     @media (max-width: 900px) {
       #sidebar { display: none !important; }
       #top-navbar { left: 0; right: 0; height: 80px; padding: 0 16px; }
       .main-content { margin-right: 0; margin-top: 80px; padding: 16px 16px 120px 16px; }
-      #main-nav { display: flex; height: 80px; background: white; border-top: 1px solid var(--border); box-shadow: 0 -5px 25px rgba(0,0,0,0.06); }
+      body.app-logged-in #main-nav {
+        display: flex !important;
+        height: 80px;
+        background: white;
+        border-top: 1px solid var(--border);
+        box-shadow: 0 -5px 25px rgba(0,0,0,0.06);
+      }
+      body.app-logged-in #cart-bar {
+        bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+      }
       .desktop-only { display: none !important; }
       
       h1 { font-size: 32px !important; }
@@ -295,6 +691,12 @@
       .login-input { padding: 18px; font-size: 16px; }
       .mobile-tab { font-size: 11px; }
       .mobile-tab span { font-size: 24px !important; }
+    }
+
+    @media (min-width: 901px) {
+      #main-nav {
+        display: none !important;
+      }
     }
 
     /* Confirmation UI */
@@ -390,11 +792,10 @@
   <div id="page-login">
     <div class="login-card">
       <div style="font-size: 44px; margin-bottom: 16px;">☕</div>
-      <h1 style="font-size: 24px; font-weight: 900; color: var(--em); margin-bottom: 8px;">مرحباً بك في بريو</h1>
-      <p style="font-size: 13px; color: var(--muted); font-weight: 700; margin-bottom: 32px;">سجل دخولك لطلب قهوتك المفضلة</p>
+      <h1 style="font-size: 26px; font-weight: 800; color: var(--em); margin-bottom: 0; text-align: center;">أهلاً بك في مجمع الصالحين ☕</h1>
+      <p style="font-size: 14px; color: #9FD4C0; font-weight: 700; margin-top: 6px; margin-bottom: 32px; text-align: center;">اطلب قهوتك المفضلة وتوصلك لمكتبك</p>
       
       <input id="li-name" class="login-input" placeholder="اسمك الكامل" type="text" />
-      <input id="li-phone" class="login-input" placeholder="رقم الهاتف" type="tel" />
       <input id="li-office" class="login-input" placeholder="رقم المكتب (مثلاً: A-102)" type="text" />
       <select id="li-floor" class="login-input">
         <option value="" disabled selected>اختر الطابق</option>
@@ -431,7 +832,7 @@
         <div class="nav-item" id="side-page-orders" onclick="navTo('page-orders')">
           <span style="font-size:20px;">📋</span> طلباتي
         </div>
-        <div class="nav-item" id="side-page-settings" onclick="openSettings()">
+        <div class="nav-item" id="side-page-settings" onclick="navTo('page-settings')">
           <span style="font-size:20px;">⚙️</span> الإعدادات
         </div>
       </div>
@@ -455,41 +856,251 @@
            </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div class="desktop-only" style="background:var(--soft); padding:6px 12px; border-radius:10px; font-size:11px; font-weight:800; color:var(--em); border:1px solid var(--border);">
-            📍 مجمع عمال عمان
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="cursor:pointer; display:flex; align-items:center; gap:8px; padding:6px 12px; border-radius:12px; border:1.5px solid var(--border); background:var(--soft);" onclick="goCheckout()" title="السلة">
+            <span style="font-size:20px;">🛒</span>
+            <span class="desktop-only" style="font-size:13px; font-weight:800; color:var(--em);">السلة</span>
+            <span id="nav-cart-badge" style="min-width:20px; height:20px; padding:0 6px; border-radius:8px; background:var(--em); color:white; font-size:11px; font-weight:900; display:none; align-items:center; justify-content:center;">0</span>
           </div>
-          <div style="cursor:pointer; font-size:22px;" onclick="navTo('page-checkout')">🛒</div>
         </div>
       </nav>
 
       <main class="main-content">
 
         <!-- PAGE: HOME -->
-        <div id="page-home" class="page active">
-          <div style="background:var(--em); border-radius:24px; padding:32px 24px; color:white; margin-bottom:24px; position:relative; overflow:hidden;">
-            <div style="position:relative; z-index:2;">
-              <h1 style="font-size:28px; font-weight:900; margin-bottom:8px;">الجو بدو قهوة! ❄️</h1>
-              <p style="font-size:14px; opacity:0.8; font-weight:500; margin-bottom:24px; max-width:200px;">أفضل كوب قهوة بدقيقة واحدة يوصلك لمكتبك.</p>
-              <button onclick="openCafe('blk')" class="btn-primary" style="background:white; color:var(--em); width:auto; border-radius:12px; padding:10px 20px; font-size:14px;">اطلب هلق</button>
+        <div id="page-home" class="page">
+          <div style="
+  background: var(--gold);
+  color: var(--char);
+  text-align: center;
+  padding: 9px 16px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;">
+  <span style="font-size:15px">🕘</span>
+  نعمل من الساعة 9 صباحاً حتى 6 مساءً
+  <span style="font-size:15px">🕕</span>
+</div>
+          <div class="hero-slider-wrap">
+            <div class="hero-slider-inner">
+              <div class="hero-slide active" data-slide="0">
+                <div class="hero-slide-bg hero-slide-1-bg"></div>
+                <div class="hero-slide-1-overlay"></div>
+                <div class="hero-grain"></div>
+                <div class="hero-float-cup hero-cup-1"></div>
+                <div class="hero-float-cup hero-cup-2"></div>
+                <div class="hero-float-cup hero-cup-3"></div>
+                <div class="hero-slide-content">
+                  <div style="font-size:28px;font-weight:900;color:white;line-height:1.35;margin-bottom:8px;">الجو بيطلب قهوة ☕</div>
+                  <div style="font-size:16px;color:#9FD4C0;font-weight:700;margin-bottom:22px;">سخونة، ريحتها بتوصل قبلها</div>
+                  <button type="button" onclick="navTo('page-drinks')" style="background:var(--gold);color:var(--char);border:none;border-radius:12px;padding:12px 28px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Tajawal',sans-serif;">اطلب هلق ←</button>
+                </div>
+              </div>
+              <div class="hero-slide" data-slide="1">
+                <div class="hero-slide-bg hero-slide-2-bg"></div>
+                <div class="hero-slide-2-overlay"></div>
+                <div class="hero-rotate-disc"></div>
+                <div class="hero-sparkle s1"></div>
+                <div class="hero-sparkle s2"></div>
+                <div class="hero-slide-content">
+                  <div style="font-size:28px;font-weight:900;color:white;line-height:1.35;margin-bottom:8px;">محلي، طازج، وبيوصلك للمكتب</div>
+                  <div style="font-size:16px;color:#9FD4C0;font-weight:700;margin-bottom:22px;">من أفضل المشروبات في مجمعنا</div>
+                  <button type="button" onclick="navTo('page-drinks')" style="background:white;color:var(--char);border:none;border-radius:12px;padding:12px 28px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Tajawal',sans-serif;">شوف المشروبات</button>
+                </div>
+              </div>
             </div>
-            <div style="position:absolute; left:-20px; bottom:-20px; font-size:140px; opacity:0.1;">☕</div>
+            <div class="hero-dots">
+              <button type="button" class="hero-dot active" aria-label="شريحة 1" onclick="goSlide(0)"></button>
+              <button type="button" class="hero-dot" aria-label="شريحة 2" onclick="goSlide(1)"></button>
+            </div>
           </div>
 
-          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:16px;">المشروبات المتاحة 🌟</h2>
-          <div id="cafe-menu-list-home"></div>
+          <div class="card" style="text-align:center;margin-bottom:20px;padding:22px 16px;">
+            <div style="font-size:15px;font-weight:800;color:var(--em);margin-bottom:6px;">كود سريع للمشروبات</div>
+            <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:14px;line-height:1.6;">امسح الكود بجوالك لفتح صفحة الطلب مباشرة</div>
+            <div id="home-drinks-qr" style="display:flex;justify-content:center;align-items:center;min-height:8px;"></div>
+          </div>
+
+          <h2 class="home-section-title">قهوتنا — قصة في كل كوب</h2>
+          <p class="home-section-sub">بريو بيجيبلك أفضل المشروبات مباشرة لمكتبك</p>
+          <div class="info-cards-row">
+            <div class="info-card">
+              <div class="info-card-icon" style="background:var(--gold-light);font-size:48px;line-height:1;">☕</div>
+              <div class="info-card-title">طازج دايماً</div>
+              <div class="info-card-text">كل طلب بيتحضر لحظة ما تطلبه، ما في قهوة باردة أو قديمة عندنا</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon" style="background:var(--em-light);font-size:48px;line-height:1;">⚡</div>
+              <div class="info-card-title">خلال 15 دقيقة</div>
+              <div class="info-card-text">من ما تضغط 'تأكيد الطلب' حتى يوصلك على مكتبك — 15 دقيقة بس</div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon" style="background:var(--gold-light);font-size:48px;line-height:1;">🎯</div>
+              <div class="info-card-title">على ذوقك</div>
+              <div class="info-card-text">قهوة تركية، نسكافيه، أو ماء بارد — كل واحد على كيفه</div>
+            </div>
+          </div>
+
+          <h2 class="home-section-title" style="margin-top:12px;">كيف تطلب؟</h2>
+          <p class="home-section-sub">٣ خطوات وقهوتك في الطريق</p>
+          <div class="how-steps">
+            <div class="how-step">
+              <span class="how-step-num">١</span>
+              <div class="how-step-icon">🥤</div>
+              <div class="how-step-body">
+                <div class="how-step-title">اختر مشروبك</div>
+                <div class="how-step-text">قهوة تركية، نسكافيه، أو ماء</div>
+              </div>
+            </div>
+            <div class="how-step">
+              <span class="how-step-num">٢</span>
+              <div class="how-step-icon">✏️</div>
+              <div class="how-step-body">
+                <div class="how-step-title">خصّصه على ذوقك</div>
+                <div class="how-step-text">سادة، وسط، حلوة، بحليب...</div>
+              </div>
+            </div>
+            <div class="how-step">
+              <span class="how-step-num">٣</span>
+              <div class="how-step-icon">🏃</div>
+              <div class="how-step-body">
+                <div class="how-step-title">استلمه بمكتبك</div>
+                <div class="how-step-text">بيوصلك خلال 15 دقيقة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-banner-home">
+            <div style="font-size:32px;margin-bottom:8px;">☕</div>
+            <div style="font-size:22px;font-weight:900;color:white;margin-bottom:6px;">جاهز تطلب؟</div>
+            <div style="font-size:14px;color:#9FD4C0;font-weight:700;margin-bottom:18px;">اضغط هلق وقهوتك جاية</div>
+            <button type="button" onclick="navTo('page-drinks')" style="background:var(--gold);color:var(--char);padding:13px 32px;border-radius:12px;font-weight:800;font-size:15px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;">اطلب هلق ←</button>
+          </div>
         </div>
 
-        <!-- PAGE: DRINKS LIST -->
+        <!-- PAGE: DRINKS -->
         <div id="page-drinks" class="page">
-          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:16px;">قائمة المشروبات</h2>
-          <div id="drinks-full-list"></div>
+          <div class="drinks-page-header">
+            <div style="font-size:20px;font-weight:900;color:var(--char);">اختر مشروبك</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:700;margin-top:4px;">خصّص طلبك واضغط أضف للسلة</div>
+          </div>
+
+          <div class="drink-card">
+            <div class="drink-card-top">
+              <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
+                <div class="drink-card-icon">☕</div>
+                <div class="drink-card-meta">
+                  <div class="drink-card-name">قهوة تركية</div>
+                  <div class="drink-card-desc">قهوة تركية مختارة — أصيلة وغنية</div>
+                </div>
+              </div>
+              <div class="drink-card-price">0.50 <span style="font-size:11px;">د.أ</span></div>
+            </div>
+            <div class="radio-group">
+              <label class="radio-pill"><input type="radio" name="turkish-type" value="سادة" onchange="updateDrinkBtn('turkish')"><span>سادة</span></label>
+              <label class="radio-pill"><input type="radio" name="turkish-type" value="وسط" onchange="updateDrinkBtn('turkish')"><span>وسط</span></label>
+              <label class="radio-pill"><input type="radio" name="turkish-type" value="حلوة" onchange="updateDrinkBtn('turkish')"><span>حلوة</span></label>
+            </div>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('turkish',-1)">−</button>
+              <span class="qty-val" id="turkish-qty">1</span>
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('turkish',1)">+</button>
+            </div>
+            <button type="button" id="turkish-add-btn" onclick="addTurkishToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+          </div>
+
+          <div class="drink-card">
+            <div class="drink-card-top">
+              <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
+                <div class="drink-card-icon">🥛</div>
+                <div class="drink-card-meta">
+                  <div class="drink-card-name">نسكافيه</div>
+                  <div class="drink-card-desc">نسكافيه كلاسيكي — دافئ ومنعش</div>
+                </div>
+              </div>
+              <div class="drink-card-price">0.50 <span style="font-size:11px;">د.أ</span></div>
+            </div>
+            <div style="font-size:12px;font-weight:800;color:var(--char);margin:4px 0 8px 0;">الحليب</div>
+            <label class="radio-pill nescafe-milk-pill" style="display:inline-flex;align-items:center;margin-bottom:4px;">
+              <input type="checkbox" id="nescafe-milk" onchange="updateDrinkBtn('nescafe')">
+              <span>بحليب</span>
+            </label>
+            <div style="font-size:12px;font-weight:800;color:var(--char);margin:12px 0 8px 0;">السكر <span style="color:var(--muted);font-weight:700;font-size:11px;">(اختر واحد)</span></div>
+            <div class="radio-group">
+              <label class="radio-pill"><input type="radio" name="nescafe-sugar" value="سكر زيادة" onchange="updateDrinkBtn('nescafe')"><span>سكر زيادة</span></label>
+              <label class="radio-pill"><input type="radio" name="nescafe-sugar" value="سكر متوسط" onchange="updateDrinkBtn('nescafe')"><span>سكر متوسط</span></label>
+              <label class="radio-pill"><input type="radio" name="nescafe-sugar" value="سكر خفيف" onchange="updateDrinkBtn('nescafe')"><span>سكر خفيف</span></label>
+              <label class="radio-pill"><input type="radio" name="nescafe-sugar" value="بدون سكر" onchange="updateDrinkBtn('nescafe')"><span>بدون سكر</span></label>
+            </div>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('nescafe',-1)">−</button>
+              <span class="qty-val" id="nescafe-qty">1</span>
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('nescafe',1)">+</button>
+            </div>
+            <button type="button" id="nescafe-add-btn" onclick="addNescafeToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+          </div>
+
+          <div class="drink-card">
+            <div class="drink-card-top">
+              <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
+                <div class="drink-card-icon">💧</div>
+                <div class="drink-card-meta">
+                  <div class="drink-card-name">ماء</div>
+                  <div class="drink-card-desc">ماء معدني نقي</div>
+                </div>
+              </div>
+              <div class="drink-card-price">0.25 <span style="font-size:11px;">د.أ</span></div>
+            </div>
+            <div class="radio-group">
+              <label class="radio-pill"><input type="radio" name="water-type" value="بارد" onchange="updateDrinkBtn('water')"><span>بارد</span></label>
+              <label class="radio-pill"><input type="radio" name="water-type" value="عادي" onchange="updateDrinkBtn('water')"><span>عادي</span></label>
+            </div>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('water',-1)">−</button>
+              <span class="qty-val" id="water-qty">1</span>
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('water',1)">+</button>
+            </div>
+            <button type="button" id="water-add-btn" onclick="addWaterToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+          </div>
+
+          <div class="drink-card">
+            <div class="drink-card-top">
+              <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
+                <div class="drink-card-icon">🍵</div>
+                <div class="drink-card-meta">
+                  <div class="drink-card-name">شاي</div>
+                  <div class="drink-card-desc">شاي طازج — اختار نوعك المفضل</div>
+                </div>
+              </div>
+              <div class="drink-card-price">0.45 <span style="font-size:11px;">د.أ</span></div>
+            </div>
+            <div class="radio-group">
+              <label class="radio-pill"><input type="radio" name="tea-type" value="أخضر" onchange="updateDrinkBtn('tea')"><span>أخضر</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="أحمر" onchange="updateDrinkBtn('tea')"><span>أحمر</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="كرك" onchange="updateDrinkBtn('tea')"><span>كرك</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="أعشاب" onchange="updateDrinkBtn('tea')"><span>أعشاب</span></label>
+            </div>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('tea',-1)">−</button>
+              <span class="qty-val" id="tea-qty">1</span>
+              <button type="button" class="qty-btn" onclick="changeDrinkQty('tea',1)">+</button>
+            </div>
+            <button type="button" id="tea-add-btn" onclick="addTeaToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+          </div>
         </div>
 
         <!-- PAGE: CHECKOUT -->
         <div id="page-checkout" class="page">
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-            <button onclick="navTo('page-home')" style="background:white; border:1px solid var(--border); border-radius:10px; width:40px; height:40px; font-size:18px; cursor:pointer;">→</button>
+            <button onclick="navTo('page-drinks')" style="background:white; border:1px solid var(--border); border-radius:10px; width:40px; height:40px; font-size:18px; cursor:pointer;">→</button>
             <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">سلة الطلبات</h2>
           </div>
           
@@ -523,7 +1134,7 @@
             </div>
           </div>
 
-          <button onclick="confirmOrder()" class="btn-primary" style="margin-top:10px;">تأكيد الطلب</button>
+          <button type="button" onclick="confirmOrder()" class="btn-primary btn-confirm-order">تأكيد الطلب</button>
         </div>
 
         <!-- PAGE: CONFIRMED -->
@@ -545,31 +1156,31 @@
             <div id="qr-section">
               <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:4px;">كود استلام طلبك</div>
               <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">أظهر هذا الكود للمندوب عند التوصيل</div>
-              <div id="qr-code-display" style="display:flex; justify-content:center; margin-bottom:12px;"></div>
+              <div id="qr-display" style="display:flex; justify-content:center; margin-bottom:12px;"></div>
               <div id="qr-order-number" style="font-size:20px; font-weight:800; color:var(--em); letter-spacing:3px; margin-bottom:10px;"></div>
               <button onclick="downloadQR()" class="btn-secondary" style="border-radius:10px; padding:8px 18px; font-size:13px;">تحميل الكود 📥</button>
             </div>
 
-            <button onclick="resetCartAndHome()" class="btn-primary" style="margin-top:24px;">العودة للرئيسية</button>
+            <div id="whatsapp-order-actions" style="display:none; margin-top:20px;">
+              <a id="whatsapp-order-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display:inline-block; border-radius:12px; padding:12px 20px; text-decoration:none; font-weight:800; background:#25D366; color:white; border:1px solid #1ebe57;">فتح واتساب للمقهى 📲</a>
+              <p style="font-size:12px; color:var(--muted); margin-top:10px; font-weight:700;">جرّب الزر إن لم يُفتح واتساب تلقائياً بعد التأكيد.</p>
+            </div>
+
+            <button onclick="resetCartAndHome()" class="btn-primary" style="margin-top:24px;">متابعة</button>
           </div>
         </div>
 
-        <!-- PAGE: ORDERS -->
+        <!-- PAGE: ORDERS (past only) -->
         <div id="page-orders" class="page">
-          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:16px;">طلباتي</h2>
-          
-          <div style="display:flex; background:white; border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:16px;">
-            <button id="tab-curr" onclick="showOrdersTab('curr')" style="flex:1; border:none; padding:10px; border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; background:var(--em); color:white;">الحالية</button>
-            <button id="tab-prev" onclick="showOrdersTab('prev')" style="flex:1; border:none; padding:10px; border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; background:transparent; color:var(--muted); cursor:pointer;">السابقة</button>
-          </div>
-
+          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:6px;">طلباتي السابقة</h2>
+          <p style="font-size:13px; color:var(--muted); font-weight:700; margin-bottom:16px;">سجل طلباتك المكتملة</p>
           <div id="orders-list"></div>
         </div>
 
         <!-- PAGE: SETTINGS -->
         <div id="page-settings" class="page">
           <div style="background:var(--em); border-radius:16px; padding:20px; margin-bottom:16px; color:white; display:flex; align-items:center; gap:14px;">
-            <div id="set-avatar" style="width:56px;height:56px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--char);">أ</div>
+            <div id="set-avatar" style="width:56px;height:56px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:white;">أ</div>
             <div>
               <div id="settings-name" style="font-size:18px; font-weight:800;"></div>
               <div id="settings-office-display" style="font-size:12px; color:#9FD4C0; margin-top:3px;"></div>
@@ -580,16 +1191,14 @@
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px;">تعديل بيانات الحساب</div>
             
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الاسم</label>
-            <input id="set-name-input" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
-            
-            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم الهاتف</label>
-            <input id="set-phone-input" type="tel" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            <input id="set-n" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
 
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم المكتب</label>
-            <input id="set-office-input" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            <input id="set-o" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
             
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الطابق</label>
-            <select id="set-floor-input" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            <select id="set-f" class="login-input" style="padding:10px 14px; background:var(--soft);">
+              <option value="" disabled selected>اختر الطابق</option>
               <option>الطابق 1</option>
               <option>الطابق 2</option>
               <option>الطابق 3</option>
@@ -597,31 +1206,54 @@
               <option>الطابق 5</option>
             </select>
             
-            <button onclick="saveSettings()" class="btn-primary" style="padding:12px; font-size:14px;">حفظ التعديلات ✔</button>
+            <button type="button" onclick="saveSettings()" class="btn-primary" style="padding:12px; font-size:14px;">حفظ التعديلات</button>
           </div>
 
           <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
-            <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:8px;">كود المنيو للعملاء</div>
-            <p style="font-size:11px; color:var(--muted); margin-bottom:14px;">شارك هذا الكود مع زملائك ليتمكنوا من الطلب مباشرة</p>
-            <div id="menu-qr-display" style="display:flex; justify-content:center; margin-bottom:12px; background:white; padding:10px; border-radius:12px;"></div>
-            <button onclick="downloadMenuQR()" class="btn-secondary" style="width:100%; border-radius:10px; padding:10px; font-size:13px;">تحميل كود المنيو 📥</button>
-          </div>
-
-          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+            <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:12px;">إحصائياتك</div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span style="font-size:13px; font-weight:700; color:var(--char);">إجمالي الطلبات</span>
+              <span id="set-stat-orders" style="font-size:13px; color:var(--muted); font-weight:800;">0</span>
+            </div>
             <div style="display:flex; justify-content:space-between; padding:10px 0;">
-              <span style="font-size:13px; font-weight:700; color:var(--char);">الإصدار</span>
-              <span style="font-size:13px; color:var(--muted);">بريو v1.0</span>
+              <span style="font-size:13px; font-weight:700; color:var(--char);">إجمالي الإنفاق</span>
+              <span id="set-stat-spend" style="font-size:13px; color:var(--muted); font-weight:800;">0.00 د.أ</span>
             </div>
           </div>
 
-          <button onclick="doLogout()" style="width:100%; background:white; border:2px solid #E53935; color:#E53935; border-radius:12px; padding:14px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:15px; cursor:pointer; margin-bottom:100px;">تسجيل الخروج</button>
+          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span style="font-size:13px; font-weight:700; color:var(--char);">الإصدار</span>
+              <span style="font-size:13px; color:var(--muted);">بريو v1.0</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0;">
+              <span style="font-size:13px; font-weight:700; color:var(--char);">المنطقة</span>
+              <span style="font-size:13px; color:var(--muted); text-align:left;">مجمع المكاتب — عمّان</span>
+            </div>
+          </div>
+
+          <button type="button" onclick="doLogout()" style="
+            width: 100%;
+            background: white;
+            border: 2px solid #E53935;
+            color: #E53935;
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+            margin-bottom: 100px;">
+            تسجيل الخروج
+          </button>
         </div>
 
         <!-- PAGE: ADMIN -->
         <div id="page-admin" class="page">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
             <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">لوحة التحكم</h2>
-            <button onclick="navTo('page-home')" style="background:white; border:1px solid var(--border); border-radius:8px; padding:4px 12px; font-size:12px; font-weight:800; cursor:pointer;">خروج</button>
+            <button onclick="navTo('page-drinks')" style="background:white; border:1px solid var(--border); border-radius:8px; padding:4px 12px; font-size:12px; font-weight:800; cursor:pointer;">خروج</button>
           </div>
           <div id="admin-orders-table" style="overflow-x:auto;"></div>
         </div>
@@ -630,111 +1262,209 @@
 
       <!-- MOBILE BOTTOM NAV -->
       <nav id="main-nav">
-        <a onclick="navTo('page-home')" class="mobile-tab active" id="tab-page-home">
+        <a onclick="navTo('page-home')" class="mobile-tab" id="nav-home">
           <span style="font-size:20px;">🏠</span>
           الرئيسية
         </a>
-        <a onclick="navTo('page-drinks')" class="mobile-tab" id="tab-page-drinks">
-          <span style="font-size:20px;">☕</span>
-          المشروبات
+        <a onclick="navTo('page-drinks')" class="mobile-tab active" id="nav-drinks">
+          <span style="font-size:20px;">🥤</span>
+          اطلب
         </a>
-        <a onclick="navTo('page-orders')" class="mobile-tab" id="tab-page-orders">
+        <a onclick="navTo('page-orders')" class="mobile-tab" id="nav-orders">
           <span style="font-size:20px;">📋</span>
           طلباتي
         </a>
-        <a onclick="openSettings()" class="mobile-tab" id="tab-page-settings">
+        <a onclick="navTo('page-settings')" class="mobile-tab" id="nav-settings">
           <span style="font-size:20px;">⚙️</span>
-          إعدادات
+          الإعدادات
         </a>
       </nav>
 
       <!-- CART BAR -->
-      <div id="cart-bar" onclick="navTo('page-checkout')">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="background:var(--em); color:white; width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900;" id="cart-count">0</div>
-          <div style="font-size:14px; font-weight:800;">سلة طلبك جاهزة!</div>
-        </div>
-        <div style="font-size:14px; font-weight:900;" id="cart-total-bar">0.00 د.أ</div>
-      </div>
+      <div id="cart-bar" onclick="goCheckout()">
+  <span style="font-size:16px">🛒</span>
+  <span id="cb-count">0 عناصر</span>
+  <span style="opacity:0.4">|</span>
+  <span id="cb-total">0.00 د.أ</span>
+  <span style="font-size:13px">←</span>
+</div>
 
     </div>
   </div>
 
   <script>
-    // --- APP DATA ---
-    const MENU_ITEMS = [
-      {
-        id: 'turkish',
-        name: 'قهوة تركية',
-        icon: '☕',
-        basePrice: 0.50,
-        description: 'قهوة تركية أصيلة',
-        options: [
-          { label: 'سادة',   priceAdd: 0 },
-          { label: 'وسط',    priceAdd: 0 },
-          { label: 'حلوة',   priceAdd: 0 }
-        ]
-      },
-      {
-        id: 'nescafe',
-        name: 'نسكافيه',
-        icon: '🥛',
-        basePrice: 0.45,
-        description: 'نسكافيه كلاسيكي',
-        options: [
-          { label: 'بحليب',       priceAdd: 0    },
-          { label: 'سكر زيادة',   priceAdd: 0    },
-          { label: 'سكر خفيف',    priceAdd: 0    },
-          { label: 'بدون سكر',    priceAdd: 0    }
-        ]
-      },
-      {
-        id: 'water',
-        name: 'ماء',
-        icon: '💧',
-        basePrice: 0.25,
-        description: 'ماء معدني بارد',
-        options: [
-          { label: 'بارد',  priceAdd: 0    },
-          { label: 'عادي',  priceAdd: 0    }
-        ]
-      }
-    ];
+    const navMap = {
+      'page-home':     'nav-home',
+      'page-drinks':   'nav-drinks',
+      'page-orders':   'nav-orders',
+      'page-settings': 'nav-settings'
+    };
 
-    // --- STATE ---
+    const CAFE_WHATSAPP_E164 = '962798252856';
+
+    function digitsOnly(s) {
+      return String(s || '').replace(/\D/g, '');
+    }
+
+    function buildOrderWhatsAppText(order, user) {
+      const u = user || {};
+      const itemLines = order.items.map(function (i) {
+        const sub = (i.price * i.qty).toFixed(2);
+        const q = i.qty > 1 ? ' ×' + i.qty : '';
+        return '• ' + i.name + q + ' — ' + sub + ' د.أ';
+      });
+      return [
+        'طلب جديد — بريو ☕',
+        '────────',
+        '📋 رقم الطلب: ' + order.id,
+        '🏷 ' + order.cafeName,
+        '────────',
+        '👤 الاسم: ' + (u.name || order.user || ''),
+        '📱 جوال العميل: ' + (u.phone || ''),
+        '📍 المكتب: ' + order.office,
+        '📌 الطابق: ' + order.floor,
+        '────────',
+        'التفاصيل:',
+      ].concat(itemLines).concat([
+        '────────',
+        '💰 الإجمالي: ' + order.total.toFixed(2) + ' د.أ',
+        '🕐 ' + order.time,
+      ]).join('\n');
+    }
+
+    function prepareWhatsAppForOrder(order) {
+      const wrap = document.getElementById('whatsapp-order-actions');
+      const link = document.getElementById('whatsapp-order-link');
+      if (!wrap || !link) return;
+      const cafeDigits = digitsOnly(CAFE_WHATSAPP_E164);
+      if (!cafeDigits) {
+        wrap.style.display = 'none';
+        link.removeAttribute('href');
+        return;
+      }
+      const text = buildOrderWhatsAppText(order, currentUser);
+      const url = 'https://wa.me/' + cafeDigits + '?text=' + encodeURIComponent(text);
+      link.href = url;
+      wrap.style.display = 'block';
+      try {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      } catch (e) {}
+    }
+
     let currentUser = null;
     let cart = { items: [] };
     let orders = [];
-    let currentOrdersTab = 'curr';
+    let drinkQty = { turkish: 1, nescafe: 1, water: 1, tea: 1 };
+    let currentSlide = 0;
+    let heroSliderTimer = null;
 
-    // --- INIT ---
+    document.addEventListener('click', (e) => {
+      const el = e.target;
+      if (el.classList && el.classList.contains('modal-overlay') && el === e.target) {
+        el.style.display = 'none';
+        el.classList.remove('active');
+      }
+    });
+
     window.onload = () => {
       try {
         const savedUser = localStorage.getItem('brewoUser');
         if (savedUser) {
           currentUser = JSON.parse(savedUser);
           document.getElementById('page-login').style.display = 'none';
-          document.getElementById('main-nav').style.display = 'flex';
+          document.body.classList.add('app-logged-in');
           document.getElementById('sidebar').style.display = 'flex';
           document.getElementById('top-navbar').style.display = 'flex';
           applyUser();
-          navTo('page-home');
+          navTo('page-drinks');
         } else {
+          document.body.classList.remove('app-logged-in');
           document.getElementById('page-login').style.display = 'flex';
         }
+      } catch (e) { console.error(e); }
 
+      try {
         const savedOrders = localStorage.getItem('brewoOrders');
-        if (savedOrders) {
-          orders = JSON.parse(savedOrders);
-        }
+        if (savedOrders) orders = JSON.parse(savedOrders);
+      } catch (e) { console.error(e); }
 
-        renderMenuItems();
-      } catch(e) {
-        console.error('Local Storage Error', e);
+      initHeroSlider();
+      ['turkish', 'nescafe', 'water', 'tea'].forEach(updateDrinkBtn);
+
+      if (location.hash === '#admin' && currentUser) {
+        setTimeout(() => navTo('page-admin'), 0);
       }
+
+      renderHomeDrinksQr();
+      consumeDrinksHash();
     };
 
-    // --- CORE LOGIC ---
+    window.addEventListener('hashchange', () => {
+      consumeDrinksHash();
+    });
+
+    function getDrinksDeepLink() {
+      try {
+        const u = new URL(location.href);
+        u.hash = 'drinks';
+        return u.href;
+      } catch (e) {
+        return (location.href.split('#')[0] || location.href) + '#drinks';
+      }
+    }
+
+    function renderHomeDrinksQr() {
+      const el = document.getElementById('home-drinks-qr');
+      if (!el || typeof QRCode === 'undefined') return;
+      el.innerHTML = '';
+      try {
+        new QRCode(el, {
+          text: getDrinksDeepLink(),
+          width: 168,
+          height: 168,
+          colorDark: '#0D4F3C',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      } catch (e) {
+        el.innerHTML = '<span style="font-size:12px;color:var(--muted);font-weight:700;">تعذر إنشاء الكود</span>';
+      }
+    }
+
+    function stripAppHash() {
+      try {
+        const h = (location.hash || '').toLowerCase();
+        if (h === '#drinks' || h === '#page-drinks') {
+          history.replaceState(null, '', location.pathname + location.search);
+        }
+      } catch (e) {}
+    }
+
+    function consumeDrinksHash() {
+      const h = (location.hash || '').toLowerCase();
+      if (h !== '#drinks' && h !== '#page-drinks') return;
+      if (!currentUser) return;
+      navTo('page-drinks');
+      stripAppHash();
+    }
+
+    function goSlide(n) {
+      const slides = document.querySelectorAll('.hero-slide');
+      const dots = document.querySelectorAll('.hero-dot');
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      currentSlide = (n + slides.length) % slides.length;
+      if (slides[currentSlide]) slides[currentSlide].classList.add('active');
+      if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+    }
+
+    function initHeroSlider() {
+      const slides = document.querySelectorAll('.hero-slide');
+      if (!slides.length) return;
+      if (heroSliderTimer) clearInterval(heroSliderTimer);
+      heroSliderTimer = setInterval(() => goSlide(currentSlide + 1), 4000);
+    }
+
     function navTo(pageId) {
       document.querySelectorAll('.page')
         .forEach(p => {
@@ -749,79 +1479,97 @@
       window.scrollTo(0, 0);
       updateSidebarActive(pageId);
 
-      if (pageId === 'page-orders') renderOrdersPage();
+      if (pageId === 'page-orders') renderOrders();
       if (pageId === 'page-admin') renderAdminPage();
       if (pageId === 'page-checkout') renderCheckoutPage();
-      
+      if (pageId === 'page-settings') openSettingsForm();
+
       updateCartBarVisibility(pageId);
     }
 
     function updateSidebarActive(pageId) {
-      // Sidebar
       document.querySelectorAll('#sidebar .nav-item').forEach(i => i.classList.remove('active'));
       const sideItem = document.getElementById('side-' + pageId);
       if (sideItem) sideItem.classList.add('active');
 
-      // Bottom Nav
       document.querySelectorAll('#main-nav .mobile-tab').forEach(i => i.classList.remove('active'));
-      const tabItem = document.getElementById('tab-' + pageId);
-      if (tabItem) tabItem.classList.add('active');
+      const navId = navMap[pageId];
+      if (navId) {
+        const tab = document.getElementById(navId);
+        if (tab) tab.classList.add('active');
+      }
     }
 
     function doLogin() {
       const name   = document.getElementById('li-name').value.trim();
-      const phone  = document.getElementById('li-phone').value.trim();
       const office = document.getElementById('li-office').value.trim();
       const floor  = document.getElementById('li-floor').value;
 
       if (!name)   { showLoginErr('أدخل اسمك الكامل'); return; }
-      if (!phone)  { showLoginErr('أدخل رقم الهاتف'); return; }
       if (!office) { showLoginErr('أدخل رقم المكتب'); return; }
       if (!floor)  { showLoginErr('اختر الطابق'); return; }
 
-      currentUser = { name, phone, office, floor };
-      localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+      currentUser = { name, office, floor };
+      try {
+        localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+      } catch (e) {}
 
       document.getElementById('page-login').style.display = 'none';
-      document.getElementById('main-nav').style.display = 'flex';
+      document.body.classList.add('app-logged-in');
       document.getElementById('top-navbar').style.display = 'flex';
       document.getElementById('sidebar').style.display = 'flex';
-      
+
       applyUser();
-      navTo('page-home');
+      navTo('page-drinks');
+      stripAppHash();
     }
 
     function guestLogin() {
       document.getElementById('li-name').value = 'زائر بريو';
-      document.getElementById('li-phone').value = '0770000000';
       document.getElementById('li-office').value = 'مكتب 0';
       document.getElementById('li-floor').selectedIndex = 1;
       doLogin();
     }
 
     function doLogout() {
-      if (!confirm('تأكيد تسجيل الخروج من بريو؟')) return;
-      
+      const confirmed = confirm(
+        'هل تريد تسجيل الخروج من بريو؟'
+      );
+      if (!confirmed) return;
+
       currentUser = null;
       cart = { items: [] };
       orders = [];
-      
-      localStorage.removeItem('brewoUser');
-      localStorage.removeItem('brewoOrders');
-      
-      document.getElementById('main-nav').style.display = 'none';
+
+      try { localStorage.removeItem('brewoUser'); }
+      catch(e) {}
+
+      document.body.classList.remove('app-logged-in');
+      document.getElementById('cart-bar')
+        .style.display = 'none';
+
+      const cartTop = document.getElementById('cart-top');
+      if (cartTop) cartTop.style.display = 'none';
+
+      const cartSum = document.getElementById(
+        'cart-summary-home');
+      if (cartSum) cartSum.style.display = 'none';
+
       document.getElementById('top-navbar').style.display = 'none';
       document.getElementById('sidebar').style.display = 'none';
-      document.getElementById('cart-bar').style.display = 'none';
 
-      document.querySelectorAll('.page')
-        .forEach(p => p.style.display = 'none');
-      document.getElementById('page-login').style.display = 'flex';
-      
-      document.getElementById('li-name').value = '';
-      document.getElementById('li-phone').value = '';
-      document.getElementById('li-office').value = '';
-      document.getElementById('li-floor').value = '';
+      document.querySelectorAll('.page').forEach(p => {
+        p.style.display = 'none';
+        p.classList.remove('active');
+      });
+
+      const loginPage = document.getElementById('page-login');
+      loginPage.style.display = 'flex';
+      loginPage.classList.add('active');
+
+      document.getElementById('li-name').value    = '';
+      document.getElementById('li-office').value  = '';
+      document.getElementById('li-floor').value   = '';
     }
 
     function applyUser() {
@@ -846,65 +1594,137 @@
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 3000);
+      setTimeout(() => { t.style.display = 'none'; }, 2400);
     }
 
-    // --- MENU / DRINKS ---
-    function renderMenuItems() {
-      let html = '';
-      MENU_ITEMS.forEach(item => {
-        html += `
-        <div style="background: white; border: 1px solid var(--border); border-radius: 24px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
-            <div style="display:flex; gap:16px; align-items:center;">
-              <div style="font-size:40px; width:64px; height:64px; background:var(--soft); border-radius:18px; display:flex; align-items:center; justify-content:center;">${item.icon}</div>
-              <div>
-                <div style="font-size:20px; font-weight:900; color:var(--char);">${item.name}</div>
-                <div style="font-size:13px; color:var(--muted); margin-top:2px;">${item.description}</div>
-              </div>
-            </div>
-            <div style="font-size:22px; font-weight:900; color:var(--em); text-align:left;">${item.basePrice.toFixed(2)} <span style="font-size:12px;">د.أ</span></div>
-          </div>
-          <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:12px; border-top:1px solid var(--soft); padding-top:16px;">اختر النوع المفضل:</div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-            ${item.options.map(opt => `
-              <button onclick="quickAddToCart('${item.name} — ${opt.label}', ${item.basePrice + opt.priceAdd})" class="btn-secondary" style="border-radius: 12px; padding: 12px 8px; font-size: 14px; width:100%; white-space:nowrap;">
-                ${opt.label} +
-              </button>
-            `).join('')}
-          </div>
-        </div>`;
-      });
-      document.getElementById('cafe-menu-list-home').innerHTML = html;
-      document.getElementById('drinks-full-list').innerHTML = html;
-    }
-
-    function quickAddToCart(itemName, price) {
-      const existing = cart.items.find(i => i.name === itemName);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.items.push({ name: itemName, price, qty: 1 });
+    function addCustomDrink(drinkName, option, price, qty) {
+      if (!option) {
+        showToast('اختر نوع المشروب أولاً');
+        return;
       }
-      
+      const fullName = drinkName + ' — ' + option;
+      const existing = cart.items.find(i => i.name === fullName);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.items.push({ name: fullName, price, qty });
+      }
       updateCartUI();
-      showToast('✅ تمت الإضافة: ' + itemName);
+      showToast('✅ تمت الإضافة: ' + fullName + ' ×' + qty);
+      resetDrinkForm(drinkName);
+    }
+
+    function resetDrinkForm(drinkName) {
+      const idMap = {
+        'قهوة تركية': 'turkish',
+        'نسكافيه':    'nescafe',
+        'ماء':        'water',
+        'شاي':        'tea'
+      };
+      const id = idMap[drinkName];
+      if (!id) return;
+      if (id === 'nescafe') {
+        document.querySelectorAll('input[name="nescafe-sugar"]')
+          .forEach(r => { r.checked = false; });
+        const m = document.getElementById('nescafe-milk');
+        if (m) m.checked = false;
+      } else {
+        document.querySelectorAll('input[name="' + id + '-type"]')
+          .forEach(r => { r.checked = false; });
+      }
+      const qtyEl = document.getElementById(id + '-qty');
+      if (qtyEl) qtyEl.textContent = '1';
+      drinkQty[id] = 1;
+      updateDrinkBtn(id);
+    }
+
+    function changeDrinkQty(id, delta) {
+      drinkQty[id] = Math.max(1,
+        Math.min(10, drinkQty[id] + delta));
+      const el = document.getElementById(id + '-qty');
+      if (el) el.textContent = drinkQty[id];
+    }
+
+    function updateDrinkBtn(id) {
+      const btn = document.getElementById(id + '-add-btn');
+      if (!btn) return;
+      if (id === 'nescafe') {
+        const sugar = document.querySelector('input[name="nescafe-sugar"]:checked');
+        const ok = !!sugar;
+        btn.style.opacity       = ok ? '1'    : '0.4';
+        btn.style.pointerEvents = ok ? 'auto' : 'none';
+        return;
+      }
+      const selected = document.querySelector(
+        'input[name="' + id + '-type"]:checked');
+      btn.style.opacity       = selected ? '1'    : '0.4';
+      btn.style.pointerEvents = selected ? 'auto' : 'none';
+    }
+
+    function addTurkishToCart() {
+      const opt = document.querySelector('input[name="turkish-type"]:checked');
+      addCustomDrink('قهوة تركية', opt && opt.value, 0.50, drinkQty.turkish);
+    }
+    function addNescafeToCart() {
+      const sugar = document.querySelector('input[name="nescafe-sugar"]:checked');
+      if (!sugar) {
+        showToast('اختر مستوى السكر');
+        return;
+      }
+      const milkEl = document.getElementById('nescafe-milk');
+      const withMilk = milkEl && milkEl.checked;
+      const parts = [];
+      if (withMilk) parts.push('بحليب');
+      parts.push(sugar.value);
+      const option = parts.join('، ');
+      addCustomDrink('نسكافيه', option, 0.50, drinkQty.nescafe);
+    }
+    function addWaterToCart() {
+      const opt = document.querySelector('input[name="water-type"]:checked');
+      addCustomDrink('ماء', opt && opt.value, 0.25, drinkQty.water);
+    }
+    function addTeaToCart() {
+      addCustomDrink(
+        'شاي',
+        document.querySelector('input[name="tea-type"]:checked')?.value,
+        0.45,
+        drinkQty['tea']
+      );
+    }
+    function goCheckout() {
+      navTo('page-checkout');
     }
 
     function updateCartUI() {
       const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const count = cart.items.reduce((sum, item) => sum + item.qty, 0);
-      
-      document.getElementById('cart-count').textContent = count;
-      document.getElementById('cart-total-bar').textContent = total.toFixed(2) + ' د.أ';
-      
+
+      const cbCount = document.getElementById('cb-count');
+      const cbTotal = document.getElementById('cb-total');
+      if (cbCount) cbCount.textContent = count + ' عناصر';
+      if (cbTotal) cbTotal.textContent = total.toFixed(2) + ' د.أ';
+
+      const navBadge = document.getElementById('nav-cart-badge');
+      if (navBadge) {
+        if (count > 0) {
+          navBadge.textContent = count > 99 ? '99+' : String(count);
+          navBadge.style.display = 'flex';
+        } else {
+          navBadge.style.display = 'none';
+        }
+      }
+
       const activePage = document.querySelector('.page.active');
       if (activePage) updateCartBarVisibility(activePage.id);
     }
 
     function updateCartBarVisibility(pageId) {
       const bar = document.getElementById('cart-bar');
-      if (cart.items.length > 0 && pageId !== 'page-checkout' && pageId !== 'page-confirmed' && pageId !== 'page-login') {
+      if (pageId === 'page-login') {
+        bar.style.display = 'none';
+        return;
+      }
+      if (cart.items.length > 0) {
         bar.style.display = 'flex';
       } else {
         bar.style.display = 'none';
@@ -960,12 +1780,13 @@
         office: office,
         floor: floor,
         user: currentUser.name,
+        date: new Date().toLocaleDateString('ar-JO'),
         time: new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' }),
         status: 'new'
       };
       
       orders.unshift(order);
-      saveOrders();
+      try { saveOrders(); } catch (e) {}
       
       // CONFIRM PAGE UI
       document.getElementById('conf-cafe').textContent = order.cafeName;
@@ -973,24 +1794,25 @@
       document.getElementById('conf-items').textContent = order.items.map(i => i.name).join('، ');
       
       generateQR(order);
-      
+
+      prepareWhatsAppForOrder(order);
+
       navTo('page-confirmed');
       
-      // SIMULATE DELIVERY
+      // SIMULATE DELIVERY (silent status update + notification only)
       setTimeout(() => {
         const o = orders.find(x => x.id === order.id);
         if (o) {
           o.status = 'delivered';
           o.deliveredTime = new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' });
-          saveOrders();
-          renderOrdersPage();
+          try { saveOrders(); } catch (e) {}
           showDeliveryNotification(o);
         }
       }, 10000);
     }
 
     function generateQR(orderData) {
-      const qrContainer = document.getElementById('qr-code-display');
+      const qrContainer = document.getElementById('qr-display');
       qrContainer.innerHTML = '';
       
       const qrText = JSON.stringify({
@@ -1019,7 +1841,7 @@
     }
 
     function downloadQR() {
-      const canvas = document.querySelector('#qr-code-display canvas');
+      const canvas = document.querySelector('#qr-display canvas');
       if (!canvas) { 
         showToast('QR Code غير متاح للتحميل'); 
         return; 
@@ -1033,7 +1855,7 @@
     function resetCartAndHome() {
       cart = { items: [] };
       updateCartUI();
-      navTo('page-home');
+      navTo('page-drinks');
     }
 
     function showDeliveryNotification(order) {
@@ -1047,116 +1869,142 @@
       }, 6000);
     }
 
-    // --- ORDERS PAGE ---
-    function renderOrdersPage() {
+    function pastOrderCard(o) {
+      const statusMap = {
+        delivered: { label: 'تم التوصيل', bg: 'var(--em-light)', color: 'var(--em)' },
+        cancelled: { label: 'ملغي', bg: '#FFEBEE', color: '#E53935' },
+        refunded:  { label: 'مسترد', bg: 'var(--soft)', color: 'var(--muted)' }
+      };
+      const st = statusMap[o.status] || { label: o.status, bg: 'var(--soft)', color: 'var(--muted)' };
+      const when = (o.date ? o.date + ' — ' : '') + o.time;
+      const drinks = o.items.map(i => i.name).join('، ');
+      const reorder = o.status === 'delivered'
+        ? '<button type="button" onclick="navTo(\'page-drinks\');showToast(\'أعد اختيار مشروباتك من القائمة\')" class="btn-secondary" style="width:100%;margin-top:14px;border-radius:12px;padding:12px;font-size:14px;">اعد الطلب</button>'
+        : '';
+      return `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;">
+            <div>
+              <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px;">رقم الطلب</div>
+              <div style="font-size:16px;font-weight:900;color:var(--em);">#${o.id}</div>
+            </div>
+            <span style="font-size:11px;font-weight:800;padding:6px 12px;border-radius:20px;background:${st.bg};color:${st.color};">${st.label}</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;">${when}</div>
+          <div style="font-size:13px;color:var(--char);font-weight:700;line-height:1.6;margin-bottom:12px;">${drinks}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;">
+            <span style="font-size:13px;font-weight:800;color:var(--char);">الإجمالي</span>
+            <span style="font-size:15px;font-weight:900;color:var(--em);">${o.total.toFixed(2)} د.أ</span>
+          </div>
+          ${reorder}
+        </div>`;
+    }
+
+    function renderOrders() {
+      const past = orders.filter(o =>
+        ['delivered', 'cancelled', 'refunded'].includes(o.status));
+
       const container = document.getElementById('orders-list');
-      const filtered = orders.filter(o => currentOrdersTab === 'curr' ? (o.status !== 'delivered' && o.status !== 'cancelled') : (o.status === 'delivered' || o.status === 'cancelled'));
-      
-      if (filtered.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:60px 20px;"><div style="font-size:40px; margin-bottom:10px;">📋</div><div style="color:var(--muted); font-weight:700;">لا يوجد طلبات هنا بعد</div></div>';
+
+      if (!past.length) {
+        container.innerHTML = `
+      <div style="text-align:center; padding:60px 20px;">
+        <div style="font-size:52px; margin-bottom:14px;">
+          📋
+        </div>
+        <div style="font-size:15px; font-weight:800;
+                    color:var(--char); margin-bottom:8px;">
+          ما في طلبات سابقة بعد
+        </div>
+        <div style="font-size:13px; color:var(--muted);
+                    line-height:1.7;">
+          طلباتك المكتملة ستظهر هنا
+        </div>
+      </div>`;
         return;
       }
-      
-      let html = '';
-      filtered.forEach(o => {
-        const isCurr = currentOrdersTab === 'curr';
-        let statusLabel = '';
-        let statusIcon = '';
-        if (o.status === 'new') { statusLabel = 'جديد'; statusIcon = '🔔'; }
-        if (o.status === 'preparing') { statusLabel = 'تحضير'; statusIcon = '⏳'; }
-        if (o.status === 'onway') { statusLabel = 'في الطريق'; statusIcon = '🛵'; }
-        if (o.status === 'delivered') { statusLabel = 'تم التوصيل'; statusIcon = '✅'; }
-        if (o.status === 'cancelled') { statusLabel = 'ملغي'; statusIcon = '🔴'; }
-
-        html += `
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-               <div style="font-size:15px; font-weight:800; color:var(--em);">بريو بريميم</div>
-               <div style="display:flex; align-items:center; gap:6px;">
-                 <span style="font-size:16px;">${statusIcon}</span>
-                 <span style="font-size:12px; font-weight:800; color:var(--muted);">${statusLabel}</span>
-               </div>
-            </div>
-            <div style="font-size:12px; color:var(--char); font-weight:700; opacity:0.7; margin-bottom:12px;">${o.items.map(i => i.name).join('، ')}</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
-              <div style="font-size:12px; color:var(--muted); font-weight:700;">${o.time} • ${o.total.toFixed(2)} د.أ</div>
-              ${o.status === 'delivered' ? `<div style="font-size:11px; color:var(--em); font-weight:800;">استلمت في ${o.deliveredTime || ''}</div>` : ''}
-              <div style="font-size:11px; color:var(--muted); font-weight:800;">#${o.id}</div>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
+      container.innerHTML = past.map(pastOrderCard).join('');
     }
 
-    function showOrdersTab(tab) {
-      currentOrdersTab = tab;
-      document.getElementById('tab-curr').style.background = tab === 'curr' ? 'var(--em)' : 'transparent';
-      document.getElementById('tab-curr').style.color = tab === 'curr' ? 'white' : 'var(--muted)';
-      document.getElementById('tab-prev').style.background = tab === 'prev' ? 'var(--em)' : 'transparent';
-      document.getElementById('tab-prev').style.color = tab === 'prev' ? 'white' : 'var(--muted)';
-      renderOrdersPage();
+    function updateSettingsStats() {
+      const totalOrders = orders.length;
+      const spend = orders
+        .filter(o => o.status === 'delivered')
+        .reduce((s, o) => s + (o.total || 0), 0);
+      const elO = document.getElementById('set-stat-orders');
+      const elS = document.getElementById('set-stat-spend');
+      if (elO) elO.textContent = String(totalOrders);
+      if (elS) elS.textContent = spend.toFixed(2) + ' د.أ';
     }
 
-    // --- SETTINGS PAGE ---
-    function openSettings() {
+    function openSettingsForm() {
       if (!currentUser) return;
-      document.getElementById('set-name-input').value = currentUser.name;
-      document.getElementById('set-phone-input').value = currentUser.phone;
-      document.getElementById('set-office-input').value = currentUser.office;
-      document.getElementById('set-floor-input').value = currentUser.floor;
-      
-      generateMenuQR();
-      navTo('page-settings');
-    }
-
-    function generateMenuQR() {
-      const container = document.getElementById('menu-qr-display');
-      container.innerHTML = '';
-      const menuUrl = window.location.origin + window.location.pathname;
-      
-      try {
-        new QRCode(container, {
-          text:          menuUrl,
-          width:         150,
-          height:        150,
-          colorDark:     '#0D4F3C',
-          colorLight:    '#ffffff',
-          correctLevel:  QRCode.CorrectLevel.H
-        });
-      } catch(e) {
-        container.innerHTML = '<div style="font-size:12px;color:var(--muted);">تعذر إنشاء الكود حالياً</div>';
+      document.getElementById('set-n').value = currentUser.name || '';
+      document.getElementById('set-o').value = currentUser.office || '';
+      const floor = currentUser.floor || '';
+      const sel = document.getElementById('set-f');
+      if (sel && floor) {
+        let matched = false;
+        for (let i = 0; i < sel.options.length; i++) {
+          const opt = sel.options[i];
+          if (opt.value === floor || opt.text === floor) {
+            sel.selectedIndex = i;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
+          for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].text.indexOf(floor) !== -1) {
+              sel.selectedIndex = i;
+              break;
+            }
+          }
+        }
       }
-    }
-
-    function downloadMenuQR() {
-      const canvas = document.querySelector('#menu-qr-display canvas');
-      if (!canvas) { showToast('الكود غير جاهز بعد'); return; }
-      const link = document.createElement('a');
-      link.download = 'brewo-menu-qr.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      updateSettingsStats();
     }
 
     function saveSettings() {
-      const name   = document.getElementById('set-name-input').value.trim();
-      const phone  = document.getElementById('set-phone-input').value.trim();
-      const office = document.getElementById('set-office-input').value.trim();
-      const floor  = document.getElementById('set-floor-input').value;
-      
+      const name   = document.getElementById('set-n').value.trim();
+      const office = document.getElementById('set-o').value.trim();
+      const floor  = document.getElementById('set-f').value;
+
       if (!name)   { showToast('أدخل اسمك'); return; }
-      if (!phone)  { showToast('أدخل رقم الهاتف'); return; }
       if (!office) { showToast('أدخل رقم مكتبك'); return; }
-      
-      currentUser = { ...currentUser, name, phone, office, floor };
-      localStorage.setItem('brewoUser', JSON.stringify(currentUser));
-      
+      if (!floor)  { showToast('اختر الطابق'); return; }
+
+      currentUser = { name, office, floor };
+
+      try {
+        localStorage.setItem('brewoUser',
+          JSON.stringify(currentUser));
+      } catch(e) {}
+
       applyUser();
-      showToast('✅ تم حفظ التعديلات بنجاح');
+      updateSettingsStats();
+      showToast('✅ تم حفظ بياناتك بنجاح');
     }
 
     function saveOrders() {
-      localStorage.setItem('brewoOrders', JSON.stringify(orders));
+      try {
+        localStorage.setItem('brewoOrders', JSON.stringify(orders));
+      } catch (e) {}
+    }
+
+    function renderAdminPage() {
+      const el = document.getElementById('admin-orders-table');
+      if (!el) return;
+      if (!orders.length) {
+        el.innerHTML = '<p style="color:var(--muted);font-weight:700;">لا توجد طلبات</p>';
+        return;
+      }
+      let rows = orders.map(o =>
+        '<tr><td style="padding:8px;border:1px solid var(--border);">#' + o.id + '</td>' +
+        '<td style="padding:8px;border:1px solid var(--border);">' + o.status + '</td>' +
+        '<td style="padding:8px;border:1px solid var(--border);">' + o.total.toFixed(2) + '</td></tr>'
+      ).join('');
+      el.innerHTML = '<table style="width:100%;font-size:12px;border-collapse:collapse;"><thead><tr><th style="padding:8px;border:1px solid var(--border);">رقم</th><th style="padding:8px;border:1px solid var(--border);">الحالة</th><th style="padding:8px;border:1px solid var(--border);">المجموع</th></tr></thead><tbody>' + rows + '</tbody></table>';
     }
 
   </script>
