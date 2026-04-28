@@ -3,8 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>بريو | قهوتك لعندك استثنائية</title>
-  
+  <title>بريو (Brewo) | قهوتك لعندك في مجمع عمال — Coffee delivered in Ammal Complex</title>
+  <meta name="description" content="بريو — اطلب قهوتك المفضلة عبر واتساب وتوصلك لمكتبك في مجمع عمال، عمّان. Brewo: order coffee on WhatsApp and get it delivered to your office in Ammal Complex, Amman.">
+  <meta name="keywords" content="بريو, Brewo, Brio Cafe, قهوة, توصيل قهوة, مجمع عمال, عمان, Amman coffee delivery, Ammal Complex">
+  <meta name="author" content="Brewo / Brio Cafe">
+  <meta name="theme-color" content="#0D4F3C">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://brewo.app/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D4F3C'/%3E%3Ctext x='50%25' y='54%25' font-size='38' text-anchor='middle' fill='%23D4A843' font-family='Arial' font-weight='800' dominant-baseline='middle'%3EB%3C/text%3E%3C/svg%3E">
+
+  <!-- Open Graph / WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Brewo (بريو)">
+  <meta property="og:title" content="بريو | قهوتك لعندك في مجمع عمال">
+  <meta property="og:description" content="اطلب قهوتك المفضلة وتوصلك لمكتبك في مجمع عمال، عمّان. Order coffee on WhatsApp, delivered to your desk.">
+  <meta property="og:url" content="https://brewo.app/">
+  <meta property="og:image" content="https://brewo.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Brewo — قهوتك لعندك">
+  <meta property="og:locale" content="ar_JO">
+  <meta property="og:locale:alternate" content="en_US">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="بريو | قهوتك لعندك في مجمع عمال">
+  <meta name="twitter:description" content="اطلب قهوتك عبر واتساب وتوصلك لمكتبك. Order coffee on WhatsApp, delivered to your desk.">
+  <meta name="twitter:image" content="https://brewo.app/og-image.png">
+
+  <!-- Structured data: LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CafeOrCoffeeShop",
+    "name": "Brewo (بريو) / Brio Cafe",
+    "image": "https://brewo.app/og-image.png",
+    "url": "https://brewo.app/",
+    "telephone": "+962798252856",
+    "servesCuisine": ["Coffee", "Tea"],
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Ammal Complex (مجمع عمال)",
+      "addressLocality": "Amman",
+      "addressCountry": "JO"
+    },
+    "areaServed": "Ammal Complex, Amman",
+    "menu": "https://brewo.app/#drinks"
+  }
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +84,7 @@
       background: var(--soft);
       color: var(--char);
       overflow-x: hidden;
-      direction: rtl;
+      direction: inherit;
     }
 
     /* Scrollbar */
@@ -64,6 +111,20 @@
       bottom: 0;
       z-index: 100;
       padding: 0 16px;
+    }
+    html[dir="ltr"] #sidebar {
+      right: auto;
+      left: 0;
+      border-left: none;
+      border-right: 1px solid var(--border);
+    }
+    html[dir="ltr"] #top-navbar {
+      left: 260px;
+      right: 0;
+    }
+    html[dir="ltr"] .main-content {
+      margin-right: 0;
+      margin-left: 260px;
     }
 
     .sidebar-logo {
@@ -240,19 +301,24 @@
       flex: 1;
       cursor: pointer;
     }
+    #nav-home,
+    #nav-drinks,
+    #nav-orders,
+    #nav-settings { font-size: 9px; }
+    #nav-home span,
+    #nav-drinks span,
+    #nav-orders span,
+    #nav-settings span { font-size: 17px !important; }
 
     .mobile-tab.active {
       color: var(--em);
     }
 
-    /* Cart Bar — physical left on all breakpoints */
+    /* Cart Bar — direction-aware positioning */
     #cart-bar {
       display: none;
       position: fixed;
       bottom: 24px;
-      left: max(12px, env(safe-area-inset-left, 0px));
-      right: auto;
-      transform: none;
       width: auto;
       min-width: 260px;
       max-width: 340px;
@@ -261,7 +327,7 @@
       border-radius: 40px;
       padding: 10px 20px;
       flex-direction: row;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
       gap: 12px;
       font-family: 'Tajawal', sans-serif;
@@ -271,7 +337,21 @@
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(0,0,0,0.15);
       white-space: nowrap;
+      transition: left .3s, right .3s;
     }
+    html[dir="rtl"] #cart-bar {
+      left: max(12px, env(safe-area-inset-left, 0px));
+      right: auto;
+      transform: none;
+    }
+    html[dir="ltr"] #cart-bar {
+      right: max(12px, env(safe-area-inset-right, 0px));
+      left: auto;
+      transform: none;
+    }
+    /* Bottom nav — direction follows document */
+    html[dir="rtl"] #main-nav { direction: rtl; }
+    html[dir="ltr"] #main-nav { direction: ltr; }
 
     /* Toast — side strip; never blocks taps on drinks below */
     #toast {
@@ -537,6 +617,7 @@
     }
     .how-step-icon { font-size: 32px; flex-shrink: 0; }
     .how-step-body { text-align: right; flex: 1; }
+    html[dir="ltr"] .how-step-body { text-align: left; }
     .how-step-title { font-size: 15px; font-weight: 800; color: var(--char); }
     .how-step-text { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
 
@@ -588,6 +669,8 @@
       flex-shrink: 0;
     }
     .drink-card-meta { flex: 1; text-align: right; }
+    html[dir="ltr"] .drink-card-top { direction: ltr; text-align: left; }
+    html[dir="ltr"] .drink-card-meta { text-align: left; }
     .drink-card-name { font-size: 17px; font-weight: 900; color: var(--char); }
     .drink-card-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
     .drink-card-price { font-size: 18px; font-weight: 900; color: var(--em); white-space: nowrap; }
@@ -697,6 +780,13 @@
       #main-nav {
         display: none !important;
       }
+      .main-content {
+        width: min(62vw, 980px);
+        max-width: calc(100vw - 320px);
+        margin-left: auto;
+        margin-right: 260px;
+        padding: 28px 28px 140px 28px;
+      }
     }
 
     /* Confirmation UI */
@@ -744,9 +834,115 @@
       object-fit: cover;
     }
 
+    .field-error {
+      border-color: #c0392b !important;
+      background-color: #fdecec !important;
+    }
+    .field-error-msg {
+      color: #c0392b;
+      font-size: 12px;
+      font-weight: 700;
+      margin: -8px 0 10px;
+      display: block;
+    }
+
+    /* Page fade transitions */
+    .page {
+      animation: pageFadeIn 180ms ease-out;
+    }
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Keyboard focus ring (doesn't show on mouse clicks) */
+    *:focus { outline: none; }
+    button:focus-visible,
+    a:focus-visible,
+    select:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    [role="button"]:focus-visible {
+      outline: 2px solid var(--em);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    /* Min tap target */
+    button, .nav-item, .mobile-tab, .hero-dot {
+      min-height: 36px;
+    }
+
+    /* Themed confirm modal */
+    .brewo-modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(13, 79, 60, 0.45);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 150ms ease-out;
+    }
+    .brewo-modal-backdrop.active { display: flex; }
+    .brewo-modal {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 22px;
+      width: min(360px, calc(100vw - 32px));
+      box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+      text-align: center;
+      animation: modalPop 200ms ease-out;
+    }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes modalPop {
+      from { opacity:0; transform: scale(0.92); }
+      to   { opacity:1; transform: scale(1); }
+    }
+    .brewo-modal h3 {
+      margin:0 0 8px; font-size:18px; font-weight:900; color: var(--em);
+    }
+    .brewo-modal p {
+      margin:0 0 18px; font-size:14px; color: var(--muted); font-weight:700;
+    }
+    .brewo-modal-actions {
+      display:flex; gap:10px; justify-content:center;
+    }
+    .brewo-modal-actions button {
+      flex:1; border:none; border-radius:12px;
+      padding:11px 16px; font-weight:800; font-size:14px;
+      font-family:'Tajawal',sans-serif; cursor:pointer;
+    }
+    .brewo-btn-cancel { background: var(--soft); color: var(--char); }
+    .brewo-btn-confirm { background: #c0392b; color: white; }
+
+    /* Empty state */
+    .empty-state {
+      text-align:center; padding:48px 20px;
+    }
+    .empty-state-icon {
+      font-size:56px; margin-bottom:12px; opacity:0.6;
+    }
+    .empty-state-title {
+      font-size:18px; font-weight:900; color: var(--em); margin-bottom:6px;
+    }
+    .empty-state-sub {
+      font-size:13px; color: var(--muted); font-weight:700; margin-bottom:18px;
+    }
+
   </style>
 </head>
 <body id="app-body">
+  <!-- Themed confirm modal -->
+  <div id="brewo-modal" class="brewo-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="brewo-modal-title">
+    <div class="brewo-modal">
+      <h3 id="brewo-modal-title"></h3>
+      <p id="brewo-modal-msg"></p>
+      <div class="brewo-modal-actions">
+        <button type="button" class="brewo-btn-cancel" id="brewo-modal-cancel"></button>
+        <button type="button" class="brewo-btn-confirm" id="brewo-modal-ok"></button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- DELIVERY NOTIFICATION -->
   <div id="delivery-notif" style="
@@ -790,14 +986,31 @@
 
   <!-- LOGIN PAGE -->
   <div id="page-login">
-    <div class="login-card">
+    <div class="login-card" style="position:relative;">
+      <button id="lang-toggle-login"
+        onclick="toggleLang()"
+        style="
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          background: var(--em-light);
+          border: 1.5px solid var(--em);
+          color: var(--em);
+          border-radius: 20px;
+          padding: 5px 14px;
+          font-family: 'Tajawal', sans-serif;
+          font-weight: 800;
+          font-size: 13px;
+          cursor: pointer;">EN</button>
       <div style="font-size: 44px; margin-bottom: 16px;">☕</div>
-      <h1 style="font-size: 26px; font-weight: 800; color: var(--em); margin-bottom: 0; text-align: center;">اهلا بكم في بريو</h1>
-      <p style="font-size: 12px; color: #8a8f98; font-weight: 600; margin-top: 6px; margin-bottom: 10px; text-align: center;">هذا الموقع فقط لموظفي مجمع الصالحين</p>
-      <p style="font-size: 14px; color: #9FD4C0; font-weight: 700; margin-top: 0; margin-bottom: 32px; text-align: center;">اطلب قهوتك المفضلة وتوصلك لمكتبك</p>
+      <h1 data-ar="اهلا بكم في بريو" data-en="Welcome to Brewo" style="font-size: 26px; font-weight: 800; color: var(--em); margin-bottom: 0; text-align: center;">اهلا بكم في بريو</h1>
+      <p data-ar="هذا الموقع فقط لموظفي مجمع الصالحين" data-en="This site is for Al-Salheen Complex staff only" style="font-size: 12px; color: #8a8f98; font-weight: 600; margin-top: 6px; margin-bottom: 10px; text-align: center;">هذا الموقع فقط لموظفي مجمع الصالحين</p>
+      <p data-ar="اطلب قهوتك المفضلة وتوصلك لمكتبك" data-en="Order your favorite drink, delivered to your desk" style="font-size: 14px; color: #9FD4C0; font-weight: 700; margin-top: 0; margin-bottom: 32px; text-align: center;">اطلب قهوتك المفضلة وتوصلك لمكتبك</p>
       
-      <input id="li-name" class="login-input" placeholder="اسمك الكامل" type="text" />
-      <input id="li-office" class="login-input" placeholder="رقم المكتب (مثلاً: A-102)" type="text" />
+      <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
+      <input id="li-office" class="login-input" type="text" required minlength="1" maxlength="30" autocomplete="off" data-ar="رقم المكتب (مثلاً: 407)" data-en="Office Number (e.g. 407)" placeholder="رقم المكتب (مثلاً: 407)" />
+      <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
+      <input id="li-phone" class="login-input" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" data-ar="07X XXXX XXXX" data-en="07X XXXX XXXX" placeholder="07X XXXX XXXX" />
       <select id="li-floor" class="login-input">
         <option value="" disabled selected>اختر الطابق</option>
         <option>الطابق 1</option>
@@ -809,8 +1022,8 @@
       
       <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
       
-      <button onclick="doLogin()" class="btn-primary" style="margin-bottom:12px;">ابدأ الطلب ←</button>
-      <button onclick="guestLogin()" style="background:transparent; border:none; color:var(--muted); font-weight:700; font-size:13px; cursor:pointer;">دخول سريع كزائر</button>
+      <button onclick="doLogin()" class="btn-primary" style="margin-bottom:12px;" data-ar="ابدأ الطلب ←" data-en="Start Order ←">ابدأ الطلب ←</button>
+      <button onclick="guestLogin()" style="background:transparent; border:none; color:var(--muted); font-weight:700; font-size:13px; cursor:pointer;" data-ar="دخول سريع كزائر" data-en="Quick Guest Login">دخول سريع كزائر</button>
     </div>
   </div>
 
@@ -858,6 +1071,18 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:10px;">
+          <button id="lang-toggle-top"
+            onclick="toggleLang()"
+            style="
+              background: rgba(255,255,255,0.15);
+              border: 1.5px solid rgba(255,255,255,0.4);
+              color: white;
+              border-radius: 16px;
+              padding: 4px 12px;
+              font-family: 'Tajawal', sans-serif;
+              font-weight: 800;
+              font-size: 12px;
+              cursor: pointer;">EN</button>
           <div style="cursor:pointer; display:flex; align-items:center; gap:8px; padding:6px 12px; border-radius:12px; border:1.5px solid var(--border); background:var(--soft);" onclick="goCheckout()" title="السلة">
             <span style="font-size:20px;">🛒</span>
             <span class="desktop-only" style="font-size:13px; font-weight:800; color:var(--em);">السلة</span>
@@ -887,7 +1112,7 @@
   justify-content: center;
   gap: 8px;">
   <span style="font-size:15px">🕘</span>
-  نعمل من الساعة 9 صباحاً حتى 6 مساءً
+  <span data-ar="نعمل من الساعة 9 صباحاً حتى 6 مساءً" data-en="Working hours: 9:00 AM — 6:00 PM">نعمل من الساعة 9 صباحاً حتى 6 مساءً</span>
   <span style="font-size:15px">🕕</span>
 </div>
           <div class="hero-slider-wrap">
@@ -928,6 +1153,20 @@
             <div style="font-size:15px;font-weight:800;color:var(--em);margin-bottom:6px;">كود سريع للمشروبات</div>
             <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:14px;line-height:1.6;">امسح الكود بجوالك لفتح صفحة الطلب مباشرة</div>
             <div id="home-drinks-qr" style="display:flex;justify-content:center;align-items:center;min-height:8px;"></div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;">
+              <button type="button" onclick="shareApp()" aria-label="Share app"
+                      style="background:var(--em);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif;display:inline-flex;align-items:center;gap:6px;">
+                <span>↗</span><span data-ar="شارك التطبيق" data-en="Share app">شارك التطبيق</span>
+              </button>
+              <button type="button" onclick="shareViaWhatsApp()" aria-label="Share via WhatsApp"
+                      style="background:#25D366;color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif;display:inline-flex;align-items:center;gap:6px;">
+                <span>📱</span><span data-ar="عبر واتساب" data-en="Via WhatsApp">عبر واتساب</span>
+              </button>
+              <button type="button" onclick="copyAppLink()" aria-label="Copy link"
+                      style="background:var(--soft);color:var(--char);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif;display:inline-flex;align-items:center;gap:6px;">
+                <span>🔗</span><span data-ar="انسخ الرابط" data-en="Copy link">انسخ الرابط</span>
+              </button>
+            </div>
           </div>
 
           <h2 class="home-section-title">قهوتنا — قصة في كل كوب</h2>
@@ -954,7 +1193,7 @@
           <p class="home-section-sub">٣ خطوات وقهوتك في الطريق</p>
           <div class="how-steps">
             <div class="how-step">
-              <span class="how-step-num">١</span>
+              <span class="how-step-num" data-ar="١" data-en="1">١</span>
               <div class="how-step-icon">🥤</div>
               <div class="how-step-body">
                 <div class="how-step-title">اختر مشروبك</div>
@@ -962,7 +1201,7 @@
               </div>
             </div>
             <div class="how-step">
-              <span class="how-step-num">٢</span>
+              <span class="how-step-num" data-ar="٢" data-en="2">٢</span>
               <div class="how-step-icon">✏️</div>
               <div class="how-step-body">
                 <div class="how-step-title">خصّصه على ذوقك</div>
@@ -970,7 +1209,7 @@
               </div>
             </div>
             <div class="how-step">
-              <span class="how-step-num">٣</span>
+              <span class="how-step-num" data-ar="٣" data-en="3">٣</span>
               <div class="how-step-icon">🏃</div>
               <div class="how-step-body">
                 <div class="how-step-title">استلمه بمكتبك</div>
@@ -991,7 +1230,7 @@
         <div id="page-drinks" class="page">
           <div class="drinks-page-header">
             <div style="font-size:20px;font-weight:900;color:var(--char);">اختر مشروبك</div>
-            <div style="font-size:13px;color:var(--muted);font-weight:700;margin-top:4px;">خصّص طلبك واضغط أضف للسلة</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:700;margin-top:4px;" data-ar="خصّص طلبك واضغط أضف للسلة" data-en="Customize your order then add to cart">خصّص طلبك واضغط أضف للسلة</div>
           </div>
 
           <div class="drink-card">
@@ -999,23 +1238,23 @@
               <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
                 <div class="drink-card-icon">☕</div>
                 <div class="drink-card-meta">
-                  <div class="drink-card-name">قهوة تركية</div>
+                  <div class="drink-card-name" data-ar="قهوة تركية" data-en="Turkish Coffee">قهوة تركية</div>
                   <div class="drink-card-desc">قهوة تركية مختارة — أصيلة وغنية</div>
                 </div>
               </div>
-              <div class="drink-card-price">0.50 <span style="font-size:11px;">د.أ</span></div>
+              <div class="drink-card-price">0.60 <span class="currency-unit" style="font-size:11px;">د.أ</span></div>
             </div>
             <div class="radio-group">
-              <label class="radio-pill"><input type="radio" name="turkish-type" value="سادة" onchange="updateDrinkBtn('turkish')"><span>سادة</span></label>
-              <label class="radio-pill"><input type="radio" name="turkish-type" value="وسط" onchange="updateDrinkBtn('turkish')"><span>وسط</span></label>
-              <label class="radio-pill"><input type="radio" name="turkish-type" value="حلوة" onchange="updateDrinkBtn('turkish')"><span>حلوة</span></label>
+              <label class="radio-pill"><input type="radio" name="turkish-type" value="سادة" data-en="No Sugar" onchange="updateDrinkBtn('turkish')"><span data-ar="سادة" data-en="No Sugar">سادة</span></label>
+              <label class="radio-pill"><input type="radio" name="turkish-type" value="وسط" data-en="Medium Sugar" onchange="updateDrinkBtn('turkish')"><span data-ar="وسط" data-en="Medium Sugar">وسط</span></label>
+              <label class="radio-pill"><input type="radio" name="turkish-type" value="حلوة" data-en="Sweet" onchange="updateDrinkBtn('turkish')"><span data-ar="حلوة" data-en="Sweet">حلوة</span></label>
             </div>
             <div class="qty-row">
               <button type="button" class="qty-btn" onclick="changeDrinkQty('turkish',-1)">−</button>
               <span class="qty-val" id="turkish-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('turkish',1)">+</button>
             </div>
-            <button type="button" id="turkish-add-btn" onclick="addTurkishToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+            <button type="button" id="turkish-add-btn" onclick="addTurkishToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
 
           <div class="drink-card">
@@ -1023,11 +1262,11 @@
               <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
                 <div class="drink-card-icon">🥛</div>
                 <div class="drink-card-meta">
-                  <div class="drink-card-name">نسكافيه</div>
-                  <div class="drink-card-desc">نسكافيه كلاسيكي — دافئ ومنعش</div>
+                  <div class="drink-card-name" data-ar="نسكافيه" data-en="Nescafe">نسكافيه</div>
+                  <div class="drink-card-desc" data-ar="نسكافيه كلاسيكي — دافئ ومنعش" data-en="Classic nescafe — warm and refreshing">نسكافيه كلاسيكي — دافئ ومنعش</div>
                 </div>
               </div>
-              <div class="drink-card-price">0.50 <span style="font-size:11px;">د.أ</span></div>
+              <div class="drink-card-price">0.50 <span class="currency-unit" style="font-size:11px;">د.أ</span></div>
             </div>
             <div style="font-size:12px;font-weight:800;color:var(--char);margin:4px 0 8px 0;">الحليب</div>
             <label class="radio-pill nescafe-milk-pill" style="display:inline-flex;align-items:center;margin-bottom:4px;">
@@ -1046,7 +1285,7 @@
               <span class="qty-val" id="nescafe-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('nescafe',1)">+</button>
             </div>
-            <button type="button" id="nescafe-add-btn" onclick="addNescafeToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+            <button type="button" id="nescafe-add-btn" onclick="addNescafeToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
 
           <div class="drink-card">
@@ -1058,7 +1297,7 @@
                   <div class="drink-card-desc">ماء معدني نقي</div>
                 </div>
               </div>
-              <div class="drink-card-price">0.25 <span style="font-size:11px;">د.أ</span></div>
+              <div class="drink-card-price">0.25 <span class="currency-unit" style="font-size:11px;">د.أ</span></div>
             </div>
             <div class="radio-group">
               <label class="radio-pill"><input type="radio" name="water-type" value="بارد" onchange="updateDrinkBtn('water')"><span>بارد</span></label>
@@ -1069,7 +1308,7 @@
               <span class="qty-val" id="water-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('water',1)">+</button>
             </div>
-            <button type="button" id="water-add-btn" onclick="addWaterToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+            <button type="button" id="water-add-btn" onclick="addWaterToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
 
           <div class="drink-card">
@@ -1077,24 +1316,84 @@
               <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
                 <div class="drink-card-icon">🍵</div>
                 <div class="drink-card-meta">
-                  <div class="drink-card-name">شاي</div>
+                  <div class="drink-card-name" data-ar="شاي" data-en="Tea">شاي</div>
                   <div class="drink-card-desc">شاي طازج — اختار نوعك المفضل</div>
                 </div>
               </div>
-              <div class="drink-card-price">0.45 <span style="font-size:11px;">د.أ</span></div>
+              <div class="drink-card-price">0.50 <span class="currency-unit" style="font-size:11px;">د.أ</span></div>
             </div>
             <div class="radio-group">
-              <label class="radio-pill"><input type="radio" name="tea-type" value="أخضر" onchange="updateDrinkBtn('tea')"><span>أخضر</span></label>
-              <label class="radio-pill"><input type="radio" name="tea-type" value="أحمر" onchange="updateDrinkBtn('tea')"><span>أحمر</span></label>
-              <label class="radio-pill"><input type="radio" name="tea-type" value="كرك" onchange="updateDrinkBtn('tea')"><span>كرك</span></label>
-              <label class="radio-pill"><input type="radio" name="tea-type" value="أعشاب" onchange="updateDrinkBtn('tea')"><span>أعشاب</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="أخضر" data-en="Green" onchange="updateTeaBtn()"><span data-ar="أخضر" data-en="Green">أخضر</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="أحمر" data-en="Black" onchange="updateTeaBtn()"><span data-ar="أحمر" data-en="Black">أحمر</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="كرك" data-en="Karak" onchange="updateTeaBtn()"><span data-ar="كرك" data-en="Karak">كرك</span></label>
+              <label class="radio-pill"><input type="radio" name="tea-type" value="أعشاب" data-en="Herbal" onchange="updateTeaBtn()"><span data-ar="أعشاب" data-en="Herbal">أعشاب</span></label>
+            </div>
+            <div style="margin-top:14px;">
+              <div style="font-size:13px; font-weight:800; color:var(--char); margin-bottom:8px;"
+                data-ar="مستوى السكر"
+                data-en="Sugar Level">
+                مستوى السكر
+              </div>
+              <div class="radio-group">
+                <label class="radio-pill">
+                  <input type="radio" name="tea-sugar"
+                    value="سكر زيادة"
+                    data-en="Extra Sugar"
+                    onchange="updateTeaBtn()">
+                  <span data-ar="سكر زيادة"
+                        data-en="Extra Sugar">
+                    سكر زيادة
+                  </span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="tea-sugar"
+                    value="سكر عادي"
+                    data-en="Medium Sugar"
+                    onchange="updateTeaBtn()">
+                  <span data-ar="سكر عادي"
+                        data-en="Medium Sugar">
+                    سكر عادي
+                  </span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="tea-sugar"
+                    value="سكر خفيف"
+                    data-en="Light Sugar"
+                    onchange="updateTeaBtn()">
+                  <span data-ar="سكر خفيف"
+                        data-en="Light Sugar">
+                    سكر خفيف
+                  </span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="tea-sugar"
+                    value="بدون سكر"
+                    data-en="No Sugar"
+                    onchange="updateTeaBtn()">
+                  <span data-ar="بدون سكر"
+                        data-en="No Sugar">
+                    بدون سكر
+                  </span>
+                </label>
+              </div>
             </div>
             <div class="qty-row">
               <button type="button" class="qty-btn" onclick="changeDrinkQty('tea',-1)">−</button>
               <span class="qty-val" id="tea-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('tea',1)">+</button>
             </div>
-            <button type="button" id="tea-add-btn" onclick="addTeaToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;">أضف للسلة +</button>
+            <button type="button" id="tea-add-btn" onclick="(function(){
+              const type = document.querySelector('input[name=\'tea-type\']:checked');
+              const sugar = document.querySelector('input[name=\'tea-sugar\']:checked');
+              if (!type || !sugar) {
+                showToast(t('selectOptions'));
+                return;
+              }
+              const typeLabel = currentLang === 'ar' ? type.value : (type.dataset.en || type.value);
+              const sugarLabel = currentLang === 'ar' ? sugar.value : (sugar.dataset.en || sugar.value);
+              const label = typeLabel + ' — ' + sugarLabel;
+              addCustomDrink('شاي', label, 0.50, drinkQty['tea']);
+            })()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
         </div>
 
@@ -1111,7 +1410,8 @@
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">تأكيد بيانات التوصيل</div>
             <div style="margin-bottom:12px;">
               <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">رقم المكتب</label>
-              <input id="checkout-office-input" type="text" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+              <input id="checkout-office-input" type="text" required minlength="1" maxlength="30" autocomplete="off" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+              <div id="checkout-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
               
               <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">الطابق</label>
               <select id="checkout-floor-input" class="login-input" style="padding:10px 14px; background:var(--soft);">
@@ -1142,8 +1442,8 @@
         <div id="page-confirmed" class="page">
           <div class="card" style="text-align:center; padding:40px 20px;">
             <div class="check-anim">✓</div>
-            <h1 style="font-size:24px; font-weight:900; color:var(--em); margin-bottom:8px;">تم إرسال طلبك!</h1>
-            <p style="font-size:14px; color:var(--muted); font-weight:700; margin-bottom:24px;">سيصلك خلال 12–15 دقيقة</p>
+            <h1 style="font-size:24px; font-weight:900; color:var(--em); margin-bottom:8px;" data-ar="تم إرسال طلبك!" data-en="Order sent!">تم إرسال طلبك!</h1>
+            <p style="font-size:14px; color:var(--muted); font-weight:700; margin-bottom:24px;" data-ar="سيصلك خلال 12–15 دقيقة" data-en="Arriving in 12–15 minutes">سيصلك خلال 12–15 دقيقة</p>
             
             <div style="background:var(--em-light); border-radius:16px; padding:16px; text-align:right; margin-bottom:24px;">
               <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
@@ -1155,19 +1455,22 @@
 
             <!-- QR CODE SECTION -->
             <div id="qr-section">
-              <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:4px;">كود استلام طلبك</div>
-              <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">أظهر هذا الكود للمندوب عند التوصيل</div>
+              <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:4px;" data-ar="كود استلام طلبك" data-en="Pickup code">كود استلام طلبك</div>
+              <div style="font-size:12px; color:var(--muted); margin-bottom:16px;" data-ar="أظهر هذا الكود للمندوب عند التوصيل" data-en="Show this code to the runner on delivery">أظهر هذا الكود للمندوب عند التوصيل</div>
               <div id="qr-display" style="display:flex; justify-content:center; margin-bottom:12px;"></div>
               <div id="qr-order-number" style="font-size:20px; font-weight:800; color:var(--em); letter-spacing:3px; margin-bottom:10px;"></div>
-              <button onclick="downloadQR()" class="btn-secondary" style="border-radius:10px; padding:8px 18px; font-size:13px;">تحميل الكود 📥</button>
+              <button onclick="downloadQR()" class="btn-secondary" style="border-radius:10px; padding:8px 18px; font-size:13px;" data-ar="تحميل الكود 📥" data-en="Download code 📥">تحميل الكود 📥</button>
             </div>
 
             <div id="whatsapp-order-actions" style="display:none; margin-top:20px;">
-              <a id="whatsapp-order-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display:inline-block; border-radius:12px; padding:12px 20px; text-decoration:none; font-weight:800; background:#25D366; color:white; border:1px solid #1ebe57;">فتح واتساب للمقهى 📲</a>
-              <p style="font-size:12px; color:var(--muted); margin-top:10px; font-weight:700;">جرّب الزر إن لم يُفتح واتساب تلقائياً بعد التأكيد.</p>
+              <div id="whatsapp-opening-hint" data-ar="يفتح واتساب الآن…" data-en="Opening WhatsApp…" style="font-size:13px;color:var(--em);font-weight:800;margin-bottom:10px;">يفتح واتساب الآن…</div>
+              <a id="whatsapp-order-link" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:14px; padding:14px 24px; text-decoration:none; font-weight:900; background:#25D366; color:white; border:none; font-size:15px; box-shadow:0 6px 18px rgba(37,211,102,0.35);">
+                <span style="font-size:20px;">📲</span>
+                <span id="whatsapp-fallback-label" data-ar="لم يفتح واتساب؟ اضغط هنا" data-en="WhatsApp didn't open? Tap here">لم يفتح واتساب؟ اضغط هنا</span>
+              </a>
             </div>
 
-            <button onclick="resetCartAndHome()" class="btn-primary" style="margin-top:24px;">متابعة</button>
+            <button onclick="resetCartAndHome()" class="btn-primary" style="margin-top:24px;" data-ar="متابعة" data-en="Continue">متابعة</button>
           </div>
         </div>
 
@@ -1192,13 +1495,14 @@
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px;">تعديل بيانات الحساب</div>
             
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الاسم</label>
-            <input id="set-n" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            <input id="set-n" type="text" required minlength="2" maxlength="40" autocomplete="name" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
 
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم المكتب</label>
-            <input id="set-o" type="text" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            <input id="set-o" type="text" required minlength="1" maxlength="30" autocomplete="off" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
+            <div id="set-o-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
             
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الطابق</label>
-            <select id="set-f" class="login-input" style="padding:10px 14px; background:var(--soft);">
+            <select id="set-f" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
               <option value="" disabled selected>اختر الطابق</option>
               <option>الطابق 1</option>
               <option>الطابق 2</option>
@@ -1206,6 +1510,20 @@
               <option>الطابق 4</option>
               <option>الطابق 5</option>
             </select>
+            <label class="set-label"
+              data-ar="رقم الجوال" data-en="Phone Number">
+              رقم الجوال
+            </label>
+            <input id="set-phone-input" type="tel"
+              placeholder="07X XXXX XXXX"
+              style="width:100%; padding:10px 14px;
+              margin-bottom:12px;
+              border:1.5px solid var(--border);
+              border-radius:10px;
+              font-family:'Tajawal',sans-serif;
+              font-size:13px; direction:inherit; text-align:inherit;
+              background:var(--soft);
+              outline:none; color:var(--char);">
             
             <button type="button" onclick="saveSettings()" class="btn-primary" style="padding:12px; font-size:14px;">حفظ التعديلات</button>
           </div>
@@ -1231,6 +1549,17 @@
               <span style="font-size:13px; font-weight:700; color:var(--char);">المنطقة</span>
               <span style="font-size:13px; color:var(--muted); text-align:left;">مجمع المكاتب — عمّان</span>
             </div>
+            <div class="set-row">
+              <span class="set-label"
+                data-ar="رقم الجوال"
+                data-en="Phone">
+                رقم الجوال
+              </span>
+              <span id="set-phone"
+                style="font-size:13px; color:var(--muted);">
+                —
+              </span>
+            </div>
           </div>
 
           <button type="button" onclick="doLogout()" style="
@@ -1246,15 +1575,15 @@
             cursor: pointer;
             margin-top: 8px;
             margin-bottom: 100px;">
-            تسجيل الخروج
+            <span data-ar="تسجيل الخروج" data-en="Log out">تسجيل الخروج</span>
           </button>
         </div>
 
         <!-- PAGE: ADMIN -->
         <div id="page-admin" class="page">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
-            <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">لوحة التحكم</h2>
-            <button onclick="navTo('page-drinks')" style="background:white; border:1px solid var(--border); border-radius:8px; padding:4px 12px; font-size:12px; font-weight:800; cursor:pointer;">خروج</button>
+            <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;" data-ar="لوحة التحكم" data-en="Admin panel">لوحة التحكم</h2>
+            <button onclick="navTo('page-drinks')" style="background:white; border:1px solid var(--border); border-radius:8px; padding:4px 12px; font-size:12px; font-weight:800; cursor:pointer;" data-ar="خروج" data-en="Exit">خروج</button>
           </div>
           <div id="admin-orders-table" style="overflow-x:auto;"></div>
         </div>
@@ -1265,19 +1594,19 @@
       <nav id="main-nav">
         <a onclick="navTo('page-home')" class="mobile-tab" id="nav-home">
           <span style="font-size:20px;">🏠</span>
-          الرئيسية
+          <span data-ar="الرئيسية" data-en="Home">الرئيسية</span>
         </a>
         <a onclick="navTo('page-drinks')" class="mobile-tab active" id="nav-drinks">
           <span style="font-size:20px;">🥤</span>
-          اطلب
+          <span data-ar="اطلب" data-en="Order">اطلب</span>
         </a>
         <a onclick="navTo('page-orders')" class="mobile-tab" id="nav-orders">
           <span style="font-size:20px;">📋</span>
-          طلباتي
+          <span data-ar="طلباتي" data-en="Orders">طلباتي</span>
         </a>
         <a onclick="navTo('page-settings')" class="mobile-tab" id="nav-settings">
           <span style="font-size:20px;">⚙️</span>
-          الإعدادات
+          <span data-ar="الإعدادات" data-en="Settings">الإعدادات</span>
         </a>
       </nav>
 
@@ -1287,7 +1616,7 @@
   <span id="cb-count">0 عناصر</span>
   <span style="opacity:0.4">|</span>
   <span id="cb-total">0.00 د.أ</span>
-  <span style="font-size:13px">←</span>
+  <span id="cb-arrow" style="font-size:13px">←</span>
 </div>
 
     </div>
@@ -1307,29 +1636,78 @@
       return String(s || '').replace(/\D/g, '');
     }
 
+    function sanitizeForWa(s) {
+      return String(s == null ? '' : s)
+        .replace(/[\r\n\t]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 120);
+    }
+
+    // LRM marker keeps Latin/numeric strings (IDs, phones, money) readable
+    // when surrounded by RTL Arabic in WhatsApp.
+    const LRM = '‎';
+
     function buildOrderWhatsAppText(order, user) {
       const u = user || {};
-      const itemLines = order.items.map(function (i) {
-        const sub = (i.price * i.qty).toFixed(2);
-        const q = i.qty > 1 ? ' ×' + i.qty : '';
-        return '• ' + i.name + q + ' — ' + sub + ' د.أ';
+      const isAr = currentLang !== 'en';
+      const L = isAr
+        ? {
+            head: 'طلب جديد — بريو ☕',
+            id:   '📋 رقم الطلب',
+            cafe: '🏷 المقهى',
+            name: '👤 الاسم',
+            phone:'📱 جوال العميل',
+            office:'📍 المكتب',
+            floor:'📌 الطابق',
+            details:'🧾 التفاصيل',
+            total:'💰 الإجمالي',
+            time: '🕐 الوقت',
+            qty:  '×',
+            cur:  'د.أ'
+          }
+        : {
+            head: 'New order — Brewo ☕',
+            id:   '📋 Order ID',
+            cafe: '🏷 Cafe',
+            name: '👤 Name',
+            phone:'📱 Customer phone',
+            office:'📍 Office',
+            floor:'📌 Floor',
+            details:'🧾 Items',
+            total:'💰 Total',
+            time: '🕐 Time',
+            qty:  '×',
+            cur:  'JD'
+          };
+
+      const money = (n) => LRM + Number(n || 0).toFixed(2) + ' ' + L.cur;
+      const ltr   = (s) => LRM + String(s || '');
+
+      const itemLines = (order.items || []).map(function (i) {
+        const sub = money(i.price * i.qty);
+        const qty = i.qty > 1 ? ' ' + L.qty + i.qty : '';
+        const opt = i.option ? ' (' + sanitizeForWa(i.option) + ')' : '';
+        return '• ' + sanitizeForWa(i.name) + opt + qty + ' — ' + sub;
       });
+
+      const sep = '────────';
       return [
-        'طلب جديد — بريو ☕',
-        '────────',
-        '📋 رقم الطلب: ' + order.id,
-        '🏷 ' + order.cafeName,
-        '────────',
-        '👤 الاسم: ' + (u.name || order.user || ''),
-        '📱 جوال العميل: ' + (u.phone || ''),
-        '📍 المكتب: ' + order.office,
-        '📌 الطابق: ' + order.floor,
-        '────────',
-        'التفاصيل:',
+        L.head,
+        sep,
+        L.id    + ': ' + ltr(order.id),
+        L.cafe  + ': ' + sanitizeForWa(order.cafeName),
+        sep,
+        L.name  + ': ' + sanitizeForWa(u.name || order.user || ''),
+        L.phone + ': ' + ltr(sanitizeForWa(u.phone || '')),
+        L.office+ ': ' + sanitizeForWa(order.office),
+        L.floor + ': ' + sanitizeForWa(order.floor),
+        sep,
+        L.details + ':'
       ].concat(itemLines).concat([
-        '────────',
-        '💰 الإجمالي: ' + order.total.toFixed(2) + ' د.أ',
-        '🕐 ' + order.time,
+        sep,
+        L.total + ': ' + money(order.total),
+        L.time  + ': ' + ltr(order.time)
       ]).join('\n');
     }
 
@@ -1352,6 +1730,456 @@
       } catch (e) {}
     }
 
+    let currentLang = 'ar';
+    const TRANSLATIONS = {
+      ar: {
+        appName:       'بريو',
+        welcome:       'أهلاً بك في مجمع الصالحين ☕',
+        welcomeSub:    'اطلب قهوتك المفضلة وتوصلك لمكتبك',
+        fullName:      'الاسم الكامل',
+        officeNum:     'رقم المكتب',
+        chooseFloor:   'اختر طابقك',
+        phone:         'رقم الجوال',
+        startOrder:    'ابدأ الطلب ←',
+        guestLogin:    'دخول سريع كزائر',
+        enterName: 'أدخل اسمك الكامل',
+        enterOffice: 'أدخل رقم المكتب',
+        enterFloor: 'اختر طابقك',
+        nameTooShort: 'الاسم قصير جداً (٢ حرف على الأقل)',
+        officeInvalid: 'رقم مكتب غير صالح',
+        phoneInvalid: 'رقم جوال غير صالح (مثال: 07XXXXXXXX)',
+        shareTitle: 'بريو — قهوتك لعندك',
+        shareText: 'جرب بريو ☕ — اطلب قهوتك وتوصلك لمكتبك في مجمع عمال',
+        shareBtn: 'شارك التطبيق',
+        linkCopied: 'تم نسخ الرابط',
+        confirmYes: 'نعم، خروج',
+        confirmCancel: 'إلغاء',
+        emptyCartTitle: 'سلتك فارغة',
+        emptyCartSub: 'أضف مشروب من القائمة لتبدأ طلبك',
+        browseMenu: 'تصفح القائمة ←',
+        whatsappOpening: 'يفتح واتساب الآن…',
+        whatsappFallback: 'لم يفتح واتساب؟ اضغط هنا',
+        confirmLogoutTitle: 'تأكيد الخروج',
+        orderSentTitle: 'تم إرسال طلبك!',
+        orderSentSub: 'سيصلك خلال 12–15 دقيقة',
+        qrTitle: 'كود استلام طلبك',
+        qrSub: 'أظهر هذا الكود للمندوب عند التوصيل',
+        downloadQr: 'تحميل الكود 📥',
+        continueBtn: 'متابعة',
+        logoutBtn: 'تسجيل الخروج',
+        adminTitle: 'لوحة التحكم',
+        exitAdmin: 'خروج',
+        drinksTitle:   'اختر مشروبك',
+        drinksSub:     'خصّص طلبك واضغط أضف للسلة',
+        addToCart:     'أضف للسلة +',
+        chooseType:    'اختر النوع:',
+        sugarLevel:    'مستوى السكر',
+        qty:           'الكمية',
+        checkout:      'إتمام الطلب ←',
+        reviewOrder:   'راجع طلبك',
+        deliveryInfo:  'معلومات التوصيل',
+        officeLabel:   'رقم المكتبـ *',
+        floorLabel:    'الطابق *',
+        notes:         'ملاحظات إضافية...',
+        subtotal:      'المجموع الفرعي',
+        delivery:      'رسوم التوصيل',
+        total:         'الإجمالي',
+        payOnDelivery: '💵 الدفع عند الاستلام — نقداً أو بطاقة',
+        confirmOrder:  'تأكيد الطلب ✔',
+        orderSent:     'تم إرسال طلبك!',
+        orderSub:      'سيصلك خلال 12–15 دقيقة ☕',
+        receiptCode:   'كود استلام طلبك',
+        receiptSub:    'أظهره للمندوب عند التوصيل',
+        downloadCode:  'تحميل الكود 📥',
+        backHome:      'العودة للرئيسية',
+        myOrders:      'طلباتي السابقة',
+        noOrders:      'ما في طلبات سابقة بعد',
+        noOrdersSub:   'طلباتك المكتملة ستظهر هنا',
+        settings:      'الإعدادات',
+        editData:      'تعديل البيانات',
+        nameLabel:     'الاسم',
+        saveSettings:  'حفظ التعديلات ✔',
+        settingsSaved: '✅ تم حفظ بياناتك بنجاح',
+        myStats:       'إحصائياتي',
+        totalOrders:   'إجمالي الطلبات',
+        totalSpent:    'إجمالي الإنفاق د.أ',
+        version:       'الإصدار',
+        location:      'المنطقة',
+        locationVal:   'مجمع الصالحين — عمّان',
+        logout:        'تسجيل الخروج',
+        selectOptions: 'اختر نوع المشروب ومستوى السكر أولاً',
+        logoutConfirm: 'هل تريد تسجيل الخروج من بريو؟',
+        navHome:       'الرئيسية',
+        navDrinks:     'اطلب',
+        navOrders:     'طلباتي',
+        navSettings:   'الإعدادات',
+        workingHours:  'نعمل من الساعة 9 صباحاً حتى 6 مساءً',
+        orderNum:      'رقم الطلب',
+        office:        'المكتب',
+        orderTotal:    'الإجمالي',
+        reorder:       'اعد الطلب 🔄',
+        cancelOrder:   'إلغاء الطلب',
+        cancelConfirm: 'تأكيد الإلغاء',
+        cancelBack:    'تراجعت',
+        refundMsg:     'سيتم استرداد المبلغ كاملاً خلال دقيقتين',
+        okUnderstood:  'حسناً، فهمت',
+        orderCancelled:'تم إلغاء طلبك',
+        refundPending: '⏳ جاري معالجة الاسترداد...',
+        refundDone:    '✅ تم استرداد',
+        heroTitle1:    'الجو بيطلب قهوة ☕',
+        heroSub1:      'سخونة، ريحتها بتوصل قبلها',
+        heroBtn1:      'اطلب هلق ←',
+        heroTitle2:    'محلي، طازج، وبيوصلك للمكتب',
+        heroSub2:      'من أفضل المشروبات في مجمعنا',
+        heroBtn2:      'شوف المشروبات',
+        turkishName:   'قهوة تركية',
+        turkishDesc:   'قهوة تركية مختارة — أصيلة وغنية',
+        nescafeName:   'نسكافيه',
+        nescafeDesc:   'نسكافيه كلاسيكي — دافئ ومنعش',
+        waterName:     'ماء',
+        waterDesc:     'ماء معدني نقي',
+        teaName:       'شاي',
+        teaDesc:       'شاي طازج — اختار نوعك المفضل'
+      },
+      en: {
+        appName:       'Brewo',
+        welcome:       'Welcome to Al-Salheen Complex ☕',
+        welcomeSub:    'Order your favorite drink, delivered to your desk',
+        fullName:      'Full Name',
+        officeNum:     'Office Number',
+        chooseFloor:   'Choose your floor',
+        phone:         'Phone Number',
+        startOrder:    'Start Order ←',
+        guestLogin:    'Quick Guest Login',
+        enterName: 'Please enter your name',
+        enterOffice: 'Please enter your office number',
+        enterFloor: 'Please select your floor',
+        nameTooShort: 'Name is too short (min 2 characters)',
+        officeInvalid: 'Invalid office number',
+        phoneInvalid: 'Invalid phone number (e.g. 07XXXXXXXX)',
+        shareTitle: 'Brewo — coffee to your desk',
+        shareText: 'Try Brewo ☕ — order coffee delivered to your office in Ammal Complex',
+        shareBtn: 'Share app',
+        linkCopied: 'Link copied',
+        confirmYes: 'Yes, log out',
+        confirmCancel: 'Cancel',
+        emptyCartTitle: 'Your basket is empty',
+        emptyCartSub: 'Add a drink from the menu to start your order',
+        browseMenu: 'Browse menu ←',
+        whatsappOpening: 'Opening WhatsApp…',
+        whatsappFallback: "WhatsApp didn't open? Tap here",
+        confirmLogoutTitle: 'Confirm logout',
+        orderSentTitle: 'Order sent!',
+        orderSentSub: 'Arriving in 12–15 minutes',
+        qrTitle: 'Pickup code',
+        qrSub: 'Show this code to the runner on delivery',
+        downloadQr: 'Download code 📥',
+        continueBtn: 'Continue',
+        logoutBtn: 'Log out',
+        adminTitle: 'Admin panel',
+        exitAdmin: 'Exit',
+        drinksTitle:   'Choose Your Drink',
+        drinksSub:     'Customize your order then add to cart',
+        addToCart:     'Add to Cart +',
+        chooseType:    'Choose type:',
+        sugarLevel:    'Sugar Level',
+        qty:           'Quantity',
+        checkout:      'Checkout ←',
+        reviewOrder:   'Review Your Order',
+        deliveryInfo:  'Delivery Information',
+        officeLabel:   'Office Number *',
+        floorLabel:    'Floor *',
+        notes:         'Additional notes...',
+        subtotal:      'Subtotal',
+        delivery:      'Delivery Fee',
+        total:         'Total',
+        payOnDelivery: '💵 Pay on delivery — Cash or Card',
+        confirmOrder:  'Confirm Order ✔',
+        orderSent:     'Order Sent!',
+        orderSub:      'Will arrive in 12–15 minutes ☕',
+        receiptCode:   'Your Order Receipt Code',
+        receiptSub:    'Show this to the delivery person',
+        downloadCode:  'Download Code 📥',
+        backHome:      'Back to Home',
+        myOrders:      'My Past Orders',
+        noOrders:      'No past orders yet',
+        noOrdersSub:   'Your completed orders will appear here',
+        settings:      'Settings',
+        editData:      'Edit Profile',
+        nameLabel:     'Name',
+        saveSettings:  'Save Changes ✔',
+        settingsSaved: '✅ Your info has been saved',
+        myStats:       'My Statistics',
+        totalOrders:   'Total Orders',
+        totalSpent:    'Total Spent JD',
+        version:       'Version',
+        location:      'Location',
+        locationVal:   'Al-Salheen Complex — Amman',
+        logout:        'Log Out',
+        selectOptions: 'Please select drink type and sugar level first',
+        logoutConfirm: 'Are you sure you want to log out?',
+        navHome:       'Home',
+        navDrinks:     'Order',
+        navOrders:     'Orders',
+        navSettings:   'Settings',
+        workingHours:  'Working hours: 9:00 AM — 6:00 PM',
+        orderNum:      'Order #',
+        office:        'Office',
+        orderTotal:    'Total',
+        reorder:       'Reorder 🔄',
+        cancelOrder:   'Cancel Order',
+        cancelConfirm: 'Confirm Cancellation',
+        cancelBack:    'Go Back',
+        refundMsg:     'Full refund will be processed within 2 minutes',
+        okUnderstood:  'OK, Got it',
+        orderCancelled:'Your order has been cancelled',
+        refundPending: '⏳ Processing refund...',
+        refundDone:    '✅ Refunded',
+        heroTitle1:    'The weather calls for coffee ☕',
+        heroSub1:      'Hot, aromatic, delivered before you miss it',
+        heroBtn1:      'Order Now ←',
+        heroTitle2:    'Local, Fresh, Right to Your Desk',
+        heroSub2:      'The best drinks in our complex',
+        heroBtn2:      'See Drinks',
+        turkishName:   'Turkish Coffee',
+        turkishDesc:   'Authentic selected Turkish coffee',
+        nescafeName:   'Nescafe',
+        nescafeDesc:   'Classic nescafe — warm and refreshing',
+        waterName:     'Water',
+        waterDesc:     'Pure mineral water',
+        teaName:       'Tea',
+        teaDesc:       'Fresh tea — choose your favorite type'
+      }
+    };
+    function t(key) {
+      return TRANSLATIONS[currentLang][key] || key;
+    }
+    function currencyUnit() {
+      return currentLang === 'ar' ? 'د.أ' : 'JD';
+    }
+    function fmtMoney(value) {
+      return Number(value || 0).toFixed(2) + ' ' + currencyUnit();
+    }
+    const ITEM_DRINK_MAP = {
+      'قهوة تركية': 'Turkish Coffee',
+      'نسكافيه':    'Nescafe',
+      'ماء':        'Water',
+      'شاي':        'Tea'
+    };
+    const ITEM_OPT_MAP = {
+      'سادة':        'No Sugar',
+      'وسط':         'Medium Sugar',
+      'حلوة':        'Sweet',
+      'بحليب':       'With Milk',
+      'سكر زيادة':   'Extra Sugar',
+      'سكر متوسط':   'Medium Sugar',
+      'سكر عادي':    'Medium Sugar',
+      'سكر خفيف':    'Light Sugar',
+      'بدون سكر':    'No Sugar',
+      'بارد':        'Cold',
+      'عادي':        'Regular',
+      'أخضر':        'Green',
+      'أحمر':        'Black',
+      'كرك':         'Karak',
+      'أعشاب':       'Herbal'
+    };
+    function translateItemName(name) {
+      if (currentLang !== 'en' || !name) return name;
+      const segs = name.split(' — ');
+      if (!segs.length) return name;
+      const drink = ITEM_DRINK_MAP[segs[0]] || segs[0];
+      const rest = segs.slice(1).map(seg =>
+        seg.split('، ').map(p => ITEM_OPT_MAP[p] || p).join(', ')
+      ).join(' — ');
+      return rest ? drink + ' — ' + rest : drink;
+    }
+    const UI_TEXT_MAP = {
+      'بريو': 'Brewo',
+      'طابق ...': 'Floor ...',
+      'السلة': 'Cart',
+      'الجو بيطلب قهوة ☕': 'The weather calls for coffee ☕',
+      'سخونة، ريحتها بتوصل قبلها': 'Hot, aromatic, delivered before you miss it',
+      'اطلب هلق ←': 'Order Now ←',
+      'محلي، طازج، وبيوصلك للمكتب': 'Local, fresh, and delivered to your desk',
+      'من أفضل المشروبات في مجمعنا': 'Some of the best drinks in our complex',
+      'شوف المشروبات': 'See Drinks',
+      'كود سريع للمشروبات': 'Quick Drinks QR',
+      'امسح الكود بجوالك لفتح صفحة الطلب مباشرة': 'Scan with your phone to open the order page directly',
+      'قهوتنا — قصة في كل كوب': 'Our Coffee - A Story in Every Cup',
+      'بريو بيجيبلك أفضل المشروبات مباشرة لمكتبك': 'Brewo brings the best drinks right to your desk',
+      'طازج دايماً': 'Always Fresh',
+      'كل طلب بيتحضر لحظة ما تطلبه، ما في قهوة باردة أو قديمة عندنا': 'Every order is prepared fresh right after you place it',
+      'خلال 15 دقيقة': 'Within 15 Minutes',
+      'من ما تضغط \'تأكيد الطلب\' حتى يوصلك على مكتبك — 15 دقيقة بس': 'From confirmation to your desk in about 15 minutes',
+      'على ذوقك': 'Made Your Way',
+      'قهوة تركية، نسكافيه، أو ماء بارد — كل واحد على كيفه': 'Turkish coffee, nescafe, or cold water - your choice',
+      'كيف تطلب؟': 'How to Order?',
+      '٣ خطوات وقهوتك في الطريق': '3 steps and your drink is on the way',
+      'اختر مشروبك': 'Choose your drink',
+      'قهوة تركية، نسكافيه، أو ماء': 'Turkish coffee, nescafe, or water',
+      'خصّصه على ذوقك': 'Customize it your way',
+      'سادة، وسط، حلوة، بحليب...': 'No sugar, medium, sweet, with milk...',
+      'استلمه بمكتبك': 'Receive it at your desk',
+      'بيوصلك خلال 15 دقيقة': 'Delivered within 15 minutes',
+      'جاهز تطلب؟': 'Ready to order?',
+      'اضغط هلق وقهوتك جاية': 'Tap now and your coffee is on the way',
+      'قهوة تركية مختارة — أصيلة وغنية': 'Selected Turkish coffee - authentic and rich',
+      'نسكافيه': 'Nescafe',
+      'نسكافيه كلاسيكي — دافئ ومنعش': 'Classic nescafe - warm and refreshing',
+      'ماء': 'Water',
+      'ماء معدني نقي': 'Pure mineral water',
+      'الحليب': 'Milk',
+      'بحليب': 'With milk',
+      'السكر': 'Sugar',
+      '(اختر واحد)': '(Choose one)',
+      'سكر زيادة': 'Extra sugar',
+      'سكر متوسط': 'Medium sugar',
+      'سكر خفيف': 'Light sugar',
+      'بدون سكر': 'No sugar',
+      'بارد': 'Cold',
+      'عادي': 'Regular',
+      'شاي طازج — اختار نوعك المفضل': 'Fresh tea - choose your favorite type',
+      'سلة الطلبات': 'Cart',
+      'تأكيد بيانات التوصيل': 'Confirm delivery details',
+      'رقم المكتب': 'Office number',
+      'الطابق': 'Floor',
+      'رسوم التوصيل': 'Delivery fee',
+      'مجاني 🎁': 'Free 🎁',
+      'الإجمالي': 'Total',
+      'تأكيد الطلب': 'Confirm order',
+      'تم إرسال طلبك!': 'Order sent!',
+      'سيصلك خلال 12–15 دقيقة': 'It will arrive within 12-15 minutes',
+      'كود استلام طلبك': 'Your pickup code',
+      'أظهر هذا الكود للمندوب عند التوصيل': 'Show this code to the courier on delivery',
+      'تحميل الكود 📥': 'Download code 📥',
+      'فتح واتساب للمقهى 📲': 'Open cafe WhatsApp 📲',
+      'جرّب الزر إن لم يُفتح واتساب تلقائياً بعد التأكيد.': 'Use this button if WhatsApp did not open automatically',
+      'متابعة': 'Continue',
+      'طلباتي السابقة': 'My past orders',
+      'سجل طلباتك المكتملة': 'History of your completed orders',
+      'تعديل بيانات الحساب': 'Edit account details',
+      'الاسم': 'Name',
+      'حفظ التعديلات': 'Save changes',
+      'إحصائياتك': 'Your statistics',
+      'إجمالي الطلبات': 'Total orders',
+      'إجمالي الإنفاق': 'Total spending',
+      'الإصدار': 'Version',
+      'المنطقة': 'Location',
+      'مجمع المكاتب — عمّان': 'Office Complex - Amman',
+      'تسجيل الخروج': 'Log out',
+      'الرئيسية': 'Home',
+      'المشروبات': 'Drinks',
+      'طلباتي': 'Orders',
+      'الإعدادات': 'Settings',
+      'اختر الطابق': 'Choose your floor'
+    };
+    const UI_TEXT_MAP_REV = Object.fromEntries(
+      Object.entries(UI_TEXT_MAP).map(([ar, en]) => [en, ar])
+    );
+    function translateFromMap(text, isAr) {
+      const map = isAr ? UI_TEXT_MAP_REV : UI_TEXT_MAP;
+      return map[text] || text;
+    }
+    function translateLooseTextNodes(isAr) {
+      const walker = document.createTreeWalker(
+        document.body,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode(node) {
+            const parent = node.parentElement;
+            if (!parent) return NodeFilter.FILTER_REJECT;
+            if (parent.closest('script, style')) return NodeFilter.FILTER_REJECT;
+            if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        }
+      );
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        const raw = node.nodeValue;
+        const trimmed = raw.trim();
+        const translated = translateFromMap(trimmed, isAr);
+        if (translated !== trimmed) {
+          node.nodeValue = raw.replace(trimmed, translated);
+        }
+      });
+      document.querySelectorAll('input, textarea').forEach((el) => {
+        if (!el.dataset.ar && el.placeholder) {
+          el.placeholder = translateFromMap(el.placeholder, isAr);
+        }
+      });
+    }
+    function toggleLang() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      document.documentElement.dir =
+        currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = currentLang;
+      try {
+        localStorage.setItem('brewoLang', currentLang);
+      } catch(e) {}
+      applyTranslations();
+      applyUser();
+      ['turkish', 'nescafe', 'water', 'tea'].forEach(updateDrinkBtn);
+      updateTeaBtn();
+      updateCartUI();
+      const active = document.querySelector('.page.active');
+      if (active) {
+        if (active.id === 'page-checkout' && typeof renderCheckoutPage === 'function') renderCheckoutPage();
+        if (active.id === 'page-orders'   && typeof renderOrders       === 'function') renderOrders();
+      }
+    }
+    function applyTranslations() {
+      const lang = currentLang;
+      const isAr = lang === 'ar';
+      document.body.style.direction = isAr ? 'rtl' : 'ltr';
+      const alignedFields = [
+        'li-name', 'li-office', 'li-phone', 'li-floor',
+        'set-n', 'set-o', 'set-f', 'set-phone-input'
+      ];
+      alignedFields.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.direction = isAr ? 'rtl' : 'ltr';
+        el.style.textAlign = isAr ? 'right' : 'left';
+      });
+      document.querySelectorAll('#lang-toggle-login, #lang-toggle-top')
+        .forEach(btn => { btn.textContent = isAr ? 'English' : 'العربية'; });
+      document.querySelectorAll('[data-ar]').forEach(el => {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = isAr
+            ? el.dataset.ar
+            : (el.dataset.en || el.dataset.ar);
+        } else {
+          el.textContent = isAr
+            ? el.dataset.ar
+            : (el.dataset.en || el.dataset.ar);
+        }
+      });
+      const floorSelects = document.querySelectorAll('#li-floor, #co-floor, #checkout-floor-input, #set-f');
+      floorSelects.forEach(sel => {
+        const opts = sel.querySelectorAll('option');
+        opts.forEach((opt, i) => {
+          if (i === 0 && opt.value === '') {
+            opt.textContent = isAr ? 'اختر طابقك' : 'Choose your floor';
+          } else {
+            const floorNum = i === 0 && opt.value !== '' ? 1 : i;
+            opt.textContent = isAr ? ('الطابق ' + floorNum) : ('Floor ' + floorNum);
+          }
+        });
+      });
+      document.querySelectorAll('.currency-unit').forEach((el) => {
+        el.textContent = currencyUnit();
+      });
+      const moneyNodes = ['cb-total', 'checkout-total', 'set-stat-spend'];
+      moneyNodes.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el || !el.textContent) return;
+        const parsed = parseFloat(el.textContent.replace(/[^\d.]/g, ''));
+        if (!Number.isNaN(parsed)) el.textContent = fmtMoney(parsed);
+      });
+      translateLooseTextNodes(isAr);
+    }
     let currentUser = null;
     let cart = { items: [] };
     let orders = [];
@@ -1369,6 +2197,16 @@
 
     window.onload = () => {
       try {
+        const savedLang = localStorage.getItem('brewoLang');
+        if (savedLang) {
+          currentLang = savedLang;
+          document.documentElement.dir =
+            currentLang === 'ar' ? 'rtl' : 'ltr';
+          document.documentElement.lang = currentLang;
+        }
+      } catch(e) {}
+      applyTranslations();
+      try {
         const savedUser = localStorage.getItem('brewoUser');
         if (savedUser) {
           currentUser = JSON.parse(savedUser);
@@ -1377,7 +2215,9 @@
           document.getElementById('sidebar').style.display = 'flex';
           document.getElementById('top-navbar').style.display = 'flex';
           applyUser();
-          navTo('page-drinks');
+          if (!pageFromHash()) {
+            navTo('page-drinks', { replace: true });
+          }
         } else {
           document.body.classList.remove('app-logged-in');
           document.getElementById('page-login').style.display = 'flex';
@@ -1392,16 +2232,92 @@
       initHeroSlider();
       ['turkish', 'nescafe', 'water', 'tea'].forEach(updateDrinkBtn);
 
-      if (location.hash === '#admin' && currentUser) {
-        setTimeout(() => navTo('page-admin'), 0);
-      }
-
       renderHomeDrinksQr();
-      consumeDrinksHash();
+      handleRoute({ replace: true });
+
+      document.addEventListener('input', (e) => {
+        const tgt = e.target;
+        if (tgt && tgt.id && tgt.classList && tgt.classList.contains('field-error')) {
+          clearFieldError(tgt.id);
+        }
+        if (tgt && (tgt.id === 'li-name' || tgt.id === 'li-office' || tgt.id === 'li-phone')) {
+          clearLoginErr();
+        }
+      });
+
+      // Blur-time validation on form fields
+      const blurMap = {
+        'li-name': validateName,
+        'li-office': validateOffice,
+        'li-phone': (v) => validatePhone(v),
+        'li-floor': validateFloor,
+        'set-n': validateName,
+        'set-o': validateOffice,
+        'set-f': validateFloor,
+        'set-phone-input': (v) => validatePhone(v),
+        'checkout-office-input': validateOffice,
+        'checkout-floor-input': validateFloor
+      };
+      attachOfficeSuggest('li-office', 'li-office-hint');
+      attachOfficeSuggest('checkout-office-input', 'checkout-office-hint');
+      attachOfficeSuggest('set-o', 'set-o-hint');
+
+      Object.keys(blurMap).forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('blur', () => {
+          const v = el.value;
+          if (!v && el.id !== 'li-floor' && el.id !== 'set-f' && el.id !== 'checkout-floor-input') return;
+          const res = blurMap[id](v);
+          if (res && !res.ok) setFieldError(id, res.msg);
+          else clearFieldError(id);
+        });
+      });
     };
 
-    window.addEventListener('hashchange', () => {
-      consumeDrinksHash();
+    // ===== ROUTER =====
+    const ROUTES = {
+      'page-home':     'home',
+      'page-drinks':   'drinks',
+      'page-checkout': 'checkout',
+      'page-orders':   'orders',
+      'page-settings': 'settings',
+      'page-admin':    'admin'
+    };
+    const HASH_TO_PAGE = Object.fromEntries(
+      Object.entries(ROUTES).map(([p, h]) => [h, p])
+    );
+    const PUBLIC_PAGES = new Set(['page-home']);
+    let _pendingHashAfterLogin = null;
+
+    function pageFromHash() {
+      const h = (location.hash || '').replace(/^#/, '').toLowerCase();
+      if (!h) return null;
+      if (h === 'page-drinks') return 'page-drinks';
+      return HASH_TO_PAGE[h] || null;
+    }
+
+    function handleRoute(opts) {
+      opts = opts || {};
+      const pageId = pageFromHash();
+      if (!currentUser) {
+        if (pageId && !PUBLIC_PAGES.has(pageId)) {
+          _pendingHashAfterLogin = pageId;
+        }
+        return;
+      }
+      _pendingHashAfterLogin = null;
+      if (!pageId) return;
+      if (pageId === 'page-admin' && !currentUser) return;
+      navTo(pageId, { fromRoute: true, replace: opts.replace });
+    }
+
+    window.addEventListener('hashchange', () => handleRoute());
+    window.addEventListener('popstate', (e) => {
+      if (!currentUser) return;
+      const pageId = (e.state && e.state.pageId) || pageFromHash() || 'page-drinks';
+      if (pageId === 'page-login' || pageId === 'page-confirmed') return;
+      navTo(pageId, { fromRoute: true });
     });
 
     function getDrinksDeepLink() {
@@ -1411,6 +2327,58 @@
         return u.href;
       } catch (e) {
         return (location.href.split('#')[0] || location.href) + '#drinks';
+      }
+    }
+
+    function getAppShareLink() {
+      try {
+        return location.origin + location.pathname;
+      } catch (e) {
+        return (location.href.split('#')[0] || location.href);
+      }
+    }
+
+    async function shareApp() {
+      const url = getAppShareLink();
+      const title = t('shareTitle');
+      const text = t('shareText');
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, text, url });
+          return;
+        } catch (e) {
+          if (e && e.name === 'AbortError') return;
+        }
+      }
+      shareViaWhatsApp();
+    }
+
+    function shareViaWhatsApp() {
+      const url = getAppShareLink();
+      const text = t('shareText') + ' ' + url;
+      const wa = 'https://wa.me/?text=' + encodeURIComponent(text);
+      window.open(wa, '_blank', 'noopener');
+    }
+
+    async function copyAppLink() {
+      const url = getAppShareLink();
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast(t('linkCopied'));
+      } catch (e) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast(t('linkCopied'));
+        } catch (e2) {
+          showToast(url);
+        }
       }
     }
 
@@ -1432,23 +2400,6 @@
       }
     }
 
-    function stripAppHash() {
-      try {
-        const h = (location.hash || '').toLowerCase();
-        if (h === '#drinks' || h === '#page-drinks') {
-          history.replaceState(null, '', location.pathname + location.search);
-        }
-      } catch (e) {}
-    }
-
-    function consumeDrinksHash() {
-      const h = (location.hash || '').toLowerCase();
-      if (h !== '#drinks' && h !== '#page-drinks') return;
-      if (!currentUser) return;
-      navTo('page-drinks');
-      stripAppHash();
-    }
-
     function goSlide(n) {
       const slides = document.querySelectorAll('.hero-slide');
       const dots = document.querySelectorAll('.hero-dot');
@@ -1466,7 +2417,8 @@
       heroSliderTimer = setInterval(() => goSlide(currentSlide + 1), 4000);
     }
 
-    function navTo(pageId) {
+    function navTo(pageId, opts) {
+      opts = opts || {};
       document.querySelectorAll('.page')
         .forEach(p => {
           p.style.display = 'none';
@@ -1486,6 +2438,23 @@
       if (pageId === 'page-settings') openSettingsForm();
 
       updateCartBarVisibility(pageId);
+
+      // Sync URL hash + history stack (skip when triggered by router itself
+      // or when the page has no hash mapping, e.g. page-confirmed)
+      if (!opts.fromRoute) {
+        const hash = ROUTES[pageId];
+        if (hash) {
+          try {
+            const newUrl = location.pathname + location.search + '#' + hash;
+            const state = { pageId };
+            if (opts.replace) {
+              history.replaceState(state, '', newUrl);
+            } else if (location.hash !== ('#' + hash)) {
+              history.pushState(state, '', newUrl);
+            }
+          } catch (e) {}
+        }
+      }
     }
 
     function updateSidebarActive(pageId) {
@@ -1501,16 +2470,110 @@
       }
     }
 
+    // ===== VALIDATORS =====
+    function validateName(v) {
+      const s = String(v || '').trim();
+      if (s.length < 2) return { ok: false, msg: t('nameTooShort') };
+      if (s.length > 40) return { ok: false, msg: t('nameTooShort') };
+      return { ok: true, value: s };
+    }
+    function validateOffice(v) {
+      const s = String(v || '').trim();
+      if (!s) return { ok: false, msg: t('enterOffice') };
+      if (s.length > 30) return { ok: false, msg: t('officeInvalid') };
+      if (!/^[\p{L}\p{N}\s\-_/.#]+$/u.test(s)) return { ok: false, msg: t('officeInvalid') };
+      return { ok: true, value: s };
+    }
+
+    // Office-number → tenant suggestions (extend freely).
+    const OFFICE_TENANTS = {
+      '201': { ar: 'Printman',  en: 'Printman' },
+      '406': { ar: 'Folowise', en: 'Folowise' },
+      '407': { ar: 'Folowise', en: 'Folowise' }
+    };
+    function lookupOfficeTenant(raw) {
+      const digits = String(raw || '').replace(/\D/g, '');
+      if (!digits) return null;
+      const hit = OFFICE_TENANTS[digits];
+      if (!hit) return null;
+      return currentLang === 'ar' ? hit.ar : hit.en;
+    }
+    function attachOfficeSuggest(inputId, hintId) {
+      const input = document.getElementById(inputId);
+      const hint = document.getElementById(hintId);
+      if (!input || !hint) return;
+      const update = () => {
+        const tenant = lookupOfficeTenant(input.value);
+        if (tenant) {
+          const prefix = currentLang === 'ar' ? 'يبدو أنك تطلب لـ ' : 'Looks like ';
+          hint.textContent = prefix + tenant + ' ✨';
+          hint.style.display = 'block';
+        } else {
+          hint.textContent = '';
+          hint.style.display = 'none';
+        }
+      };
+      input.addEventListener('input', update);
+      input.addEventListener('blur', update);
+      update();
+    }
+    function validateFloor(v) {
+      const s = String(v || '').trim();
+      if (!s) return { ok: false, msg: t('enterFloor') };
+      return { ok: true, value: s };
+    }
+    function validatePhone(v, opts) {
+      opts = opts || {};
+      const raw = String(v || '').trim();
+      if (!raw) {
+        if (opts.required) return { ok: false, msg: t('phoneInvalid') };
+        return { ok: true, value: '' };
+      }
+      const digits = raw.replace(/\D/g, '');
+      let normalized = '';
+      if (/^00962[7][7-9]\d{7}$/.test(digits)) normalized = '+' + digits.slice(2);
+      else if (/^962[7][7-9]\d{7}$/.test(digits)) normalized = '+' + digits;
+      else if (/^0[7][7-9]\d{7}$/.test(digits)) normalized = '+962' + digits.slice(1);
+      else if (/^[7][7-9]\d{7}$/.test(digits)) normalized = '+962' + digits;
+      else return { ok: false, msg: t('phoneInvalid') };
+      return { ok: true, value: normalized };
+    }
+
+    function setFieldError(elId, msg) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.classList.add('field-error');
+      el.setAttribute('aria-invalid', 'true');
+      el.title = msg || '';
+    }
+    function clearFieldError(elId) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.classList.remove('field-error');
+      el.removeAttribute('aria-invalid');
+      el.title = '';
+    }
+    function clearFieldErrors(ids) { ids.forEach(clearFieldError); }
+
     function doLogin() {
-      const name   = document.getElementById('li-name').value.trim();
-      const office = document.getElementById('li-office').value.trim();
-      const floor  = document.getElementById('li-floor').value;
+      clearFieldErrors(['li-name', 'li-office', 'li-floor', 'li-phone']);
 
-      if (!name)   { showLoginErr('أدخل اسمك الكامل'); return; }
-      if (!office) { showLoginErr('أدخل رقم المكتب'); return; }
-      if (!floor)  { showLoginErr('اختر الطابق'); return; }
+      const nameRes   = validateName(document.getElementById('li-name').value);
+      const officeRes = validateOffice(document.getElementById('li-office').value);
+      const floorRes  = validateFloor(document.getElementById('li-floor').value);
+      const phoneRes  = validatePhone(document.getElementById('li-phone').value);
 
-      currentUser = { name, office, floor };
+      if (!nameRes.ok)   { setFieldError('li-name', nameRes.msg);     showLoginErr(nameRes.msg);   return; }
+      if (!officeRes.ok) { setFieldError('li-office', officeRes.msg); showLoginErr(officeRes.msg); return; }
+      if (!floorRes.ok)  { setFieldError('li-floor', floorRes.msg);   showLoginErr(floorRes.msg);  return; }
+      if (!phoneRes.ok)  { setFieldError('li-phone', phoneRes.msg);   showLoginErr(phoneRes.msg);  return; }
+
+      currentUser = {
+        name: nameRes.value,
+        office: officeRes.value,
+        floor: floorRes.value,
+        phone: phoneRes.value
+      };
       try {
         localStorage.setItem('brewoUser', JSON.stringify(currentUser));
       } catch (e) {}
@@ -1521,22 +2584,44 @@
       document.getElementById('sidebar').style.display = 'flex';
 
       applyUser();
-      navTo('page-drinks');
-      stripAppHash();
+      const target = _pendingHashAfterLogin || 'page-drinks';
+      _pendingHashAfterLogin = null;
+      navTo(target, { replace: true });
     }
 
     function guestLogin() {
-      document.getElementById('li-name').value = 'زائر بريو';
-      document.getElementById('li-office').value = 'مكتب 0';
-      document.getElementById('li-floor').selectedIndex = 1;
-      doLogin();
+      currentUser = {
+        name:   currentLang === 'ar' ? 'زائر' : 'Guest',
+        office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
+        floor:  currentLang === 'ar' ? 'الطابق 1' : 'Floor 1',
+        phone:  ''
+      };
+      try {
+        localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+      } catch(e) {}
+      document.getElementById('page-login').style.display = 'none';
+      document.body.classList.add('app-logged-in');
+      document.getElementById('top-navbar').style.display = 'flex';
+      document.getElementById('sidebar').style.display = 'flex';
+      applyUser();
+      const target = _pendingHashAfterLogin || 'page-drinks';
+      _pendingHashAfterLogin = null;
+      navTo(target, { replace: true });
     }
 
-    function doLogout() {
-      const confirmed = confirm(
-        'هل تريد تسجيل الخروج من بريو؟'
-      );
+    async function doLogout() {
+      const confirmed = await brewoConfirm({
+        title: t('confirmLogoutTitle'),
+        message: t('logoutConfirm'),
+        okText: t('confirmYes'),
+        cancelText: t('confirmCancel')
+      });
       if (!confirmed) return;
+
+      if (heroSliderTimer) {
+        try { clearInterval(heroSliderTimer); } catch(e) {}
+        heroSliderTimer = null;
+      }
 
       currentUser = null;
       cart = { items: [] };
@@ -1570,7 +2655,11 @@
 
       document.getElementById('li-name').value    = '';
       document.getElementById('li-office').value  = '';
+      document.getElementById('li-phone').value   = '';
       document.getElementById('li-floor').value   = '';
+      try {
+        history.replaceState({ pageId: 'page-login' }, '', location.pathname + location.search);
+      } catch (e) {}
     }
 
     function applyUser() {
@@ -1581,16 +2670,58 @@
       document.getElementById('set-avatar').textContent = currentUser.name.charAt(0);
       document.getElementById('settings-name').textContent = currentUser.name;
       document.getElementById('settings-office-display').textContent = currentUser.office + ' — ' + currentUser.floor;
+      document.getElementById('set-phone').textContent = currentUser.phone || '—';
+      const pi = document.getElementById('set-phone-input');
+      if (pi) pi.value = currentUser.phone || '';
     }
 
     function showLoginErr(msg) {
       const err = document.getElementById('login-err');
       err.textContent = msg;
       err.style.display = 'block';
-      setTimeout(() => { err.style.display = 'none'; }, 3000);
+    }
+    function clearLoginErr() {
+      const err = document.getElementById('login-err');
+      if (err) { err.textContent = ''; err.style.display = 'none'; }
     }
 
     // --- MODALS ---
+    function brewoConfirm({ title, message, okText, cancelText }) {
+      return new Promise((resolve) => {
+        const back = document.getElementById('brewo-modal');
+        const t1 = document.getElementById('brewo-modal-title');
+        const m1 = document.getElementById('brewo-modal-msg');
+        const ok = document.getElementById('brewo-modal-ok');
+        const cancel = document.getElementById('brewo-modal-cancel');
+        if (!back) { resolve(window.confirm(message)); return; }
+        t1.textContent = title || '';
+        m1.textContent = message || '';
+        ok.textContent = okText || t('confirmYes');
+        cancel.textContent = cancelText || t('confirmCancel');
+        back.classList.add('active');
+        const close = (val) => {
+          back.classList.remove('active');
+          ok.removeEventListener('click', onOk);
+          cancel.removeEventListener('click', onCancel);
+          back.removeEventListener('click', onBack);
+          document.removeEventListener('keydown', onKey);
+          resolve(val);
+        };
+        const onOk = () => close(true);
+        const onCancel = () => close(false);
+        const onBack = (e) => { if (e.target === back) close(false); };
+        const onKey = (e) => {
+          if (e.key === 'Escape') close(false);
+          if (e.key === 'Enter')  close(true);
+        };
+        ok.addEventListener('click', onOk);
+        cancel.addEventListener('click', onCancel);
+        back.addEventListener('click', onBack);
+        document.addEventListener('keydown', onKey);
+        setTimeout(() => ok.focus(), 50);
+      });
+    }
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -1632,6 +2763,11 @@
       } else {
         document.querySelectorAll('input[name="' + id + '-type"]')
           .forEach(r => { r.checked = false; });
+        if (id === 'tea') {
+          document.querySelectorAll('input[name="tea-sugar"]')
+            .forEach(r => { r.checked = false; });
+          updateTeaBtn();
+        }
       }
       const qtyEl = document.getElementById(id + '-qty');
       if (qtyEl) qtyEl.textContent = '1';
@@ -1664,7 +2800,8 @@
 
     function addTurkishToCart() {
       const opt = document.querySelector('input[name="turkish-type"]:checked');
-      addCustomDrink('قهوة تركية', opt && opt.value, 0.50, drinkQty.turkish);
+      const label = !opt ? '' : (currentLang === 'ar' ? opt.value : (opt.dataset.en || opt.value));
+      addCustomDrink('قهوة تركية', label, 0.60, drinkQty.turkish);
     }
     function addNescafeToCart() {
       const sugar = document.querySelector('input[name="nescafe-sugar"]:checked');
@@ -1685,12 +2822,27 @@
       addCustomDrink('ماء', opt && opt.value, 0.25, drinkQty.water);
     }
     function addTeaToCart() {
-      addCustomDrink(
-        'شاي',
-        document.querySelector('input[name="tea-type"]:checked')?.value,
-        0.45,
-        drinkQty['tea']
-      );
+      const type = document.querySelector('input[name="tea-type"]:checked');
+      const sugar = document.querySelector('input[name="tea-sugar"]:checked');
+      if (!type || !sugar) {
+        showToast(t('selectOptions'));
+        return;
+      }
+      const typeLabel = currentLang === 'ar' ? type.value : (type.dataset.en || type.value);
+      const sugarLabel = currentLang === 'ar' ? sugar.value : (sugar.dataset.en || sugar.value);
+      addCustomDrink('شاي', typeLabel + ' — ' + sugarLabel, 0.50, drinkQty['tea']);
+    }
+    function updateTeaBtn() {
+      const typeSelected = document.querySelector(
+        'input[name="tea-type"]:checked');
+      const sugarSelected = document.querySelector(
+        'input[name="tea-sugar"]:checked');
+      const btn = document.getElementById('tea-add-btn');
+      if (btn) {
+        const ready = typeSelected && sugarSelected;
+        btn.style.opacity       = ready ? '1'    : '0.4';
+        btn.style.pointerEvents = ready ? 'auto' : 'none';
+      }
     }
     function goCheckout() {
       navTo('page-checkout');
@@ -1702,8 +2854,14 @@
 
       const cbCount = document.getElementById('cb-count');
       const cbTotal = document.getElementById('cb-total');
-      if (cbCount) cbCount.textContent = count + ' عناصر';
-      if (cbTotal) cbTotal.textContent = total.toFixed(2) + ' د.أ';
+      const cbArrow = document.getElementById('cb-arrow');
+      if (cbCount) {
+        cbCount.textContent = currentLang === 'ar'
+          ? count + ' عناصر'
+          : count + (count === 1 ? ' item' : ' items');
+      }
+      if (cbTotal) cbTotal.textContent = fmtMoney(total);
+      if (cbArrow) cbArrow.textContent = currentLang === 'ar' ? '←' : '→';
 
       const navBadge = document.getElementById('nav-cart-badge');
       if (navBadge) {
@@ -1740,12 +2898,13 @@
       
       let html = '';
       let total = 0;
+      const isAr = currentLang === 'ar';
       cart.items.forEach((item, idx) => {
         html += `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:white; padding:12px; border-radius:12px; border:1px solid var(--border);">
-            <div>
-              <div style="font-size:14px; font-weight:800; color:var(--em);">${item.name}</div>
-              <div style="font-size:12px; color:var(--muted); font-weight:700;">${item.qty} × ${item.price.toFixed(2)} د.أ</div>
+            <div style="text-align:${isAr ? 'right' : 'left'};">
+              <div style="font-size:14px; font-weight:800; color:var(--em);">${translateItemName(item.name)}</div>
+              <div style="font-size:12px; color:var(--muted); font-weight:700;">${item.qty} × ${fmtMoney(item.price)}</div>
             </div>
             <button onclick="removeFromCart(${idx})" style="border:none; background:transparent; font-size:18px; cursor:pointer; color:#E53935;">✕</button>
           </div>
@@ -1753,8 +2912,15 @@
         total += item.price * item.qty;
       });
       
-      document.getElementById('checkout-cart-items').innerHTML = cart.items.length > 0 ? html : '<div style="text-align:center; padding:40px; color:var(--muted); font-weight:700;">سلتك فارغة</div>';
-      document.getElementById('checkout-total').textContent = total.toFixed(2) + ' د.أ';
+      const emptyHtml =
+        '<div class="empty-state">' +
+          '<div class="empty-state-icon">☕</div>' +
+          '<div class="empty-state-title">' + t('emptyCartTitle') + '</div>' +
+          '<div class="empty-state-sub">' + t('emptyCartSub') + '</div>' +
+          '<button type="button" class="btn-primary" onclick="navTo(\'page-drinks\')" style="border-radius:12px;padding:12px 22px;">' + t('browseMenu') + '</button>' +
+        '</div>';
+      document.getElementById('checkout-cart-items').innerHTML = cart.items.length > 0 ? html : emptyHtml;
+      document.getElementById('checkout-total').textContent = fmtMoney(total);
     }
 
     function removeFromCart(idx) {
@@ -1765,12 +2931,18 @@
 
     function confirmOrder() {
       if (cart.items.length === 0) {
-        showToast('السلة فارغة!');
+        showToast(t('emptyCartTitle'));
+        navTo('page-drinks');
         return;
       }
 
-      const office = document.getElementById('checkout-office-input').value.trim() || currentUser.office;
-      const floor  = document.getElementById('checkout-floor-input').value || currentUser.floor;
+      clearFieldErrors(['checkout-office-input', 'checkout-floor-input']);
+      const officeRes = validateOffice(document.getElementById('checkout-office-input').value);
+      const floorRes  = validateFloor(document.getElementById('checkout-floor-input').value);
+      if (!officeRes.ok) { setFieldError('checkout-office-input', officeRes.msg); showToast(officeRes.msg); return; }
+      if (!floorRes.ok)  { setFieldError('checkout-floor-input', floorRes.msg);   showToast(floorRes.msg);  return; }
+      const office = officeRes.value;
+      const floor  = floorRes.value;
       
       const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const order = {
@@ -1792,7 +2964,8 @@
       // CONFIRM PAGE UI
       document.getElementById('conf-cafe').textContent = order.cafeName;
       document.getElementById('conf-id').textContent = '#' + order.id;
-      document.getElementById('conf-items').textContent = order.items.map(i => i.name).join('، ');
+      const itemSep = currentLang === 'ar' ? '، ' : ', ';
+      document.getElementById('conf-items').textContent = order.items.map(i => translateItemName(i.name)).join(itemSep);
       
       generateQR(order);
 
@@ -1878,7 +3051,8 @@
       };
       const st = statusMap[o.status] || { label: o.status, bg: 'var(--soft)', color: 'var(--muted)' };
       const when = (o.date ? o.date + ' — ' : '') + o.time;
-      const drinks = o.items.map(i => i.name).join('، ');
+      const drinks = o.items.map(i => translateItemName(i.name)).join(currentLang === 'ar' ? '، ' : ', ');
+      const lineAlign = currentLang === 'ar' ? 'right' : 'left';
       const reorder = o.status === 'delivered'
         ? '<button type="button" onclick="navTo(\'page-drinks\');showToast(\'أعد اختيار مشروباتك من القائمة\')" class="btn-secondary" style="width:100%;margin-top:14px;border-radius:12px;padding:12px;font-size:14px;">اعد الطلب</button>'
         : '';
@@ -1892,10 +3066,10 @@
             <span style="font-size:11px;font-weight:800;padding:6px 12px;border-radius:20px;background:${st.bg};color:${st.color};">${st.label}</span>
           </div>
           <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;">${when}</div>
-          <div style="font-size:13px;color:var(--char);font-weight:700;line-height:1.6;margin-bottom:12px;">${drinks}</div>
+          <div style="font-size:13px;color:var(--char);font-weight:700;line-height:1.6;margin-bottom:12px;text-align:${lineAlign};">${drinks}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;">
             <span style="font-size:13px;font-weight:800;color:var(--char);">الإجمالي</span>
-            <span style="font-size:15px;font-weight:900;color:var(--em);">${o.total.toFixed(2)} د.أ</span>
+            <span style="font-size:15px;font-weight:900;color:var(--em);">${fmtMoney(o.total)}</span>
           </div>
           ${reorder}
         </div>`;
@@ -1915,11 +3089,11 @@
         </div>
         <div style="font-size:15px; font-weight:800;
                     color:var(--char); margin-bottom:8px;">
-          ما في طلبات سابقة بعد
+          ${t('noOrders')}
         </div>
         <div style="font-size:13px; color:var(--muted);
                     line-height:1.7;">
-          طلباتك المكتملة ستظهر هنا
+          ${t('noOrdersSub')}
         </div>
       </div>`;
         return;
@@ -1935,13 +3109,15 @@
       const elO = document.getElementById('set-stat-orders');
       const elS = document.getElementById('set-stat-spend');
       if (elO) elO.textContent = String(totalOrders);
-      if (elS) elS.textContent = spend.toFixed(2) + ' د.أ';
+      if (elS) elS.textContent = fmtMoney(spend);
     }
 
     function openSettingsForm() {
       if (!currentUser) return;
       document.getElementById('set-n').value = currentUser.name || '';
       document.getElementById('set-o').value = currentUser.office || '';
+      const phoneInput = document.getElementById('set-phone-input');
+      if (phoneInput) phoneInput.value = currentUser.phone || '';
       const floor = currentUser.floor || '';
       const sel = document.getElementById('set-f');
       if (sel && floor) {
@@ -1967,15 +3143,24 @@
     }
 
     function saveSettings() {
-      const name   = document.getElementById('set-n').value.trim();
-      const office = document.getElementById('set-o').value.trim();
-      const floor  = document.getElementById('set-f').value;
+      clearFieldErrors(['set-n', 'set-o', 'set-f', 'set-phone-input']);
+      const nameRes   = validateName(document.getElementById('set-n').value);
+      const officeRes = validateOffice(document.getElementById('set-o').value);
+      const floorRes  = validateFloor(document.getElementById('set-f').value);
+      const phoneRes  = validatePhone(document.getElementById('set-phone-input').value);
 
-      if (!name)   { showToast('أدخل اسمك'); return; }
-      if (!office) { showToast('أدخل رقم مكتبك'); return; }
-      if (!floor)  { showToast('اختر الطابق'); return; }
+      if (!nameRes.ok)   { setFieldError('set-n', nameRes.msg);            showToast(nameRes.msg);   return; }
+      if (!officeRes.ok) { setFieldError('set-o', officeRes.msg);          showToast(officeRes.msg); return; }
+      if (!floorRes.ok)  { setFieldError('set-f', floorRes.msg);           showToast(floorRes.msg);  return; }
+      if (!phoneRes.ok)  { setFieldError('set-phone-input', phoneRes.msg); showToast(phoneRes.msg);  return; }
 
-      currentUser = { name, office, floor };
+      currentUser = {
+        ...currentUser,
+        name: nameRes.value,
+        office: officeRes.value,
+        floor: floorRes.value,
+        phone: phoneRes.value
+      };
 
       try {
         localStorage.setItem('brewoUser',
@@ -1984,7 +3169,7 @@
 
       applyUser();
       updateSettingsStats();
-      showToast('✅ تم حفظ بياناتك بنجاح');
+      showToast(t('settingsSaved'));
     }
 
     function saveOrders() {
