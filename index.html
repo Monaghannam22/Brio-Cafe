@@ -3171,16 +3171,27 @@
       } catch (e) {}
     }
 
+    // Guest users get a language-reactive display name; their stored
+    // currentUser.name is just an initial seed in whatever language was
+    // active at sign-up.
+    function displayUserName() {
+      if (!currentUser) return '';
+      if (currentUser.isGuest) return currentLang === 'ar' ? 'زائر' : 'Guest';
+      return currentUser.name || '';
+    }
+
     function applyUser() {
       if (!currentUser) return;
-      document.getElementById('user-display-name').textContent = currentUser.name;
+      const name = displayUserName();
+      const initial = (name || '·').charAt(0);
+      document.getElementById('user-display-name').textContent = name;
       document.getElementById('user-display-office').textContent =
         currentUser.isGuest
           ? t('guestBadge')
           : currentUser.office;
-      document.getElementById('user-badge').textContent = currentUser.name.charAt(0);
-      document.getElementById('set-avatar').textContent = currentUser.name.charAt(0);
-      document.getElementById('settings-name').textContent = currentUser.name;
+      document.getElementById('user-badge').textContent = initial;
+      document.getElementById('set-avatar').textContent = initial;
+      document.getElementById('settings-name').textContent = name;
       document.getElementById('settings-office-display').textContent = currentUser.office || '';
       document.getElementById('set-phone').textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
