@@ -4,6 +4,7 @@
  */
 import http from "http";
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -41,7 +42,22 @@ const server = http.createServer((req, res) => {
   });
 });
 
+function lanAddresses() {
+  const out = [];
+  const ifaces = os.networkInterfaces();
+  for (const name of Object.keys(ifaces)) {
+    for (const ni of ifaces[name] || []) {
+      if (ni.family === "IPv4" && !ni.internal) out.push(ni.address);
+    }
+  }
+  return out;
+}
+
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3010;
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`Brewo static preview: http://127.0.0.1:${PORT}/`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Brewo static preview running on port ${PORT}`);
+  console.log(`  Local:    http://127.0.0.1:${PORT}/`);
+  for (const ip of lanAddresses()) {
+    console.log(`  Network:  http://${ip}:${PORT}/   ← open this URL so QR works on phone`);
+  }
 });

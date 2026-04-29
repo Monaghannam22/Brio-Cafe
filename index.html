@@ -87,6 +87,98 @@
       direction: inherit;
     }
 
+    /* Per-drink note */
+    .drink-note-wrap { margin-top: 12px; }
+    .drink-note-label {
+      font-size: 12px; font-weight: 800; color: var(--char);
+      margin-bottom: 6px;
+    }
+    .drink-note-input {
+      width: 100%;
+      min-height: 56px;
+      max-height: 140px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--soft);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      color: var(--char);
+      resize: vertical;
+      outline: none;
+      direction: inherit;
+      text-align: start;
+    }
+    .drink-note-input:focus { border-color: var(--em); }
+
+    /* Top-nav cart "real cart" pill */
+    .top-cart-pill {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--em);
+      background: var(--em);
+      color: #fff;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1;
+      transition: transform .15s, box-shadow .15s, background .2s;
+      box-shadow: 0 2px 8px rgba(13,79,60,0.18);
+    }
+    .top-cart-pill:hover {
+      background: #0a3f30;
+      box-shadow: 0 4px 14px rgba(13,79,60,0.28);
+    }
+    .top-cart-pill:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 2px;
+    }
+    .top-cart-pill:active { transform: scale(0.97); }
+    .top-cart-pill .icon { font-size: 18px; }
+    .top-cart-pill .count {
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 11px;
+      background: var(--gold);
+      color: var(--char);
+      font-size: 12px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top-cart-pill .total {
+      font-weight: 900;
+      color: #fff;
+      white-space: nowrap;
+    }
+    /* The cart pill stays fully tappable when empty — same as Amazon, etc.
+       We only soften the badge so an empty count is less visually loud. */
+    .top-cart-pill.is-empty .count {
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+    }
+    .top-cart-pill.bump { animation: cartBump 0.32s ease; }
+    @keyframes cartBump {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    @media (max-width: 900px) {
+      .top-cart-pill {
+        padding: 6px 10px;
+        font-size: 12px;
+        gap: 6px;
+      }
+      .top-cart-pill .total { font-size: 12px; }
+      .top-cart-pill .count { min-width: 20px; height: 20px; font-size: 11px; }
+    }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -118,13 +210,17 @@
       border-left: none;
       border-right: 1px solid var(--border);
     }
-    html[dir="ltr"] #top-navbar {
-      left: 260px;
-      right: 0;
-    }
-    html[dir="ltr"] .main-content {
-      margin-right: 0;
-      margin-left: 260px;
+    /* Sidebar offsets only apply when the sidebar is actually visible
+       (≥901px). Mobile layout below resets them. */
+    @media (min-width: 901px) {
+      html[dir="ltr"] #top-navbar {
+        left: 260px;
+        right: 0;
+      }
+      html[dir="ltr"] .main-content {
+        margin-right: 0;
+        margin-left: 260px;
+      }
     }
 
     .sidebar-logo {
@@ -179,9 +275,9 @@
       margin-right: 260px;
       margin-top: 70px;
       padding: 24px;
-      width: 100%;
-      max-width: 1200px;
-      transition: all 0.3s;
+      width: auto;
+      max-width: none;
+      transition: padding 0.3s;
     }
 
     /* Pages */
@@ -240,7 +336,10 @@
     #page-login {
       position: fixed;
       inset: 0;
-      background: var(--em);
+      background:
+        linear-gradient(rgba(13,79,60,0.55), rgba(0,0,0,0.65)),
+        url('./ChatGPT Image Apr 28, 2026, 03_48_52 PM.png') center/cover no-repeat,
+        var(--em);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -267,7 +366,7 @@
       margin-bottom: 12px;
       font-family: 'Tajawal', sans-serif;
       font-size: 14px;
-      text-align: right;
+      text-align: start;
       outline: none;
     }
 
@@ -358,8 +457,8 @@
       display: none;
       position: fixed;
       top: calc(88px + env(safe-area-inset-top, 0px));
-      right: max(12px, env(safe-area-inset-right, 0px));
-      left: auto;
+      inset-inline-end: max(12px, env(safe-area-inset-end, 12px));
+      inset-inline-start: auto;
       bottom: auto;
       transform: none;
       background: var(--char);
@@ -372,7 +471,7 @@
       z-index: 2000;
       width: max-content;
       max-width: min(300px, calc(100vw - 24px));
-      text-align: right;
+      text-align: start;
       line-height: 1.45;
       white-space: normal;
       word-break: break-word;
@@ -752,8 +851,10 @@
     /* Responsive: bottom nav only on small screens (mobile) */
     @media (max-width: 900px) {
       #sidebar { display: none !important; }
-      #top-navbar { left: 0; right: 0; height: 80px; padding: 0 16px; }
-      .main-content { margin-right: 0; margin-top: 80px; padding: 16px 16px 120px 16px; }
+      #top-navbar,
+      html[dir="ltr"] #top-navbar { left: 0; right: 0; height: 80px; padding: 0 16px; }
+      .main-content,
+      html[dir="ltr"] .main-content { margin-right: 0; margin-left: 0; margin-top: 80px; padding: 16px 16px 120px 16px; }
       body.app-logged-in #main-nav {
         display: flex !important;
         height: 80px;
@@ -781,12 +882,43 @@
         display: none !important;
       }
       .main-content {
-        width: min(62vw, 980px);
-        max-width: calc(100vw - 320px);
-        margin-left: auto;
+        width: auto;
+        max-width: none;
         margin-right: 260px;
-        padding: 28px 28px 140px 28px;
+        margin-left: 0;
+        padding: 28px 40px 140px 40px;
       }
+      html[dir="ltr"] .main-content {
+        margin-right: 0;
+        margin-left: 260px;
+      }
+      /* Wide screens: drink cards in a responsive grid so they fill the
+         page instead of stretching to 1500px wide each. */
+      #page-drinks {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 20px;
+        align-items: start;
+      }
+      #page-drinks .drinks-page-header {
+        grid-column: 1 / -1;
+      }
+      #page-drinks .drink-card {
+        margin: 0;
+      }
+      /* Past orders, admin: 2-column on very wide screens */
+      #orders-list,
+      #admin-orders-table {
+        max-width: 100%;
+      }
+    }
+    @media (min-width: 1400px) {
+      #orders-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+        gap: 18px;
+      }
+      #orders-list .card { margin: 0; }
     }
 
     /* Confirmation UI */
@@ -848,11 +980,166 @@
 
     /* Page fade transitions */
     .page {
-      animation: pageFadeIn 180ms ease-out;
+      animation: pageFadeIn 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
     }
     @keyframes pageFadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+      from { opacity: 0; transform: translateY(14px) scale(0.995); filter: blur(2px); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);     filter: blur(0); }
+    }
+
+    /* Stagger card entrance inside the active page */
+    .page.active .card,
+    .page.active .cafe-card {
+      animation: cardRise 520ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+    }
+    .page.active .card:nth-child(1),
+    .page.active .cafe-card:nth-child(1) { animation-delay: 40ms; }
+    .page.active .card:nth-child(2),
+    .page.active .cafe-card:nth-child(2) { animation-delay: 90ms; }
+    .page.active .card:nth-child(3),
+    .page.active .cafe-card:nth-child(3) { animation-delay: 140ms; }
+    .page.active .card:nth-child(4),
+    .page.active .cafe-card:nth-child(4) { animation-delay: 190ms; }
+    .page.active .card:nth-child(5),
+    .page.active .cafe-card:nth-child(5) { animation-delay: 240ms; }
+    .page.active .card:nth-child(n+6),
+    .page.active .cafe-card:nth-child(n+6) { animation-delay: 290ms; }
+    @keyframes cardRise {
+      from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Login card entrance */
+    .login-card {
+      animation: loginCardIn 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    @keyframes loginCardIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+
+    /* Button micro-interactions */
+    .btn-primary, .btn-secondary, .nav-item, .mobile-tab,
+    button:not(.brewo-modal-actions button) {
+      transition: transform 160ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                  box-shadow 200ms ease,
+                  background-color 200ms ease,
+                  color 200ms ease,
+                  border-color 200ms ease,
+                  opacity 200ms ease;
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(13, 79, 60, 0.28);
+    }
+    .btn-primary:active:not(:disabled),
+    button:active:not(:disabled) { transform: scale(0.97); }
+
+    /* Cafe-card hover lift */
+    .cafe-card {
+      transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                  box-shadow 220ms ease, border-color 220ms ease;
+    }
+    .cafe-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(13, 79, 60, 0.12);
+      border-color: var(--gold);
+    }
+
+    /* Cart bar slide-up entrance */
+    #cart-bar {
+      animation: cartBarRise 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    @keyframes cartBarRise {
+      from { opacity: 0; transform: translateY(120%); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toast slide-in */
+    #toast {
+      animation: toastIn 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    @keyframes toastIn {
+      0%   { opacity: 0; transform: translate(-50%, -16px) scale(0.95); }
+      60%  { opacity: 1; transform: translate(-50%, 4px)   scale(1.02); }
+      100% { opacity: 1; transform: translate(-50%, 0)     scale(1); }
+    }
+
+    /* Sidebar nav-item hover slide */
+    .nav-item {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--em-light), transparent);
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 220ms ease, transform 220ms ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .nav-item > * { position: relative; z-index: 1; }
+    .nav-item:hover::before { opacity: 1; transform: translateX(0); }
+
+    /* Confirmation check ring pulse */
+    .check-anim {
+      position: relative;
+    }
+    .check-anim::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 3px solid var(--em);
+      opacity: 0.6;
+      animation: checkRing 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+    }
+    @keyframes checkRing {
+      0%   { transform: scale(0.6); opacity: 0.7; }
+      80%  { transform: scale(1.3); opacity: 0;   }
+      100% { transform: scale(1.3); opacity: 0;   }
+    }
+
+    /* Field error shake */
+    .field-error {
+      animation: shakeX 360ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    @keyframes shakeX {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(2px); }
+    }
+
+    /* Input focus glow */
+    .login-input {
+      transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+    }
+    .login-input:focus {
+      box-shadow: 0 0 0 4px rgba(13, 79, 60, 0.12);
+      transform: translateY(-1px);
+    }
+
+    /* Cart-badge pulse when count changes */
+    #nav-cart-badge.bump,
+    .cart-badge.bump { animation: bump 360ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+    @keyframes bump {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    /* Respect reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
 
     /* Keyboard focus ring (doesn't show on mouse clicks) */
@@ -958,19 +1245,19 @@
     width: calc(100% - 40px);
     max-width: 400px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    direction: rtl;
+    direction: inherit;
     font-family: 'Tajawal', sans-serif;
     align-items: center;
     gap: 12px;">
     
     <div style="font-size: 28px;">☕</div>
     <div style="flex:1;">
-      <div style="font-weight:800; font-size:15px; margin-bottom:3px;">
+      <div style="font-weight:800; font-size:15px; margin-bottom:3px;" data-ar="تم استلام طلبك!" data-en="Order received!">
         تم استلام طلبك!
       </div>
       <div style="font-size:12px; color:#9FD4C0;">
-        <span id="dn-cafe"></span> — 
-        رقم الطلب: <span id="dn-id"></span>
+        <span id="dn-cafe"></span> —
+        <span data-ar="رقم الطلب" data-en="Order #">رقم الطلب</span>: <span id="dn-id"></span>
       </div>
     </div>
     <button onclick="document.getElementById('delivery-notif').style.display='none'"
@@ -1010,7 +1297,7 @@
       <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
       <input id="li-office" class="login-input" type="text" required minlength="1" maxlength="30" autocomplete="off" data-ar="رقم المكتب (مثلاً: 407)" data-en="Office Number (e.g. 407)" placeholder="رقم المكتب (مثلاً: 407)" />
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
-      <input id="li-phone" class="login-input" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" data-ar="07X XXXX XXXX" data-en="07X XXXX XXXX" placeholder="07X XXXX XXXX" />
+      <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
       <select id="li-floor" class="login-input">
         <option value="" disabled selected>اختر الطابق</option>
         <option>الطابق 1</option>
@@ -1083,11 +1370,12 @@
               font-weight: 800;
               font-size: 12px;
               cursor: pointer;">EN</button>
-          <div style="cursor:pointer; display:flex; align-items:center; gap:8px; padding:6px 12px; border-radius:12px; border:1.5px solid var(--border); background:var(--soft);" onclick="goCheckout()" title="السلة">
-            <span style="font-size:20px;">🛒</span>
-            <span class="desktop-only" style="font-size:13px; font-weight:800; color:var(--em);">السلة</span>
-            <span id="nav-cart-badge" style="min-width:20px; height:20px; padding:0 6px; border-radius:8px; background:var(--em); color:white; font-size:11px; font-weight:900; display:none; align-items:center; justify-content:center;">0</span>
-          </div>
+          <button type="button" id="top-cart" class="top-cart-pill is-empty" onclick="goCheckout()" aria-label="Cart">
+            <span class="icon">🛒</span>
+            <span class="count" id="nav-cart-badge">0</span>
+            <span class="desktop-only" id="nav-cart-label">السلة</span>
+            <span class="total"><span id="nav-cart-total">0.00</span> <span class="currency-unit">د.أ</span></span>
+          </button>
         </div>
       </nav>
 
@@ -1254,6 +1542,10 @@
               <span class="qty-val" id="turkish-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('turkish',1)">+</button>
             </div>
+            <div class="drink-note-wrap">
+              <div class="drink-note-label" data-ar="ملاحظة (اختياري)" data-en="Note (optional)">ملاحظة (اختياري)</div>
+              <textarea id="turkish-note" class="drink-note-input" maxlength="140" rows="2" data-ar="مثلاً: بدون قشطة، أقل سخونة..." data-en="e.g. less hot, no foam..." placeholder="مثلاً: بدون قشطة، أقل سخونة..."></textarea>
+            </div>
             <button type="button" id="turkish-add-btn" onclick="addTurkishToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
 
@@ -1285,6 +1577,10 @@
               <span class="qty-val" id="nescafe-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('nescafe',1)">+</button>
             </div>
+            <div class="drink-note-wrap">
+              <div class="drink-note-label" data-ar="ملاحظة (اختياري)" data-en="Note (optional)">ملاحظة (اختياري)</div>
+              <textarea id="nescafe-note" class="drink-note-input" maxlength="140" rows="2" data-ar="مثلاً: بدون قشطة، أقل سخونة..." data-en="e.g. less hot, no foam..." placeholder="مثلاً: بدون قشطة، أقل سخونة..."></textarea>
+            </div>
             <button type="button" id="nescafe-add-btn" onclick="addNescafeToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
 
@@ -1307,6 +1603,10 @@
               <button type="button" class="qty-btn" onclick="changeDrinkQty('water',-1)">−</button>
               <span class="qty-val" id="water-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('water',1)">+</button>
+            </div>
+            <div class="drink-note-wrap">
+              <div class="drink-note-label" data-ar="ملاحظة (اختياري)" data-en="Note (optional)">ملاحظة (اختياري)</div>
+              <textarea id="water-note" class="drink-note-input" maxlength="140" rows="2" data-ar="مثلاً: مع شفاطات..." data-en="e.g. with straws..." placeholder="مثلاً: مع شفاطات..."></textarea>
             </div>
             <button type="button" id="water-add-btn" onclick="addWaterToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
@@ -1382,6 +1682,10 @@
               <span class="qty-val" id="tea-qty">1</span>
               <button type="button" class="qty-btn" onclick="changeDrinkQty('tea',1)">+</button>
             </div>
+            <div class="drink-note-wrap">
+              <div class="drink-note-label" data-ar="ملاحظة (اختياري)" data-en="Note (optional)">ملاحظة (اختياري)</div>
+              <textarea id="tea-note" class="drink-note-input" maxlength="140" rows="2" data-ar="مثلاً: مع نعنع، أقل سكر..." data-en="e.g. with mint, less sugar..." placeholder="مثلاً: مع نعنع، أقل سكر..."></textarea>
+            </div>
             <button type="button" id="tea-add-btn" onclick="(function(){
               const type = document.querySelector('input[name=\'tea-type\']:checked');
               const sugar = document.querySelector('input[name=\'tea-sugar\']:checked');
@@ -1392,7 +1696,7 @@
               const typeLabel = currentLang === 'ar' ? type.value : (type.dataset.en || type.value);
               const sugarLabel = currentLang === 'ar' ? sugar.value : (sugar.dataset.en || sugar.value);
               const label = typeLabel + ' — ' + sugarLabel;
-              addCustomDrink('شاي', label, 0.50, drinkQty['tea']);
+              addCustomDrink('شاي', label, 0.50, drinkQty['tea'], readDrinkNote('tea'));
             })()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
         </div>
@@ -1445,7 +1749,7 @@
             <h1 style="font-size:24px; font-weight:900; color:var(--em); margin-bottom:8px;" data-ar="تم إرسال طلبك!" data-en="Order sent!">تم إرسال طلبك!</h1>
             <p style="font-size:14px; color:var(--muted); font-weight:700; margin-bottom:24px;" data-ar="سيصلك خلال 12–15 دقيقة" data-en="Arriving in 12–15 minutes">سيصلك خلال 12–15 دقيقة</p>
             
-            <div style="background:var(--em-light); border-radius:16px; padding:16px; text-align:right; margin-bottom:24px;">
+            <div style="background:var(--em-light); border-radius:16px; padding:16px; text-align:start; margin-bottom:24px;">
               <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
                 <span id="conf-cafe" style="font-size:14px; font-weight:800; color:var(--em);">...</span>
                 <span id="conf-id" style="font-size:12px; color:var(--muted);">#...</span>
@@ -1476,7 +1780,13 @@
 
         <!-- PAGE: ORDERS (past only) -->
         <div id="page-orders" class="page">
-          <h2 style="font-size:18px; font-weight:900; color:var(--em); margin-bottom:6px;">طلباتي السابقة</h2>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; flex-wrap:wrap;">
+            <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">طلباتي السابقة</h2>
+            <button type="button" id="orders-clear-all" onclick="clearAllOrders()"
+              style="display:none; align-items:center; gap:6px; border:1.5px solid #FFCDD2; background:#FFEBEE; color:#E53935; border-radius:10px; padding:8px 14px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:12px; cursor:pointer;">
+              مسح كل الطلبات
+            </button>
+          </div>
           <p style="font-size:13px; color:var(--muted); font-weight:700; margin-bottom:16px;">سجل طلباتك المكتملة</p>
           <div id="orders-list"></div>
         </div>
@@ -1514,8 +1824,9 @@
               data-ar="رقم الجوال" data-en="Phone Number">
               رقم الجوال
             </label>
-            <input id="set-phone-input" type="tel"
-              placeholder="07X XXXX XXXX"
+            <input id="set-phone-input" type="tel" inputmode="numeric"
+              maxlength="10" pattern="0[7][7-9][0-9]{7}" required
+              placeholder="07XXXXXXXX"
               style="width:100%; padding:10px 14px;
               margin-bottom:12px;
               border:1.5px solid var(--border);
@@ -1648,7 +1959,45 @@
     // when surrounded by RTL Arabic in WhatsApp.
     const LRM = '‎';
 
+    function escapeHtml(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Display the order's saved ISO timestamp in the active language. Falls
+    // back to whatever the order originally stored (older records).
+    function formatOrderDate(iso, fallback) {
+      if (!iso) return fallback || '';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return fallback || iso;
+      const locale = currentLang === 'ar' ? 'ar-JO' : 'en-GB';
+      try { return d.toLocaleDateString(locale); }
+      catch (e) { return fallback || iso; }
+    }
+    function formatOrderTime(iso, fallback) {
+      if (!iso) return fallback || '';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return fallback || iso;
+      const locale = currentLang === 'ar' ? 'ar-JO' : 'en-GB';
+      try { return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }); }
+      catch (e) { return fallback || iso; }
+    }
+    function orderCafeName(o) {
+      // Older orders stored a hardcoded brand name; remap to the active
+      // language whenever we recognise it.
+      if (!o) return t('cafeBrandName');
+      if (o.cafeName === 'بريو بريميم' || o.cafeName === 'Brewo Premium' || !o.cafeName) {
+        return t('cafeBrandName');
+      }
+      return o.cafeName;
+    }
+
     function buildOrderWhatsAppText(order, user) {
+      order = order || {};
       const u = user || {};
       const isAr = currentLang !== 'en';
       const L = isAr
@@ -1681,14 +2030,22 @@
             cur:  'JD'
           };
 
-      const money = (n) => LRM + Number(n || 0).toFixed(2) + ' ' + L.cur;
-      const ltr   = (s) => LRM + String(s || '');
+      // LRM brackets keep numbers + currency rendering left-to-right
+      // when the surrounding paragraph is Arabic (otherwise the digits
+      // can appear reversed next to the unit).
+      const money = (n) => LRM + Number(n || 0).toFixed(2) + ' ' + L.cur + LRM;
+      const ltr   = (s) => LRM + String(s || '') + LRM;
 
+      const noteLabel = isAr ? 'ملاحظة' : 'Note';
       const itemLines = (order.items || []).map(function (i) {
         const sub = money(i.price * i.qty);
         const qty = i.qty > 1 ? ' ' + L.qty + i.qty : '';
         const opt = i.option ? ' (' + sanitizeForWa(i.option) + ')' : '';
-        return '• ' + sanitizeForWa(i.name) + opt + qty + ' — ' + sub;
+        const displayName = isAr ? i.name : (typeof translateItemName === 'function' ? translateItemName(i.name) : i.name);
+        let line = '• ' + sanitizeForWa(displayName) + opt + qty + ' — ' + sub;
+        const noteText = sanitizeForWa(i.note || '');
+        if (noteText) line += '\n   📝 ' + noteLabel + ': ' + noteText;
+        return line;
       });
 
       const sep = '────────';
@@ -1716,7 +2073,7 @@
       const link = document.getElementById('whatsapp-order-link');
       if (!wrap || !link) return;
       const cafeDigits = digitsOnly(CAFE_WHATSAPP_E164);
-      if (!cafeDigits) {
+      if (!cafeDigits || !order || !Array.isArray(order.items) || order.items.length === 0) {
         wrap.style.display = 'none';
         link.removeAttribute('href');
         return;
@@ -1747,7 +2104,8 @@
         enterFloor: 'اختر طابقك',
         nameTooShort: 'الاسم قصير جداً (٢ حرف على الأقل)',
         officeInvalid: 'رقم مكتب غير صالح',
-        phoneInvalid: 'رقم جوال غير صالح (مثال: 07XXXXXXXX)',
+        phoneInvalid: 'رقم الجوال يجب أن يكون 10 أرقام بالضبط (مثال: 07XXXXXXXX)',
+        phoneRequired: 'يرجى إدخال رقم الجوال (10 أرقام)',
         shareTitle: 'بريو — قهوتك لعندك',
         shareText: 'جرب بريو ☕ — اطلب قهوتك وتوصلك لمكتبك في مجمع عمال',
         shareBtn: 'شارك التطبيق',
@@ -1839,7 +2197,41 @@
         waterName:     'ماء',
         waterDesc:     'ماء معدني نقي',
         teaName:       'شاي',
-        teaDesc:       'شاي طازج — اختار نوعك المفضل'
+        teaDesc:       'شاي طازج — اختار نوعك المفضل',
+        selectDrinkType: 'اختر نوع المشروب أولاً',
+        selectSugar:   'اختر مستوى السكر',
+        addedToCart:   '✅ تمت الإضافة',
+        qrUnavailable: 'كود QR غير متاح للتحميل',
+        qrFailed:      'تعذر إنشاء الكود',
+        reorderHint:   'أعد اختيار مشروباتك من القائمة',
+        statusDelivered:'تم التوصيل',
+        statusCancelled:'ملغي',
+        statusRefunded: 'مسترد',
+        adminColId:    'رقم',
+        adminColStatus:'الحالة',
+        adminColTotal: 'المجموع',
+        adminEmpty:    'لا توجد طلبات',
+        tenantHint:    'يبدو أنك تطلب لـ ',
+        deliveryReceived: 'تم استلام طلبك!',
+        freeGift:      'مجاني 🎁',
+        guestModeTitle:'تصفح كزائر',
+        guestModeMsg:  'لإتمام الطلب، سجّل الدخول باسمك ورقم مكتبك. تقدر تتصفح المشروبات بدون تسجيل.',
+        signInBtn:     'تسجيل الدخول',
+        keepBrowsing:  'متابعة التصفح',
+        guestBadge:    'وضع الزائر',
+        drinkNoteLbl:  'ملاحظة (اختياري)',
+        drinkNotePh:   'مثلاً: بدون قشطة، أقل سخونة...',
+        notePrefix:    'ملاحظة',
+        cafeBrandName: 'بريو بريميم',
+        cartLabel:     'السلة',
+        deleteOrder:   'حذف 🗑',
+        deleteOrderTitle:'حذف الطلب',
+        deleteOrderMsg:'هل تريد حذف هذا الطلب من سجل طلباتك؟ لا يمكن التراجع.',
+        deleteYes:     'نعم، احذف',
+        orderDeleted:  'تم حذف الطلب',
+        clearAllOrders:'مسح كل الطلبات',
+        clearAllTitle: 'مسح السجل',
+        clearAllMsg:   'هل تريد حذف كل طلباتك السابقة؟ لا يمكن التراجع.'
       },
       en: {
         appName:       'Brewo',
@@ -1856,7 +2248,8 @@
         enterFloor: 'Please select your floor',
         nameTooShort: 'Name is too short (min 2 characters)',
         officeInvalid: 'Invalid office number',
-        phoneInvalid: 'Invalid phone number (e.g. 07XXXXXXXX)',
+        phoneInvalid: 'Phone number must be exactly 10 digits (e.g. 07XXXXXXXX)',
+        phoneRequired: 'Please enter your phone number (10 digits)',
         shareTitle: 'Brewo — coffee to your desk',
         shareText: 'Try Brewo ☕ — order coffee delivered to your office in Ammal Complex',
         shareBtn: 'Share app',
@@ -1948,7 +2341,41 @@
         waterName:     'Water',
         waterDesc:     'Pure mineral water',
         teaName:       'Tea',
-        teaDesc:       'Fresh tea — choose your favorite type'
+        teaDesc:       'Fresh tea — choose your favorite type',
+        selectDrinkType: 'Choose a drink type first',
+        selectSugar:   'Choose a sugar level',
+        addedToCart:   '✅ Added',
+        qrUnavailable: 'QR code unavailable',
+        qrFailed:      'Unable to render code',
+        reorderHint:   'Re-pick your drinks from the menu',
+        statusDelivered:'Delivered',
+        statusCancelled:'Cancelled',
+        statusRefunded: 'Refunded',
+        adminColId:    'ID',
+        adminColStatus:'Status',
+        adminColTotal: 'Total',
+        adminEmpty:    'No orders',
+        tenantHint:    'Looks like ',
+        deliveryReceived: 'Order received!',
+        freeGift:      'Free 🎁',
+        guestModeTitle:'Browsing as guest',
+        guestModeMsg:  'To place an order, please sign in with your name and office. You can keep browsing the menu without signing in.',
+        signInBtn:     'Sign In',
+        keepBrowsing:  'Keep Browsing',
+        guestBadge:    'Guest mode',
+        drinkNoteLbl:  'Note (optional)',
+        drinkNotePh:   'e.g. less hot, no foam...',
+        notePrefix:    'Note',
+        cafeBrandName: 'Brewo Premium',
+        cartLabel:     'Cart',
+        deleteOrder:   'Delete 🗑',
+        deleteOrderTitle:'Delete order',
+        deleteOrderMsg:'Remove this order from your history? This cannot be undone.',
+        deleteYes:     'Yes, delete',
+        orderDeleted:  'Order deleted',
+        clearAllOrders:'Clear all orders',
+        clearAllTitle: 'Clear history',
+        clearAllMsg:   'Remove every past order? This cannot be undone.'
       }
     };
     function t(key) {
@@ -2127,6 +2554,7 @@
       if (active) {
         if (active.id === 'page-checkout' && typeof renderCheckoutPage === 'function') renderCheckoutPage();
         if (active.id === 'page-orders'   && typeof renderOrders       === 'function') renderOrders();
+        if (active.id === 'page-admin'    && typeof renderAdminPage    === 'function') renderAdminPage();
       }
     }
     function applyTranslations() {
@@ -2216,7 +2644,7 @@
           document.getElementById('top-navbar').style.display = 'flex';
           applyUser();
           if (!pageFromHash()) {
-            navTo('page-drinks', { replace: true });
+            navTo('page-home', { replace: true });
           }
         } else {
           document.body.classList.remove('app-logged-in');
@@ -2287,7 +2715,7 @@
     const HASH_TO_PAGE = Object.fromEntries(
       Object.entries(ROUTES).map(([p, h]) => [h, p])
     );
-    const PUBLIC_PAGES = new Set(['page-home']);
+    const PUBLIC_PAGES = new Set(['page-home', 'page-drinks']);
     let _pendingHashAfterLogin = null;
 
     function pageFromHash() {
@@ -2301,15 +2729,43 @@
       opts = opts || {};
       const pageId = pageFromHash();
       if (!currentUser) {
-        if (pageId && !PUBLIC_PAGES.has(pageId)) {
-          _pendingHashAfterLogin = pageId;
+        if (pageId && PUBLIC_PAGES.has(pageId)) {
+          // Deep-linked share/QR lands on a public page (e.g. #drinks):
+          // auto-create a guest session so the menu renders immediately,
+          // and the existing guest gating prompts for login on add-to-cart.
+          autoGuestSession();
+          navTo(pageId, { fromRoute: true, replace: opts.replace });
+          return;
         }
+        if (pageId) _pendingHashAfterLogin = pageId;
         return;
       }
       _pendingHashAfterLogin = null;
       if (!pageId) return;
-      if (pageId === 'page-admin' && !currentUser) return;
       navTo(pageId, { fromRoute: true, replace: opts.replace });
+    }
+
+    function autoGuestSession() {
+      if (currentUser) return;
+      // Transient: NOT persisted to localStorage. We only want browse access
+      // for this tab; reloading should land back on the login page so the
+      // user is never silently "stuck" as guest forever.
+      currentUser = {
+        name:   currentLang === 'ar' ? 'زائر' : 'Guest',
+        office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
+        floor:  currentLang === 'ar' ? 'الطابق 1' : 'Floor 1',
+        phone:  '',
+        isGuest: true,
+        isTransient: true
+      };
+      const lp = document.getElementById('page-login');
+      if (lp) lp.style.display = 'none';
+      document.body.classList.add('app-logged-in');
+      const tn = document.getElementById('top-navbar');
+      if (tn) tn.style.display = 'flex';
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.style.display = 'flex';
+      applyUser();
     }
 
     window.addEventListener('hashchange', () => handleRoute());
@@ -2317,6 +2773,7 @@
       if (!currentUser) return;
       const pageId = (e.state && e.state.pageId) || pageFromHash() || 'page-drinks';
       if (pageId === 'page-login' || pageId === 'page-confirmed') return;
+      if (pageId === 'page-admin' && !currentUser) return;
       navTo(pageId, { fromRoute: true });
     });
 
@@ -2396,7 +2853,7 @@
           correctLevel: QRCode.CorrectLevel.H
         });
       } catch (e) {
-        el.innerHTML = '<span style="font-size:12px;color:var(--muted);font-weight:700;">تعذر إنشاء الكود</span>';
+        el.innerHTML = '<span style="font-size:12px;color:var(--muted);font-weight:700;">' + t('qrFailed') + '</span>';
       }
     }
 
@@ -2419,6 +2876,15 @@
 
     function navTo(pageId, opts) {
       opts = opts || {};
+      // Auth gate: app pages require a logged-in user.
+      if (!currentUser && pageId !== 'page-login' && pageId !== 'page-home') {
+        return;
+      }
+      // Admin is intentionally not exposed in the UI; only allow direct
+      // navigation when a user is logged in.
+      if (pageId === 'page-admin' && !currentUser) {
+        return;
+      }
       document.querySelectorAll('.page')
         .forEach(p => {
           p.style.display = 'none';
@@ -2485,12 +2951,63 @@
       return { ok: true, value: s };
     }
 
-    // Office-number → tenant suggestions (extend freely).
-    const OFFICE_TENANTS = {
-      '201': { ar: 'Printman',  en: 'Printman' },
-      '406': { ar: 'Folowise', en: 'Folowise' },
-      '407': { ar: 'Folowise', en: 'Folowise' }
-    };
+    // Office-number → tenant suggestions for مجمع الصالحين التجاري.
+    const OFFICE_TENANTS = (() => {
+      const t = {};
+      const set = (rooms, ar, en) => rooms.forEach(r => { t[String(r)] = { ar: ar, en: en || ar }; });
+      // 1st Floor
+      set([101], 'نوافذ', 'Nawafez');
+      set([102], 'Golden Value', 'Golden Value');
+      set([103], 'Second Life', 'Second Life');
+      set([104], 'Mumkenat Agency', 'Mumkenat Agency');
+      set([105, 106], 'أكاديمية مايا لتعليم فن تصميم الأزياء', 'Maya Fashion Design Academy');
+      set([107], 'الأفق العصري', 'Al-Ofok Al-Asri');
+      set([108], 'الأفق العصري (امتداد)', 'Al-Ofok Al-Asri (Ext.)');
+      set([109], 'شركة دلتا للتدريب والتطوير', 'Delta Training & Development');
+      set([110], 'مركز مريم للاستشارات الغذائية', 'Maryam Nutrition Consulting');
+      set([111, 112], 'وجه القمر', 'Wajh Al-Qamar');
+      // 2nd Floor
+      set([201], 'مؤسسة عماد القضاة لتجارة السيارات', 'Imad Al-Qudah Auto Trading');
+      set([202], 'مؤسسة الحاكورة لإعداد البرامج', 'Al-Hakoura Programs');
+      set([203], 'Rania Studio', 'Rania Studio');
+      set([204], 'أكرم كتكوت', 'Akram Katkout');
+      set([205], 'أهل الهمم', 'Ahl Al-Himam');
+      set([206], 'العائلات الأردنية', 'Jordanian Families');
+      set([207], 'Print Man', 'Print Man');
+      set([208], 'HADRYFACIAL Queen', 'HADRYFACIAL Queen');
+      set([209], 'علي النجار', 'Ali Al-Najjar');
+      set([210], 'تاج العدل', 'Taj Al-Adel');
+      set([211], 'الكفاءة للخدمات الزراعية', 'Al-Kafa\'a Agricultural Services');
+      set([212], 'أبو الهوى', 'Abu Al-Hawa');
+      // 3rd Floor
+      set([301], 'Sbody', 'Sbody');
+      set([302], 'شركة رقي الحياة', 'Roqi Al-Hayat');
+      set([303], 'مجددون الأردن', 'Mojaddidoon Jordan');
+      set([304], 'الرائد أبو عبيد', 'Al-Ra\'ed Abu Obaid');
+      set([305], 'شركة أمجد وماجد سلامة', 'Amjad & Majed Salameh');
+      set([306], 'مؤسسة علاء عودة لتجهيز المكاتب', 'Alaa Odeh Office Supplies');
+      set([307], 'شركة وتد', 'Watad');
+      set([308], 'شركة أزاد', 'Azad');
+      set([309], 'Project Studio', 'Project Studio');
+      set([310], 'مكتب الدكتور خالد الدعجة', 'Dr. Khaled Al-Da\'ja Office');
+      set([311, 312], 'شركة جوهرة الحياة', 'Jawharat Al-Hayat');
+      // 4th Floor
+      set([401], 'مكتب الدكتور خالد الدعجة', 'Dr. Khaled Al-Da\'ja Office');
+      set([402, 403, 404], 'JO Academy', 'JO Academy');
+      set([405], 'الأنظمة الرقمية — محاسبية وقانونية', 'Digital Systems (Accounting & Legal)');
+      set([406, 407], 'Folowise', 'Folowise');
+      set([408], 'شركة ماهر العوايشة العقارية', 'Maher Al-Awaysheh Real Estate');
+      set([409, 410, 411, 412], 'Falcon Engineering Solutions', 'Falcon Engineering Solutions');
+      // 5th Floor
+      set([501], 'Smart Chemical', 'Smart Chemical');
+      set([502, 503], 'HALLA’S Studio', 'HALLA’S Studio');
+      set([504], 'شركة المتحكمات الدقيقة للأنظمة الذكية', 'Precision Controllers — Smart Systems');
+      set([505, 506, 507], 'BETO KERATIN', 'BETO KERATIN');
+      set([508], 'مركز بيو كيراتين', 'Bio Keratin Center');
+      set([509, 510, 511], 'Female Zone', 'Female Zone');
+      set([512], 'LEXAMJO', 'LEXAMJO');
+      return t;
+    })();
     function lookupOfficeTenant(raw) {
       const digits = String(raw || '').replace(/\D/g, '');
       if (!digits) return null;
@@ -2505,8 +3022,7 @@
       const update = () => {
         const tenant = lookupOfficeTenant(input.value);
         if (tenant) {
-          const prefix = currentLang === 'ar' ? 'يبدو أنك تطلب لـ ' : 'Looks like ';
-          hint.textContent = prefix + tenant + ' ✨';
+          hint.textContent = t('tenantHint') + tenant + ' ✨';
           hint.style.display = 'block';
         } else {
           hint.textContent = '';
@@ -2522,21 +3038,16 @@
       if (!s) return { ok: false, msg: t('enterFloor') };
       return { ok: true, value: s };
     }
-    function validatePhone(v, opts) {
-      opts = opts || {};
+    function validatePhone(v) {
+      // Strictly 10 digits in Jordan local format: 07X XXXXXXX where the
+      // 3rd digit is 7-9 (Zain/Orange/Umniah). Empty, shorter, or longer
+      // values are rejected with a length-specific message.
       const raw = String(v || '').trim();
-      if (!raw) {
-        if (opts.required) return { ok: false, msg: t('phoneInvalid') };
-        return { ok: true, value: '' };
-      }
       const digits = raw.replace(/\D/g, '');
-      let normalized = '';
-      if (/^00962[7][7-9]\d{7}$/.test(digits)) normalized = '+' + digits.slice(2);
-      else if (/^962[7][7-9]\d{7}$/.test(digits)) normalized = '+' + digits;
-      else if (/^0[7][7-9]\d{7}$/.test(digits)) normalized = '+962' + digits.slice(1);
-      else if (/^[7][7-9]\d{7}$/.test(digits)) normalized = '+962' + digits;
-      else return { ok: false, msg: t('phoneInvalid') };
-      return { ok: true, value: normalized };
+      if (digits.length === 0) return { ok: false, msg: t('phoneRequired') };
+      if (digits.length !== 10) return { ok: false, msg: t('phoneInvalid') };
+      if (!/^0[7][7-9]\d{7}$/.test(digits)) return { ok: false, msg: t('phoneInvalid') };
+      return { ok: true, value: digits };
     }
 
     function setFieldError(elId, msg) {
@@ -2584,7 +3095,7 @@
       document.getElementById('sidebar').style.display = 'flex';
 
       applyUser();
-      const target = _pendingHashAfterLogin || 'page-drinks';
+      const target = _pendingHashAfterLogin || 'page-home';
       _pendingHashAfterLogin = null;
       navTo(target, { replace: true });
     }
@@ -2594,7 +3105,8 @@
         name:   currentLang === 'ar' ? 'زائر' : 'Guest',
         office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
         floor:  currentLang === 'ar' ? 'الطابق 1' : 'Floor 1',
-        phone:  ''
+        phone:  '',
+        isGuest: true
       };
       try {
         localStorage.setItem('brewoUser', JSON.stringify(currentUser));
@@ -2604,7 +3116,7 @@
       document.getElementById('top-navbar').style.display = 'flex';
       document.getElementById('sidebar').style.display = 'flex';
       applyUser();
-      const target = _pendingHashAfterLogin || 'page-drinks';
+      const target = _pendingHashAfterLogin || 'page-home';
       _pendingHashAfterLogin = null;
       navTo(target, { replace: true });
     }
@@ -2665,7 +3177,10 @@
     function applyUser() {
       if (!currentUser) return;
       document.getElementById('user-display-name').textContent = currentUser.name;
-      document.getElementById('user-display-office').textContent = currentUser.office + ' | ' + currentUser.floor;
+      document.getElementById('user-display-office').textContent =
+        currentUser.isGuest
+          ? t('guestBadge')
+          : (currentUser.office + ' | ' + currentUser.floor);
       document.getElementById('user-badge').textContent = currentUser.name.charAt(0);
       document.getElementById('set-avatar').textContent = currentUser.name.charAt(0);
       document.getElementById('settings-name').textContent = currentUser.name;
@@ -2729,20 +3244,63 @@
       setTimeout(() => { t.style.display = 'none'; }, 2400);
     }
 
-    function addCustomDrink(drinkName, option, price, qty) {
+    // Guest visitors can browse but cannot order. When they hit an
+    // ordering action, prompt them to sign in for real. Returns true
+    // when the action was blocked (caller must abort).
+    async function requireRealLogin() {
+      if (!currentUser || !currentUser.isGuest) return false;
+      const wantsLogin = await brewoConfirm({
+        title: t('guestModeTitle'),
+        message: t('guestModeMsg'),
+        okText: t('signInBtn'),
+        cancelText: t('keepBrowsing')
+      });
+      if (wantsLogin) {
+        // Drop guest session and route to login.
+        currentUser = null;
+        cart = { items: [] };
+        try { localStorage.removeItem('brewoUser'); } catch (e) {}
+        document.body.classList.remove('app-logged-in');
+        const cb = document.getElementById('cart-bar');
+        if (cb) cb.style.display = 'none';
+        const tn = document.getElementById('top-navbar');
+        if (tn) tn.style.display = 'none';
+        const sb = document.getElementById('sidebar');
+        if (sb) sb.style.display = 'none';
+        document.querySelectorAll('.page').forEach(p => {
+          p.style.display = 'none';
+          p.classList.remove('active');
+        });
+        const loginPage = document.getElementById('page-login');
+        if (loginPage) {
+          loginPage.style.display = 'flex';
+          loginPage.classList.add('active');
+        }
+        updateCartUI();
+        try {
+          history.replaceState({ pageId: 'page-login' }, '', location.pathname + location.search);
+        } catch (e) {}
+      }
+      return true;
+    }
+
+    async function addCustomDrink(drinkName, option, price, qty, note) {
       if (!option) {
-        showToast('اختر نوع المشروب أولاً');
+        showToast(t('selectDrinkType'));
         return;
       }
+      const cleanNote = sanitizeForWa(note || '');
       const fullName = drinkName + ' — ' + option;
-      const existing = cart.items.find(i => i.name === fullName);
+      // Merge into existing line only when the note matches too — otherwise
+      // distinct notes deserve distinct lines so the cafe can read both.
+      const existing = cart.items.find(i => i.name === fullName && (i.note || '') === cleanNote);
       if (existing) {
         existing.qty += qty;
       } else {
-        cart.items.push({ name: fullName, price, qty });
+        cart.items.push({ name: fullName, price, qty, note: cleanNote });
       }
       updateCartUI();
-      showToast('✅ تمت الإضافة: ' + fullName + ' ×' + qty);
+      showToast(t('addedToCart') + ': ' + translateItemName(fullName) + ' ×' + qty);
       resetDrinkForm(drinkName);
     }
 
@@ -2769,10 +3327,17 @@
           updateTeaBtn();
         }
       }
+      const noteEl = document.getElementById(id + '-note');
+      if (noteEl) noteEl.value = '';
       const qtyEl = document.getElementById(id + '-qty');
       if (qtyEl) qtyEl.textContent = '1';
       drinkQty[id] = 1;
       updateDrinkBtn(id);
+    }
+
+    function readDrinkNote(id) {
+      const el = document.getElementById(id + '-note');
+      return el ? String(el.value || '').trim() : '';
     }
 
     function changeDrinkQty(id, delta) {
@@ -2801,12 +3366,12 @@
     function addTurkishToCart() {
       const opt = document.querySelector('input[name="turkish-type"]:checked');
       const label = !opt ? '' : (currentLang === 'ar' ? opt.value : (opt.dataset.en || opt.value));
-      addCustomDrink('قهوة تركية', label, 0.60, drinkQty.turkish);
+      addCustomDrink('قهوة تركية', label, 0.60, drinkQty.turkish, readDrinkNote('turkish'));
     }
     function addNescafeToCart() {
       const sugar = document.querySelector('input[name="nescafe-sugar"]:checked');
       if (!sugar) {
-        showToast('اختر مستوى السكر');
+        showToast(t('selectSugar'));
         return;
       }
       const milkEl = document.getElementById('nescafe-milk');
@@ -2815,11 +3380,11 @@
       if (withMilk) parts.push('بحليب');
       parts.push(sugar.value);
       const option = parts.join('، ');
-      addCustomDrink('نسكافيه', option, 0.50, drinkQty.nescafe);
+      addCustomDrink('نسكافيه', option, 0.50, drinkQty.nescafe, readDrinkNote('nescafe'));
     }
     function addWaterToCart() {
       const opt = document.querySelector('input[name="water-type"]:checked');
-      addCustomDrink('ماء', opt && opt.value, 0.25, drinkQty.water);
+      addCustomDrink('ماء', opt && opt.value, 0.25, drinkQty.water, readDrinkNote('water'));
     }
     function addTeaToCart() {
       const type = document.querySelector('input[name="tea-type"]:checked');
@@ -2830,7 +3395,7 @@
       }
       const typeLabel = currentLang === 'ar' ? type.value : (type.dataset.en || type.value);
       const sugarLabel = currentLang === 'ar' ? sugar.value : (sugar.dataset.en || sugar.value);
-      addCustomDrink('شاي', typeLabel + ' — ' + sugarLabel, 0.50, drinkQty['tea']);
+      addCustomDrink('شاي', typeLabel + ' — ' + sugarLabel, 0.50, drinkQty['tea'], readDrinkNote('tea'));
     }
     function updateTeaBtn() {
       const typeSelected = document.querySelector(
@@ -2845,6 +3410,8 @@
       }
     }
     function goCheckout() {
+      // Cart is always viewable — like any real e-commerce site. Sign-in is
+      // only required at the actual "Place order" step (confirmOrder).
       navTo('page-checkout');
     }
 
@@ -2863,14 +3430,27 @@
       if (cbTotal) cbTotal.textContent = fmtMoney(total);
       if (cbArrow) cbArrow.textContent = currentLang === 'ar' ? '←' : '→';
 
+      const topCart = document.getElementById('top-cart');
       const navBadge = document.getElementById('nav-cart-badge');
+      const navTotal = document.getElementById('nav-cart-total');
+      const navLabel = document.getElementById('nav-cart-label');
+      if (navLabel) navLabel.textContent = t('cartLabel');
       if (navBadge) {
-        if (count > 0) {
-          navBadge.textContent = count > 99 ? '99+' : String(count);
-          navBadge.style.display = 'flex';
-        } else {
-          navBadge.style.display = 'none';
+        const prev = navBadge.textContent;
+        const next = count > 99 ? '99+' : String(count);
+        navBadge.textContent = next;
+        if (prev !== next) {
+          if (topCart) {
+            topCart.classList.remove('bump');
+            void topCart.offsetWidth;
+            topCart.classList.add('bump');
+          }
         }
+      }
+      if (navTotal) navTotal.textContent = Number(total || 0).toFixed(2);
+      if (topCart) {
+        if (count > 0) topCart.classList.remove('is-empty');
+        else topCart.classList.add('is-empty');
       }
 
       const activePage = document.querySelector('.page.active');
@@ -2879,11 +3459,11 @@
 
     function updateCartBarVisibility(pageId) {
       const bar = document.getElementById('cart-bar');
-      if (pageId === 'page-login') {
-        bar.style.display = 'none';
-        return;
-      }
-      if (cart.items.length > 0) {
+      if (!bar) return;
+      // Cart-bar only acts as a CTA on browse pages. Hide it once the user
+      // is already at/past checkout, viewing past orders, or in admin.
+      const SHOW_ON = new Set(['page-home', 'page-drinks']);
+      if (cart.items.length > 0 && SHOW_ON.has(pageId)) {
         bar.style.display = 'flex';
       } else {
         bar.style.display = 'none';
@@ -2900,11 +3480,15 @@
       let total = 0;
       const isAr = currentLang === 'ar';
       cart.items.forEach((item, idx) => {
+        const noteHtml = item.note
+          ? `<div style="font-size:11px;color:var(--em);font-weight:700;margin-top:4px;line-height:1.4;">📝 ${escapeHtml(item.note)}</div>`
+          : '';
         html += `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:white; padding:12px; border-radius:12px; border:1px solid var(--border);">
-            <div style="text-align:${isAr ? 'right' : 'left'};">
-              <div style="font-size:14px; font-weight:800; color:var(--em);">${translateItemName(item.name)}</div>
+            <div style="text-align:start; flex:1; min-width:0;">
+              <div style="font-size:14px; font-weight:800; color:var(--em);">${escapeHtml(translateItemName(item.name))}</div>
               <div style="font-size:12px; color:var(--muted); font-weight:700;">${item.qty} × ${fmtMoney(item.price)}</div>
+              ${noteHtml}
             </div>
             <button onclick="removeFromCart(${idx})" style="border:none; background:transparent; font-size:18px; cursor:pointer; color:#E53935;">✕</button>
           </div>
@@ -2929,7 +3513,8 @@
       renderCheckoutPage();
     }
 
-    function confirmOrder() {
+    async function confirmOrder() {
+      if (await requireRealLogin()) return;
       if (cart.items.length === 0) {
         showToast(t('emptyCartTitle'));
         navTo('page-drinks');
@@ -2945,16 +3530,21 @@
       const floor  = floorRes.value;
       
       const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const nowIso = new Date().toISOString();
       const order = {
-        id: 'BR' + Math.floor(1000 + Math.random() * 9000),
-        cafeName: 'بريو بريميم',
-        items: [...cart.items],
+        // Time-suffixed id avoids collisions when two orders are
+        // submitted in the same millisecond.
+        id: 'BR' + (Date.now().toString(36).toUpperCase().slice(-4)) + Math.floor(10 + Math.random() * 89),
+        cafeName: t('cafeBrandName'),
+        items: cart.items.map(i => ({ name: i.name, price: i.price, qty: i.qty, note: i.note || '' })),
         total: total,
         office: office,
         floor: floor,
         user: currentUser.name,
-        date: new Date().toLocaleDateString('ar-JO'),
-        time: new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' }),
+        // Locale-neutral storage so past orders read correctly in either language.
+        createdAt: nowIso,
+        date: formatOrderDate(nowIso),
+        time: formatOrderTime(nowIso),
         status: 'new'
       };
       
@@ -2962,7 +3552,7 @@
       try { saveOrders(); } catch (e) {}
       
       // CONFIRM PAGE UI
-      document.getElementById('conf-cafe').textContent = order.cafeName;
+      document.getElementById('conf-cafe').textContent = orderCafeName(order);
       document.getElementById('conf-id').textContent = '#' + order.id;
       const itemSep = currentLang === 'ar' ? '، ' : ', ';
       document.getElementById('conf-items').textContent = order.items.map(i => translateItemName(i.name)).join(itemSep);
@@ -2978,7 +3568,8 @@
         const o = orders.find(x => x.id === order.id);
         if (o) {
           o.status = 'delivered';
-          o.deliveredTime = new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' });
+          o.deliveredAt = new Date().toISOString();
+          o.deliveredTime = formatOrderTime(o.deliveredAt);
           try { saveOrders(); } catch (e) {}
           showDeliveryNotification(o);
         }
@@ -3016,9 +3607,9 @@
 
     function downloadQR() {
       const canvas = document.querySelector('#qr-display canvas');
-      if (!canvas) { 
-        showToast('QR Code غير متاح للتحميل'); 
-        return; 
+      if (!canvas) {
+        showToast(t('qrUnavailable'));
+        return;
       }
       const link = document.createElement('a');
       link.download = 'brewo-order-' + document.getElementById('qr-order-number').textContent + '.png';
@@ -3034,7 +3625,7 @@
 
     function showDeliveryNotification(order) {
       const notif = document.getElementById('delivery-notif');
-      document.getElementById('dn-cafe').textContent = order.cafeName;
+      document.getElementById('dn-cafe').textContent = orderCafeName(order);
       document.getElementById('dn-id').textContent = order.id;
       notif.style.display = 'flex';
       
@@ -3045,39 +3636,92 @@
 
     function pastOrderCard(o) {
       const statusMap = {
-        delivered: { label: 'تم التوصيل', bg: 'var(--em-light)', color: 'var(--em)' },
-        cancelled: { label: 'ملغي', bg: '#FFEBEE', color: '#E53935' },
-        refunded:  { label: 'مسترد', bg: 'var(--soft)', color: 'var(--muted)' }
+        delivered: { label: t('statusDelivered'), bg: 'var(--em-light)', color: 'var(--em)' },
+        cancelled: { label: t('statusCancelled'), bg: '#FFEBEE', color: '#E53935' },
+        refunded:  { label: t('statusRefunded'),  bg: 'var(--soft)',     color: 'var(--muted)' }
       };
       const st = statusMap[o.status] || { label: o.status, bg: 'var(--soft)', color: 'var(--muted)' };
-      const when = (o.date ? o.date + ' — ' : '') + o.time;
-      const drinks = o.items.map(i => translateItemName(i.name)).join(currentLang === 'ar' ? '، ' : ', ');
-      const lineAlign = currentLang === 'ar' ? 'right' : 'left';
+      const date = o.createdAt ? formatOrderDate(o.createdAt, o.date) : (o.date || '');
+      const time = o.createdAt ? formatOrderTime(o.createdAt, o.time) : (o.time || '');
+      const when = (date ? date + ' — ' : '') + time;
+      const itemsHtml = (o.items || []).map(i => {
+        const noteLine = i.note
+          ? `<div style="font-size:11px;color:var(--em);font-weight:700;margin-top:2px;">📝 ${escapeHtml(i.note)}</div>`
+          : '';
+        return `<div style="margin-bottom:6px;">
+            <span>${escapeHtml(translateItemName(i.name))}</span>
+            <span style="color:var(--muted);font-weight:700;"> ×${i.qty}</span>
+            ${noteLine}
+          </div>`;
+      }).join('');
+      const safeHint = String(t('reorderHint')).replace(/'/g, "\\'");
+      const safeId = String(o.id).replace(/'/g, "\\'");
       const reorder = o.status === 'delivered'
-        ? '<button type="button" onclick="navTo(\'page-drinks\');showToast(\'أعد اختيار مشروباتك من القائمة\')" class="btn-secondary" style="width:100%;margin-top:14px;border-radius:12px;padding:12px;font-size:14px;">اعد الطلب</button>'
+        ? '<button type="button" onclick="navTo(\'page-drinks\');showToast(\'' + safeHint + '\')" class="btn-secondary" style="flex:1;border-radius:12px;padding:12px;font-size:14px;">' + t('reorder') + '</button>'
+        : '';
+      const deleteBtn = '<button type="button" onclick="deleteOrder(\'' + safeId + '\')" class="past-order-del" aria-label="' + escapeHtml(t('deleteOrder')) + '" style="flex:0 0 auto;border:1.5px solid #FFCDD2;background:#FFEBEE;color:#E53935;border-radius:12px;padding:12px 16px;font-weight:800;font-size:14px;cursor:pointer;font-family:\'Tajawal\',sans-serif;">' + t('deleteOrder') + '</button>';
+      const actionsRow = (reorder || deleteBtn)
+        ? '<div style="display:flex;gap:8px;margin-top:14px;">' + reorder + deleteBtn + '</div>'
         : '';
       return `
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;">
             <div>
-              <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px;">رقم الطلب</div>
-              <div style="font-size:16px;font-weight:900;color:var(--em);">#${o.id}</div>
+              <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px;">${t('orderNum')}</div>
+              <div style="font-size:16px;font-weight:900;color:var(--em);">#${escapeHtml(o.id)}</div>
             </div>
-            <span style="font-size:11px;font-weight:800;padding:6px 12px;border-radius:20px;background:${st.bg};color:${st.color};">${st.label}</span>
+            <span style="font-size:11px;font-weight:800;padding:6px 12px;border-radius:20px;background:${st.bg};color:${st.color};">${escapeHtml(st.label)}</span>
           </div>
-          <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;">${when}</div>
-          <div style="font-size:13px;color:var(--char);font-weight:700;line-height:1.6;margin-bottom:12px;text-align:${lineAlign};">${drinks}</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;">${escapeHtml(when)}</div>
+          <div style="font-size:13px;color:var(--char);font-weight:700;line-height:1.6;margin-bottom:12px;text-align:start;">${itemsHtml}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;">
-            <span style="font-size:13px;font-weight:800;color:var(--char);">الإجمالي</span>
+            <span style="font-size:13px;font-weight:800;color:var(--char);">${t('orderTotal')}</span>
             <span style="font-size:15px;font-weight:900;color:var(--em);">${fmtMoney(o.total)}</span>
           </div>
-          ${reorder}
+          ${actionsRow}
         </div>`;
+    }
+
+    async function deleteOrder(id) {
+      const ok = await brewoConfirm({
+        title:   t('deleteOrderTitle'),
+        message: t('deleteOrderMsg'),
+        okText:  t('deleteYes'),
+        cancelText: t('confirmCancel')
+      });
+      if (!ok) return;
+      orders = orders.filter(o => o.id !== id);
+      saveOrders();
+      renderOrders();
+      showToast(t('orderDeleted'));
+    }
+
+    async function clearAllOrders() {
+      const past = orders.filter(o => ['delivered', 'cancelled', 'refunded'].includes(o.status));
+      if (!past.length) return;
+      const ok = await brewoConfirm({
+        title:   t('clearAllTitle'),
+        message: t('clearAllMsg'),
+        okText:  t('deleteYes'),
+        cancelText: t('confirmCancel')
+      });
+      if (!ok) return;
+      // Keep any in-flight orders (status 'new'); only drop the past ones.
+      orders = orders.filter(o => !['delivered', 'cancelled', 'refunded'].includes(o.status));
+      saveOrders();
+      renderOrders();
+      showToast(t('orderDeleted'));
     }
 
     function renderOrders() {
       const past = orders.filter(o =>
         ['delivered', 'cancelled', 'refunded'].includes(o.status));
+
+      // Toggle the "Clear all" header button visibility based on whether
+      // there is anything to clear.
+      const clearBtn = document.getElementById('orders-clear-all');
+      if (clearBtn) clearBtn.style.display = past.length ? 'inline-flex' : 'none';
+      if (clearBtn) clearBtn.textContent = t('clearAllOrders');
 
       const container = document.getElementById('orders-list');
 
@@ -3182,15 +3826,21 @@
       const el = document.getElementById('admin-orders-table');
       if (!el) return;
       if (!orders.length) {
-        el.innerHTML = '<p style="color:var(--muted);font-weight:700;">لا توجد طلبات</p>';
+        el.innerHTML = '<p style="color:var(--muted);font-weight:700;">' + t('adminEmpty') + '</p>';
         return;
       }
+      const statusLabel = (s) => {
+        if (s === 'delivered') return t('statusDelivered');
+        if (s === 'cancelled') return t('statusCancelled');
+        if (s === 'refunded')  return t('statusRefunded');
+        return s;
+      };
       let rows = orders.map(o =>
         '<tr><td style="padding:8px;border:1px solid var(--border);">#' + o.id + '</td>' +
-        '<td style="padding:8px;border:1px solid var(--border);">' + o.status + '</td>' +
-        '<td style="padding:8px;border:1px solid var(--border);">' + o.total.toFixed(2) + '</td></tr>'
+        '<td style="padding:8px;border:1px solid var(--border);">' + statusLabel(o.status) + '</td>' +
+        '<td style="padding:8px;border:1px solid var(--border);">' + fmtMoney(o.total) + '</td></tr>'
       ).join('');
-      el.innerHTML = '<table style="width:100%;font-size:12px;border-collapse:collapse;"><thead><tr><th style="padding:8px;border:1px solid var(--border);">رقم</th><th style="padding:8px;border:1px solid var(--border);">الحالة</th><th style="padding:8px;border:1px solid var(--border);">المجموع</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      el.innerHTML = '<table style="width:100%;font-size:12px;border-collapse:collapse;"><thead><tr><th style="padding:8px;border:1px solid var(--border);">' + t('adminColId') + '</th><th style="padding:8px;border:1px solid var(--border);">' + t('adminColStatus') + '</th><th style="padding:8px;border:1px solid var(--border);">' + t('adminColTotal') + '</th></tr></thead><tbody>' + rows + '</tbody></table>';
     }
 
   </script>
