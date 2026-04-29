@@ -373,7 +373,9 @@
       cursor: pointer;
     }
 
-    /* Login Page */
+    /* Login Page — hidden by default to avoid a flash before JS decides
+       whether to show it. The window.onload handler / requireRealLogin /
+       doLogout flip display:flex when the page should appear. */
     #page-login {
       position: fixed;
       inset: 0;
@@ -382,7 +384,7 @@
         url('./ChatGPT Image Apr 28, 2026, 03_48_52 PM.png') center/cover no-repeat,
         var(--em);
       z-index: 1000;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       padding: 24px;
@@ -1337,7 +1339,7 @@
       <p data-ar="اطلب قهوتك المفضلة وتوصلك لمكتبك" data-en="Order your favorite drink, delivered to your desk" style="font-size: 14px; color: #9FD4C0; font-weight: 700; margin-top: 0; margin-bottom: 32px; text-align: center;">اطلب قهوتك المفضلة وتوصلك لمكتبك</p>
       
       <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
-      <input id="li-office" class="login-input" type="text" required minlength="1" maxlength="30" autocomplete="off" data-ar="رقم المكتب (مثلاً: 407)" data-en="Office Number (e.g. 407)" placeholder="رقم المكتب (مثلاً: 407)" />
+      <input id="li-office" class="login-input" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" data-ar="رقم المكتب (101-512)" data-en="Office Number (101-512)" placeholder="رقم المكتب (101-512)" />
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
 
@@ -1742,7 +1744,7 @@
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">تأكيد بيانات التوصيل</div>
             <div style="margin-bottom:12px;">
               <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">رقم المكتب</label>
-              <input id="checkout-office-input" type="text" required minlength="1" maxlength="30" autocomplete="off" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+              <input id="checkout-office-input" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" placeholder="101-512" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
               <div id="checkout-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
               
             </div>
@@ -1828,7 +1830,7 @@
             <input id="set-n" type="text" required minlength="2" maxlength="40" autocomplete="name" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
 
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم المكتب</label>
-            <input id="set-o" type="text" required minlength="1" maxlength="30" autocomplete="off" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
+            <input id="set-o" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" placeholder="101-512" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
             <div id="set-o-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
             
             <label class="set-label"
@@ -2111,7 +2113,7 @@
         enterOffice: 'أدخل رقم المكتب',
         enterFloor: 'اختر طابقك',
         nameTooShort: 'الاسم قصير جداً (٢ حرف على الأقل)',
-        officeInvalid: 'رقم مكتب غير صالح',
+        officeInvalid: 'رقم المكتب يجب أن يكون من 101–112، 201–212، 301–312، 401–412، أو 501–512',
         phoneInvalid: 'رقم الجوال يجب أن يكون 10 أرقام بالضبط (مثال: 07XXXXXXXX)',
         phoneRequired: 'يرجى إدخال رقم الجوال (10 أرقام)',
         shareTitle: 'بريو — قهوتك لعندك',
@@ -2255,7 +2257,7 @@
         enterOffice: 'Please enter your office number',
         enterFloor: 'Please select your floor',
         nameTooShort: 'Name is too short (min 2 characters)',
-        officeInvalid: 'Invalid office number',
+        officeInvalid: 'Office must be 101–112, 201–212, 301–312, 401–412, or 501–512',
         phoneInvalid: 'Phone number must be exactly 10 digits (e.g. 07XXXXXXXX)',
         phoneRequired: 'Please enter your phone number (10 digits)',
         shareTitle: 'Brewo — coffee to your desk',
@@ -2950,9 +2952,14 @@
     function validateOffice(v) {
       const s = String(v || '').trim();
       if (!s) return { ok: false, msg: t('enterOffice') };
-      if (s.length > 30) return { ok: false, msg: t('officeInvalid') };
-      if (!/^[\p{L}\p{N}\s\-_/.#]+$/u.test(s)) return { ok: false, msg: t('officeInvalid') };
-      return { ok: true, value: s };
+      // Allowed: 1XX/2XX/3XX/4XX/5XX where XX is 01-12 (rooms 101-112,
+      // 201-212, ..., 501-512). Strip any non-digits so users can type
+      // "Office 305" or "rm-305" and still validate.
+      const digits = s.replace(/\D/g, '');
+      if (!/^[1-5](0[1-9]|1[0-2])$/.test(digits)) {
+        return { ok: false, msg: t('officeInvalid') };
+      }
+      return { ok: true, value: digits };
     }
 
     // Office-number → tenant suggestions for مجمع الصالحين التجاري.
@@ -3671,12 +3678,16 @@
     }
 
     function pastOrderCard(o) {
+      // Delivered orders no longer show a status pill — only cancelled
+      // and refunded surface a label, since those are the unusual states.
       const statusMap = {
-        delivered: { label: t('statusDelivered'), bg: 'var(--em-light)', color: 'var(--em)' },
         cancelled: { label: t('statusCancelled'), bg: '#FFEBEE', color: '#E53935' },
         refunded:  { label: t('statusRefunded'),  bg: 'var(--soft)',     color: 'var(--muted)' }
       };
-      const st = statusMap[o.status] || { label: o.status, bg: 'var(--soft)', color: 'var(--muted)' };
+      const st = statusMap[o.status];
+      const statusPill = st
+        ? `<span style="font-size:11px;font-weight:800;padding:6px 12px;border-radius:20px;background:${st.bg};color:${st.color};">${escapeHtml(st.label)}</span>`
+        : '';
       const date = o.createdAt ? formatOrderDate(o.createdAt, o.date) : (o.date || '');
       const time = o.createdAt ? formatOrderTime(o.createdAt, o.time) : (o.time || '');
       const when = (date ? date + ' — ' : '') + time;
@@ -3690,10 +3701,11 @@
             ${noteLine}
           </div>`;
       }).join('');
-      const safeHint = String(t('reorderHint')).replace(/'/g, "\\'");
       const safeId = String(o.id).replace(/'/g, "\\'");
-      const reorder = o.status === 'delivered'
-        ? '<button type="button" onclick="navTo(\'page-drinks\');showToast(\'' + safeHint + '\')" class="btn-secondary" style="flex:1;border-radius:12px;padding:12px;font-size:14px;">' + t('reorder') + '</button>'
+      // Cancelled/refunded can also be reordered; only thing that gates
+      // "Reorder" is whether items are still present on the order.
+      const reorder = (o.items && o.items.length)
+        ? '<button type="button" onclick="reorderFromHistory(\'' + safeId + '\')" class="btn-secondary" style="flex:1;border-radius:12px;padding:12px;font-size:14px;">' + t('reorder') + '</button>'
         : '';
       const deleteBtn = '<button type="button" onclick="deleteOrder(\'' + safeId + '\')" class="past-order-del" aria-label="' + escapeHtml(t('deleteOrder')) + '" style="flex:0 0 auto;border:1.5px solid #FFCDD2;background:#FFEBEE;color:#E53935;border-radius:12px;padding:12px 16px;font-weight:800;font-size:14px;cursor:pointer;font-family:\'Tajawal\',sans-serif;">' + t('deleteOrder') + '</button>';
       const actionsRow = (reorder || deleteBtn)
@@ -3706,7 +3718,7 @@
               <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px;">${t('orderNum')}</div>
               <div style="font-size:16px;font-weight:900;color:var(--em);">#${escapeHtml(o.id)}</div>
             </div>
-            <span style="font-size:11px;font-weight:800;padding:6px 12px;border-radius:20px;background:${st.bg};color:${st.color};">${escapeHtml(st.label)}</span>
+            ${statusPill}
           </div>
           <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;">${escapeHtml(when)}</div>
           <div style="font-size:13px;color:var(--char);font-weight:700;line-height:1.6;margin-bottom:12px;text-align:start;">${itemsHtml}</div>
@@ -3716,6 +3728,25 @@
           </div>
           ${actionsRow}
         </div>`;
+    }
+
+    // Repopulate the cart from a past order and jump to checkout so the
+    // user can confirm/edit before the WhatsApp message is sent.
+    function reorderFromHistory(id) {
+      const src = orders.find(o => o.id === id);
+      if (!src || !src.items || !src.items.length) return;
+      cart = {
+        items: src.items.map(i => ({
+          name: i.name,
+          price: i.price,
+          qty:   i.qty,
+          note:  i.note || ''
+        }))
+      };
+      saveCart();
+      updateCartUI();
+      navTo('page-checkout');
+      showToast(t('reorder'));
     }
 
     async function deleteOrder(id) {
