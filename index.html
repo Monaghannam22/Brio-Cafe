@@ -111,6 +111,11 @@
     }
     .drink-note-input:focus { border-color: var(--em); }
 
+    /* Top-nav user chip (avatar + name) -> settings */
+    #user-chip:hover { background: var(--soft); }
+    #user-chip:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    #user-chip:active { transform: scale(0.98); }
+
     /* Top-nav language toggle — sits next to the cart pill */
     .top-lang-pill {
       cursor: pointer;
@@ -1376,15 +1381,16 @@
       
       <!-- TOP NAV -->
       <nav id="top-navbar" style="display:none;">
-        <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" id="user-chip" onclick="navTo('page-settings')" aria-label="Settings"
+          style="display:flex; align-items:center; gap:8px; background:transparent; border:none; padding:4px 8px; border-radius:12px; cursor:pointer; font-family:'Tajawal',sans-serif; transition: background .15s;">
            <div id="user-badge" style="width:36px; height:36px; background:var(--gold-light); color:var(--em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:1px solid var(--gold);">
             أ
            </div>
-           <div style="display:flex; flex-direction:column; line-height:1;">
+           <div style="display:flex; flex-direction:column; line-height:1; text-align:start;">
             <span id="user-display-name" style="font-size:13px; font-weight:800; color:var(--char);">...</span>
             <span id="user-display-office" style="font-size:10px; color:var(--muted); font-weight:700;">طابق ...</span>
            </div>
-        </div>
+        </button>
 
         <div style="display:flex; align-items:center; gap:10px;">
           <button type="button" id="lang-toggle-top" class="top-lang-pill"
