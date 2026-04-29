@@ -1199,7 +1199,8 @@
       font-family:'Tajawal',sans-serif; cursor:pointer;
     }
     .brewo-btn-cancel { background: var(--soft); color: var(--char); }
-    .brewo-btn-confirm { background: #c0392b; color: white; }
+    .brewo-btn-confirm { background: var(--em); color: white; }
+    .brewo-btn-confirm.is-destructive { background: #c0392b; }
 
     /* Empty state */
     .empty-state {
@@ -1298,15 +1299,7 @@
       <input id="li-office" class="login-input" type="text" required minlength="1" maxlength="30" autocomplete="off" data-ar="رقم المكتب (مثلاً: 407)" data-en="Office Number (e.g. 407)" placeholder="رقم المكتب (مثلاً: 407)" />
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
-      <select id="li-floor" class="login-input">
-        <option value="" disabled selected>اختر الطابق</option>
-        <option>الطابق 1</option>
-        <option>الطابق 2</option>
-        <option>الطابق 3</option>
-        <option>الطابق 4</option>
-        <option>الطابق 5</option>
-      </select>
-      
+
       <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
       
       <button onclick="doLogin()" class="btn-primary" style="margin-bottom:12px;" data-ar="ابدأ الطلب ←" data-en="Start Order ←">ابدأ الطلب ←</button>
@@ -1717,14 +1710,6 @@
               <input id="checkout-office-input" type="text" required minlength="1" maxlength="30" autocomplete="off" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
               <div id="checkout-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
               
-              <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">الطابق</label>
-              <select id="checkout-floor-input" class="login-input" style="padding:10px 14px; background:var(--soft);">
-                <option>الطابق 1</option>
-                <option>الطابق 2</option>
-                <option>الطابق 3</option>
-                <option>الطابق 4</option>
-                <option>الطابق 5</option>
-              </select>
             </div>
           </div>
 
@@ -1811,15 +1796,6 @@
             <input id="set-o" type="text" required minlength="1" maxlength="30" autocomplete="off" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
             <div id="set-o-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
             
-            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الطابق</label>
-            <select id="set-f" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
-              <option value="" disabled selected>اختر الطابق</option>
-              <option>الطابق 1</option>
-              <option>الطابق 2</option>
-              <option>الطابق 3</option>
-              <option>الطابق 4</option>
-              <option>الطابق 5</option>
-            </select>
             <label class="set-label"
               data-ar="رقم الجوال" data-en="Phone Number">
               رقم الجوال
@@ -2008,7 +1984,6 @@
             name: '👤 الاسم',
             phone:'📱 جوال العميل',
             office:'📍 المكتب',
-            floor:'📌 الطابق',
             details:'🧾 التفاصيل',
             total:'💰 الإجمالي',
             time: '🕐 الوقت',
@@ -2022,7 +1997,6 @@
             name: '👤 Name',
             phone:'📱 Customer phone',
             office:'📍 Office',
-            floor:'📌 Floor',
             details:'🧾 Items',
             total:'💰 Total',
             time: '🕐 Time',
@@ -2058,7 +2032,6 @@
         L.name  + ': ' + sanitizeForWa(u.name || order.user || ''),
         L.phone + ': ' + ltr(sanitizeForWa(u.phone || '')),
         L.office+ ': ' + sanitizeForWa(order.office),
-        L.floor + ': ' + sanitizeForWa(order.floor),
         sep,
         L.details + ':'
       ].concat(itemLines).concat([
@@ -2562,8 +2535,8 @@
       const isAr = lang === 'ar';
       document.body.style.direction = isAr ? 'rtl' : 'ltr';
       const alignedFields = [
-        'li-name', 'li-office', 'li-phone', 'li-floor',
-        'set-n', 'set-o', 'set-f', 'set-phone-input'
+        'li-name', 'li-office', 'li-phone',
+        'set-n', 'set-o', 'set-phone-input'
       ];
       alignedFields.forEach((id) => {
         const el = document.getElementById(id);
@@ -2583,18 +2556,6 @@
             ? el.dataset.ar
             : (el.dataset.en || el.dataset.ar);
         }
-      });
-      const floorSelects = document.querySelectorAll('#li-floor, #co-floor, #checkout-floor-input, #set-f');
-      floorSelects.forEach(sel => {
-        const opts = sel.querySelectorAll('option');
-        opts.forEach((opt, i) => {
-          if (i === 0 && opt.value === '') {
-            opt.textContent = isAr ? 'اختر طابقك' : 'Choose your floor';
-          } else {
-            const floorNum = i === 0 && opt.value !== '' ? 1 : i;
-            opt.textContent = isAr ? ('الطابق ' + floorNum) : ('Floor ' + floorNum);
-          }
-        });
       });
       document.querySelectorAll('.currency-unit').forEach((el) => {
         el.textContent = currencyUnit();
@@ -2647,8 +2608,13 @@
             navTo('page-home', { replace: true });
           }
         } else {
-          document.body.classList.remove('app-logged-in');
-          document.getElementById('page-login').style.display = 'flex';
+          // First-time visitor: drop them straight on the home page as a
+          // transient guest. Login page is only reached by tapping
+          // "Sign In" from the guest modal or the sidebar's logout.
+          autoGuestSession();
+          if (!pageFromHash()) {
+            navTo('page-home', { replace: true });
+          }
         }
       } catch (e) { console.error(e); }
 
@@ -2678,13 +2644,10 @@
         'li-name': validateName,
         'li-office': validateOffice,
         'li-phone': (v) => validatePhone(v),
-        'li-floor': validateFloor,
         'set-n': validateName,
         'set-o': validateOffice,
-        'set-f': validateFloor,
         'set-phone-input': (v) => validatePhone(v),
-        'checkout-office-input': validateOffice,
-        'checkout-floor-input': validateFloor
+        'checkout-office-input': validateOffice
       };
       attachOfficeSuggest('li-office', 'li-office-hint');
       attachOfficeSuggest('checkout-office-input', 'checkout-office-hint');
@@ -2695,7 +2658,7 @@
         if (!el) return;
         el.addEventListener('blur', () => {
           const v = el.value;
-          if (!v && el.id !== 'li-floor' && el.id !== 'set-f' && el.id !== 'checkout-floor-input') return;
+          if (!v) return;
           const res = blurMap[id](v);
           if (res && !res.ok) setFieldError(id, res.msg);
           else clearFieldError(id);
@@ -2747,13 +2710,11 @@
 
     function autoGuestSession() {
       if (currentUser) return;
-      // Transient: NOT persisted to localStorage. We only want browse access
-      // for this tab; reloading should land back on the login page so the
-      // user is never silently "stuck" as guest forever.
+      // Transient: NOT persisted to localStorage. The user can browse home/
+      // drinks freely; placing an order opens the sign-in modal.
       currentUser = {
         name:   currentLang === 'ar' ? 'زائر' : 'Guest',
         office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
-        floor:  currentLang === 'ar' ? 'الطابق 1' : 'Floor 1',
         phone:  '',
         isGuest: true,
         isTransient: true
@@ -3067,22 +3028,19 @@
     function clearFieldErrors(ids) { ids.forEach(clearFieldError); }
 
     function doLogin() {
-      clearFieldErrors(['li-name', 'li-office', 'li-floor', 'li-phone']);
+      clearFieldErrors(['li-name', 'li-office', 'li-phone']);
 
       const nameRes   = validateName(document.getElementById('li-name').value);
       const officeRes = validateOffice(document.getElementById('li-office').value);
-      const floorRes  = validateFloor(document.getElementById('li-floor').value);
       const phoneRes  = validatePhone(document.getElementById('li-phone').value);
 
       if (!nameRes.ok)   { setFieldError('li-name', nameRes.msg);     showLoginErr(nameRes.msg);   return; }
       if (!officeRes.ok) { setFieldError('li-office', officeRes.msg); showLoginErr(officeRes.msg); return; }
-      if (!floorRes.ok)  { setFieldError('li-floor', floorRes.msg);   showLoginErr(floorRes.msg);  return; }
       if (!phoneRes.ok)  { setFieldError('li-phone', phoneRes.msg);   showLoginErr(phoneRes.msg);  return; }
 
       currentUser = {
         name: nameRes.value,
         office: officeRes.value,
-        floor: floorRes.value,
         phone: phoneRes.value
       };
       try {
@@ -3104,7 +3062,6 @@
       currentUser = {
         name:   currentLang === 'ar' ? 'زائر' : 'Guest',
         office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
-        floor:  currentLang === 'ar' ? 'الطابق 1' : 'Floor 1',
         phone:  '',
         isGuest: true
       };
@@ -3126,7 +3083,8 @@
         title: t('confirmLogoutTitle'),
         message: t('logoutConfirm'),
         okText: t('confirmYes'),
-        cancelText: t('confirmCancel')
+        cancelText: t('confirmCancel'),
+        tone: 'destructive'
       });
       if (!confirmed) return;
 
@@ -3168,7 +3126,6 @@
       document.getElementById('li-name').value    = '';
       document.getElementById('li-office').value  = '';
       document.getElementById('li-phone').value   = '';
-      document.getElementById('li-floor').value   = '';
       try {
         history.replaceState({ pageId: 'page-login' }, '', location.pathname + location.search);
       } catch (e) {}
@@ -3180,11 +3137,11 @@
       document.getElementById('user-display-office').textContent =
         currentUser.isGuest
           ? t('guestBadge')
-          : (currentUser.office + ' | ' + currentUser.floor);
+          : currentUser.office;
       document.getElementById('user-badge').textContent = currentUser.name.charAt(0);
       document.getElementById('set-avatar').textContent = currentUser.name.charAt(0);
       document.getElementById('settings-name').textContent = currentUser.name;
-      document.getElementById('settings-office-display').textContent = currentUser.office + ' — ' + currentUser.floor;
+      document.getElementById('settings-office-display').textContent = currentUser.office || '';
       document.getElementById('set-phone').textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
       if (pi) pi.value = currentUser.phone || '';
@@ -3201,7 +3158,7 @@
     }
 
     // --- MODALS ---
-    function brewoConfirm({ title, message, okText, cancelText }) {
+    function brewoConfirm({ title, message, okText, cancelText, tone }) {
       return new Promise((resolve) => {
         const back = document.getElementById('brewo-modal');
         const t1 = document.getElementById('brewo-modal-title');
@@ -3213,6 +3170,7 @@
         m1.textContent = message || '';
         ok.textContent = okText || t('confirmYes');
         cancel.textContent = cancelText || t('confirmCancel');
+        ok.classList.toggle('is-destructive', tone === 'destructive');
         back.classList.add('active');
         const close = (val) => {
           back.classList.remove('active');
@@ -3473,8 +3431,8 @@
     // --- CHECKOUT & ORDERING ---
     function renderCheckoutPage() {
       if (!currentUser) return;
-      document.getElementById('checkout-office-input').value = currentUser.office;
-      document.getElementById('checkout-floor-input').value  = currentUser.floor;
+      const office = currentUser.isGuest ? '' : (currentUser.office || '');
+      document.getElementById('checkout-office-input').value = office;
       
       let html = '';
       let total = 0;
@@ -3521,13 +3479,10 @@
         return;
       }
 
-      clearFieldErrors(['checkout-office-input', 'checkout-floor-input']);
+      clearFieldErrors(['checkout-office-input']);
       const officeRes = validateOffice(document.getElementById('checkout-office-input').value);
-      const floorRes  = validateFloor(document.getElementById('checkout-floor-input').value);
       if (!officeRes.ok) { setFieldError('checkout-office-input', officeRes.msg); showToast(officeRes.msg); return; }
-      if (!floorRes.ok)  { setFieldError('checkout-floor-input', floorRes.msg);   showToast(floorRes.msg);  return; }
       const office = officeRes.value;
-      const floor  = floorRes.value;
       
       const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const nowIso = new Date().toISOString();
@@ -3539,7 +3494,6 @@
         items: cart.items.map(i => ({ name: i.name, price: i.price, qty: i.qty, note: i.note || '' })),
         total: total,
         office: office,
-        floor: floor,
         user: currentUser.name,
         // Locale-neutral storage so past orders read correctly in either language.
         createdAt: nowIso,
@@ -3584,7 +3538,6 @@
         id:     orderData.id,
         cafe:   orderData.cafeName,
         office: orderData.office,
-        floor:  orderData.floor,
         total:  orderData.total,
         time:   orderData.time
       });
@@ -3687,7 +3640,8 @@
         title:   t('deleteOrderTitle'),
         message: t('deleteOrderMsg'),
         okText:  t('deleteYes'),
-        cancelText: t('confirmCancel')
+        cancelText: t('confirmCancel'),
+        tone: 'destructive'
       });
       if (!ok) return;
       orders = orders.filter(o => o.id !== id);
@@ -3703,7 +3657,8 @@
         title:   t('clearAllTitle'),
         message: t('clearAllMsg'),
         okText:  t('deleteYes'),
-        cancelText: t('confirmCancel')
+        cancelText: t('confirmCancel'),
+        tone: 'destructive'
       });
       if (!ok) return;
       // Keep any in-flight orders (status 'new'); only drop the past ones.
@@ -3762,47 +3717,23 @@
       document.getElementById('set-o').value = currentUser.office || '';
       const phoneInput = document.getElementById('set-phone-input');
       if (phoneInput) phoneInput.value = currentUser.phone || '';
-      const floor = currentUser.floor || '';
-      const sel = document.getElementById('set-f');
-      if (sel && floor) {
-        let matched = false;
-        for (let i = 0; i < sel.options.length; i++) {
-          const opt = sel.options[i];
-          if (opt.value === floor || opt.text === floor) {
-            sel.selectedIndex = i;
-            matched = true;
-            break;
-          }
-        }
-        if (!matched) {
-          for (let i = 0; i < sel.options.length; i++) {
-            if (sel.options[i].text.indexOf(floor) !== -1) {
-              sel.selectedIndex = i;
-              break;
-            }
-          }
-        }
-      }
       updateSettingsStats();
     }
 
     function saveSettings() {
-      clearFieldErrors(['set-n', 'set-o', 'set-f', 'set-phone-input']);
+      clearFieldErrors(['set-n', 'set-o', 'set-phone-input']);
       const nameRes   = validateName(document.getElementById('set-n').value);
       const officeRes = validateOffice(document.getElementById('set-o').value);
-      const floorRes  = validateFloor(document.getElementById('set-f').value);
       const phoneRes  = validatePhone(document.getElementById('set-phone-input').value);
 
       if (!nameRes.ok)   { setFieldError('set-n', nameRes.msg);            showToast(nameRes.msg);   return; }
       if (!officeRes.ok) { setFieldError('set-o', officeRes.msg);          showToast(officeRes.msg); return; }
-      if (!floorRes.ok)  { setFieldError('set-f', floorRes.msg);           showToast(floorRes.msg);  return; }
       if (!phoneRes.ok)  { setFieldError('set-phone-input', phoneRes.msg); showToast(phoneRes.msg);  return; }
 
       currentUser = {
         ...currentUser,
         name: nameRes.value,
         office: officeRes.value,
-        floor: floorRes.value,
         phone: phoneRes.value
       };
 
