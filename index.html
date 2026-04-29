@@ -2623,6 +2623,11 @@
         if (savedOrders) orders = JSON.parse(savedOrders);
       } catch (e) { console.error(e); }
 
+      // Restore in-flight cart (e.g. guest started an order, signed in,
+      // or reloaded mid-checkout).
+      loadCart();
+      updateCartUI();
+
       initHeroSlider();
       ['turkish', 'nescafe', 'water', 'tea'].forEach(updateDrinkBtn);
 
@@ -3059,6 +3064,9 @@
     }
 
     function guestLogin() {
+      // Clear any pending checkout hop — guests can't complete an order, so
+      // routing them to checkout would just re-open the sign-in prompt.
+      _pendingHashAfterLogin = null;
       currentUser = {
         name:   currentLang === 'ar' ? 'زائر' : 'Guest',
         office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
@@ -3214,9 +3222,13 @@
         cancelText: t('keepBrowsing')
       });
       if (wantsLogin) {
-        // Drop guest session and route to login.
+        // Drop guest session and route to login — but PRESERVE the cart
+        // so the user can finish the order they started.
+        saveCart();
+        // Remember they were trying to check out so doLogin lands them
+        // back on the checkout page after sign-in.
+        _pendingHashAfterLogin = cart.items.length ? 'page-checkout' : null;
         currentUser = null;
-        cart = { items: [] };
         try { localStorage.removeItem('brewoUser'); } catch (e) {}
         document.body.classList.remove('app-logged-in');
         const cb = document.getElementById('cart-bar');
@@ -3234,12 +3246,26 @@
           loginPage.style.display = 'flex';
           loginPage.classList.add('active');
         }
-        updateCartUI();
         try {
           history.replaceState({ pageId: 'page-login' }, '', location.pathname + location.search);
         } catch (e) {}
       }
       return true;
+    }
+
+    // Cart persistence: survives the guest -> login transition AND
+    // accidental reloads while the user is mid-order.
+    function saveCart() {
+      try { localStorage.setItem('brewoCart', JSON.stringify(cart)); } catch (e) {}
+    }
+    function loadCart() {
+      try {
+        const raw = localStorage.getItem('brewoCart');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.items)) cart = parsed;
+        }
+      } catch (e) {}
     }
 
     async function addCustomDrink(drinkName, option, price, qty, note) {
@@ -3257,6 +3283,7 @@
       } else {
         cart.items.push({ name: fullName, price, qty, note: cleanNote });
       }
+      saveCart();
       updateCartUI();
       showToast(t('addedToCart') + ': ' + translateItemName(fullName) + ' ×' + qty);
       resetDrinkForm(drinkName);
@@ -3467,6 +3494,7 @@
 
     function removeFromCart(idx) {
       cart.items.splice(idx, 1);
+      saveCart();
       updateCartUI();
       renderCheckoutPage();
     }
@@ -3504,7 +3532,12 @@
       
       orders.unshift(order);
       try { saveOrders(); } catch (e) {}
-      
+      // Order is now submitted — cart can be cleared. resetCartAndHome
+      // (called when user taps "Continue") becomes a no-op for the cart.
+      cart = { items: [] };
+      saveCart();
+      updateCartUI();
+
       // CONFIRM PAGE UI
       document.getElementById('conf-cafe').textContent = orderCafeName(order);
       document.getElementById('conf-id').textContent = '#' + order.id;
@@ -3572,6 +3605,7 @@
 
     function resetCartAndHome() {
       cart = { items: [] };
+      saveCart();
       updateCartUI();
       navTo('page-drinks');
     }
