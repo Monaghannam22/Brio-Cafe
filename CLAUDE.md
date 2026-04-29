@@ -1,6 +1,6 @@
 # Brewo (بريو) / Brio Cafe
 
-Arabic-first (RTL), bilingual (AR/EN) single-page web app for ordering coffee from a cafe and getting it delivered inside مجمع عمال (Ammal complex) in Amman, Jordan. Orders are placed by composing a WhatsApp message to the cafe — there is no backend.
+Arabic-first (RTL), bilingual (AR/EN) single-page web app for ordering coffee from a cafe and getting it delivered inside مجمع الصالحين (Al-Saleheen Complex) in Amman, Jordan. Orders are placed by composing a WhatsApp message to the cafe — there is no backend.
 
 ## Architecture
 
