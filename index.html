@@ -1327,8 +1327,8 @@
     
     <div style="font-size: 28px;">☕</div>
     <div style="flex:1;">
-      <div style="font-weight:800; font-size:15px; margin-bottom:3px;" data-ar="تم استلام طلبك!" data-en="Order received!">
-        تم استلام طلبك!
+      <div style="font-weight:800; font-size:15px; margin-bottom:3px;" data-ar="جاري تجهيز طلبك" data-en="Order processing">
+        جاري تجهيز طلبك
       </div>
       <div style="font-size:12px; color:#9FD4C0;">
         <span id="dn-cafe"></span> —
@@ -1405,7 +1405,7 @@
         </div>
       </div>
 
-      <div class="nav-item" style="color:#E53935; margin-bottom:24px;" onclick="doLogout()">
+      <div id="sidebar-logout" class="nav-item" style="color:#E53935; margin-bottom:24px;" onclick="doLogout()">
         <span style="font-size:20px;">🚪</span> تسجيل الخروج
       </div>
     </aside>
@@ -2258,7 +2258,7 @@
         adminColTotal: 'المجموع',
         adminEmpty:    'لا توجد طلبات',
         tenantHint:    'يبدو أنك تطلب لـ ',
-        deliveryReceived: 'تم استلام طلبك!',
+        deliveryReceived: 'جاري تجهيز طلبك',
         freeGift:      'مجاني 🎁',
         guestModeTitle:'تصفح كزائر',
         guestModeMsg:  'لإتمام الطلب، سجّل الدخول باسمك ورقم مكتبك. تقدر تتصفح المشروبات بدون تسجيل.',
@@ -2402,7 +2402,7 @@
         adminColTotal: 'Total',
         adminEmpty:    'No orders',
         tenantHint:    'Looks like ',
-        deliveryReceived: 'Order received!',
+        deliveryReceived: 'Order processing',
         freeGift:      'Free 🎁',
         guestModeTitle:'Browsing as guest',
         guestModeMsg:  'To place an order, please sign in with your name and office. You can keep browsing the menu without signing in.',
@@ -2593,6 +2593,10 @@
       } catch(e) {}
       applyTranslations();
       applyUser();
+      ['li-office', 'checkout-office-input', 'set-o'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.dispatchEvent(new Event('input'));
+      });
       ['turkish', 'nescafe', 'water', 'tea'].forEach(updateDrinkBtn);
       updateTeaBtn();
       updateCartUI();
@@ -3267,6 +3271,8 @@
       document.getElementById('set-phone').textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
       if (pi) pi.value = currentUser.phone || '';
+      const sideLogout = document.getElementById('sidebar-logout');
+      if (sideLogout) sideLogout.style.display = currentUser.isGuest ? 'none' : '';
     }
 
     function showLoginErr(msg) {
