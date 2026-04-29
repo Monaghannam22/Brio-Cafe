@@ -111,6 +111,42 @@
     }
     .drink-note-input:focus { border-color: var(--em); }
 
+    /* Top-nav language toggle — sits next to the cart pill */
+    .top-lang-pill {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--em);
+      background: white;
+      color: var(--em);
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1;
+      transition: transform .15s, background .2s, color .2s, box-shadow .15s;
+      box-shadow: 0 2px 8px rgba(13,79,60,0.08);
+    }
+    .top-lang-pill:hover {
+      background: var(--em-light);
+      box-shadow: 0 4px 14px rgba(13,79,60,0.18);
+    }
+    .top-lang-pill:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 2px;
+    }
+    .top-lang-pill:active { transform: scale(0.97); }
+    .top-lang-pill .icon { font-size: 15px; }
+    @media (max-width: 900px) {
+      .top-lang-pill {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .top-lang-pill .icon { font-size: 13px; }
+    }
+
     /* Top-nav cart "real cart" pill */
     .top-cart-pill {
       cursor: pointer;
@@ -1351,18 +1387,11 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:10px;">
-          <button id="lang-toggle-top"
-            onclick="toggleLang()"
-            style="
-              background: rgba(255,255,255,0.15);
-              border: 1.5px solid rgba(255,255,255,0.4);
-              color: white;
-              border-radius: 16px;
-              padding: 4px 12px;
-              font-family: 'Tajawal', sans-serif;
-              font-weight: 800;
-              font-size: 12px;
-              cursor: pointer;">EN</button>
+          <button type="button" id="lang-toggle-top" class="top-lang-pill"
+            onclick="toggleLang()" aria-label="Switch language">
+            <span class="icon" aria-hidden="true">🌐</span>
+            <span id="lang-toggle-top-label">EN</span>
+          </button>
           <button type="button" id="top-cart" class="top-cart-pill is-empty" onclick="goCheckout()" aria-label="Cart">
             <span class="icon">🛒</span>
             <span class="count" id="nav-cart-badge">0</span>
@@ -2544,8 +2573,11 @@
         el.style.direction = isAr ? 'rtl' : 'ltr';
         el.style.textAlign = isAr ? 'right' : 'left';
       });
-      document.querySelectorAll('#lang-toggle-login, #lang-toggle-top')
-        .forEach(btn => { btn.textContent = isAr ? 'English' : 'العربية'; });
+      const langLabel = isAr ? 'English' : 'العربية';
+      const loginBtn = document.getElementById('lang-toggle-login');
+      if (loginBtn) loginBtn.textContent = langLabel;
+      const topLabel = document.getElementById('lang-toggle-top-label');
+      if (topLabel) topLabel.textContent = langLabel;
       document.querySelectorAll('[data-ar]').forEach(el => {
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
           el.placeholder = isAr
