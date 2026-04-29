@@ -82,7 +82,7 @@ def main():
         "arialbd.ttf", "Arial Bold.ttf", "tahomabd.ttf",
         "DejaVuSans-Bold.ttf", "verdanab.ttf"
     ], 84)
-    wordmark = "Brewo  ·  " + shape_ar("بريو")
+    wordmark = "Brio  ·  " + shape_ar("بريو")
     wbbox = draw.textbbox((0, 0), wordmark, font=word_font)
     ww, wh = wbbox[2] - wbbox[0], wbbox[3] - wbbox[1]
     draw.text(
@@ -101,8 +101,8 @@ def main():
         draw.text(((W - tw) // 2 - bb[0], y - bb[1]),
                   text, fill=fill, font=tag_font)
 
-    centered("Coffee delivered to your desk in Ammal Complex, Amman", 510, GOLD_TEXT)
-    centered(shape_ar("اطلب قهوتك المفضلة وتوصلك لمكتبك في مجمع عمال"), 555, GOLD_TEXT)
+    centered("Coffee delivered to your desk in Al-Saleheen Complex, Amman", 510, GOLD_TEXT)
+    centered(shape_ar("اطلب قهوتك المفضلة وتوصلك لمكتبك في مجمع الصالحين"), 555, GOLD_TEXT)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     img.save(OUT, "PNG", optimize=True)
