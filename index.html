@@ -19,6 +19,14 @@
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = 'en';
       }
+      // If the user explicitly logged out, surface the login page on
+      // first paint so refreshing the login page doesn't flash the
+      // home/auto-guest layout before the JS catches up.
+      var __savedUser = localStorage.getItem('brewoUser');
+      var __loggedOut = localStorage.getItem('brewoLoggedOut');
+      if (!__savedUser && __loggedOut === '1') {
+        document.documentElement.classList.add('logged-out');
+      }
     } catch (e) {}
   </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D4F3C'/%3E%3Ctext x='50%25' y='54%25' font-size='38' text-anchor='middle' fill='%23D4A843' font-family='Arial' font-weight='800' dominant-baseline='middle'%3EB%3C/text%3E%3C/svg%3E">
@@ -385,6 +393,16 @@
       font-size: 14px;
       cursor: pointer;
     }
+
+    /* Sticky-logout: if the user explicitly logged out, the early
+       <head> script tags <html> with .logged-out so the login page
+       paints first (no home / sidebar flash on refresh). */
+    html.logged-out #sidebar,
+    html.logged-out #top-navbar,
+    html.logged-out .page,
+    html.logged-out #cart-bar,
+    html.logged-out #main-nav { display: none !important; }
+    html.logged-out #page-login { display: flex !important; }
 
     /* Login Page — hidden by default to avoid a flash before JS decides
        whether to show it. The window.onload handler / requireRealLogin /
@@ -2666,12 +2684,25 @@
             navTo('page-home', { replace: true });
           }
         } else {
-          // First-time visitor: drop them straight on the home page as a
-          // transient guest. Login page is only reached by tapping
-          // "Sign In" from the guest modal or the sidebar's logout.
-          autoGuestSession();
-          if (!pageFromHash()) {
-            navTo('page-home', { replace: true });
+          // No saved user. Two paths:
+          //   1) The user explicitly logged out — the early <head> script
+          //      already tagged <html> with .logged-out so the login page
+          //      is painted. Don't auto-guest; just keep the login screen.
+          //   2) Otherwise (first-time visit), drop them on the home page
+          //      as a transient guest.
+          const stickyLogout = localStorage.getItem('brewoLoggedOut') === '1';
+          if (stickyLogout) {
+            document.body.classList.remove('app-logged-in');
+            const loginPage = document.getElementById('page-login');
+            if (loginPage) {
+              loginPage.style.display = 'flex';
+              loginPage.classList.add('active');
+            }
+          } else {
+            autoGuestSession();
+            if (!pageFromHash()) {
+              navTo('page-home', { replace: true });
+            }
           }
         }
       } catch (e) { console.error(e); }
@@ -3113,7 +3144,9 @@
       };
       try {
         localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+        localStorage.removeItem('brewoLoggedOut');
       } catch (e) {}
+      document.documentElement.classList.remove('logged-out');
 
       document.getElementById('page-login').style.display = 'none';
       document.body.classList.add('app-logged-in');
@@ -3138,7 +3171,9 @@
       };
       try {
         localStorage.setItem('brewoUser', JSON.stringify(currentUser));
+        localStorage.removeItem('brewoLoggedOut');
       } catch(e) {}
+      document.documentElement.classList.remove('logged-out');
       document.getElementById('page-login').style.display = 'none';
       document.body.classList.add('app-logged-in');
       document.getElementById('top-navbar').style.display = 'flex';
@@ -3168,8 +3203,13 @@
       cart = { items: [] };
       orders = [];
 
-      try { localStorage.removeItem('brewoUser'); }
-      catch(e) {}
+      try {
+        localStorage.removeItem('brewoUser');
+        // Sticky logout: refreshing the login page should keep us on
+        // the login page instead of silently auto-guesting back home.
+        localStorage.setItem('brewoLoggedOut', '1');
+      } catch(e) {}
+      document.documentElement.classList.add('logged-out');
 
       document.body.classList.remove('app-logged-in');
       document.getElementById('cart-bar')
