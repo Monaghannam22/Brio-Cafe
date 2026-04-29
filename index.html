@@ -10,6 +10,17 @@
   <meta name="theme-color" content="#0D4F3C">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://brewo.app/">
+  <!-- Set lang/dir as early as possible so the document never paints
+       in the wrong direction. Runs before <body> is rendered. -->
+  <script>
+    try {
+      var __savedLang = localStorage.getItem('brewoLang');
+      if (__savedLang === 'en') {
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+      }
+    } catch (e) {}
+  </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D4F3C'/%3E%3Ctext x='50%25' y='54%25' font-size='38' text-anchor='middle' fill='%23D4A843' font-family='Arial' font-weight='800' dominant-baseline='middle'%3EB%3C/text%3E%3C/svg%3E">
 
   <!-- Open Graph / WhatsApp / Facebook -->
@@ -1261,7 +1272,7 @@
 
   </style>
 </head>
-<body id="app-body">
+<body id="app-body" class="app-logged-in">
   <!-- Themed confirm modal -->
   <div id="brewo-modal" class="brewo-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="brewo-modal-title">
     <div class="brewo-modal">
@@ -1353,7 +1364,7 @@
   <div class="app-container">
     
     <!-- SIDEBAR -->
-    <aside id="sidebar" style="display:none;">
+    <aside id="sidebar">
       <div class="sidebar-logo">
         <div style="width:40px; height:40px; background:var(--gold); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px;">☕</div>
         <div style="font-size:20px; font-weight:900; color:var(--em);">بريو</div>
@@ -1382,15 +1393,13 @@
     <div style="flex:1; width:100%;">
       
       <!-- TOP NAV -->
-      <nav id="top-navbar" style="display:none;">
+      <nav id="top-navbar">
         <button type="button" id="user-chip" onclick="navTo('page-settings')" aria-label="Settings"
           style="display:flex; align-items:center; gap:8px; background:transparent; border:none; padding:4px 8px; border-radius:12px; cursor:pointer; font-family:'Tajawal',sans-serif; transition: background .15s;">
-           <div id="user-badge" style="width:36px; height:36px; background:var(--gold-light); color:var(--em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:1px solid var(--gold);">
-            أ
-           </div>
+           <div id="user-badge" style="width:36px; height:36px; background:var(--gold-light); color:var(--em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:1px solid var(--gold);">·</div>
            <div style="display:flex; flex-direction:column; line-height:1; text-align:start;">
-            <span id="user-display-name" style="font-size:13px; font-weight:800; color:var(--char);">...</span>
-            <span id="user-display-office" style="font-size:10px; color:var(--muted); font-weight:700;">طابق ...</span>
+            <span id="user-display-name" style="font-size:13px; font-weight:800; color:var(--char);"></span>
+            <span id="user-display-office" style="font-size:10px; color:var(--muted); font-weight:700;"></span>
            </div>
         </button>
 
@@ -1412,7 +1421,7 @@
       <main class="main-content">
 
         <!-- PAGE: HOME -->
-        <div id="page-home" class="page">
+        <div id="page-home" class="page active">
           <div style="
   background: var(--gold);
   color: var(--char);
