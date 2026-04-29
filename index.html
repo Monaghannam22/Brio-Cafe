@@ -1776,13 +1776,13 @@
                   data-en="Delivery only within Al-Saleheen Complex">التوصيل داخل مجمع الصالحين فقط</span>
           </div>
 
-          <div class="card">
+          <div class="card" id="checkout-delivery-info">
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">تأكيد بيانات التوصيل</div>
             <div style="margin-bottom:12px;">
               <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">رقم المكتب</label>
               <input id="checkout-office-input" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" placeholder="101-512" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
               <div id="checkout-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
-              
+
             </div>
           </div>
 
@@ -3574,6 +3574,14 @@
       if (!currentUser) return;
       const office = currentUser.isGuest ? '' : (currentUser.office || '');
       document.getElementById('checkout-office-input').value = office;
+      // Guests can't actually finish ordering — they're going to be
+      // bounced to the sign-in modal at confirm time. Hide the
+      // delivery-info form so guests aren't asked for an office number
+      // they'll just have to re-enter on the login form anyway.
+      const deliveryCard = document.getElementById('checkout-delivery-info');
+      if (deliveryCard) {
+        deliveryCard.style.display = currentUser.isGuest ? 'none' : '';
+      }
       
       let html = '';
       let total = 0;
