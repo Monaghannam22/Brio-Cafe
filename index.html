@@ -1405,7 +1405,7 @@
         </div>
       </div>
 
-      <div id="sidebar-logout" class="nav-item" style="color:#E53935; margin-bottom:24px;" onclick="doLogout()">
+      <div id="sidebar-logout" class="nav-item" style="color:#E53935; margin-bottom:24px; display:none;" onclick="doLogout()">
         <span style="font-size:20px;">🚪</span> تسجيل الخروج
       </div>
     </aside>
@@ -3272,7 +3272,7 @@
       const pi = document.getElementById('set-phone-input');
       if (pi) pi.value = currentUser.phone || '';
       const sideLogout = document.getElementById('sidebar-logout');
-      if (sideLogout) sideLogout.style.display = currentUser.isGuest ? 'none' : '';
+      if (sideLogout) sideLogout.style.display = currentUser.isGuest ? 'none' : 'flex';
     }
 
     function showLoginErr(msg) {
