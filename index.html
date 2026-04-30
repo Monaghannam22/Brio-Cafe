@@ -1922,7 +1922,7 @@
             </div>
           </div>
 
-          <button type="button" onclick="doLogout()" style="
+          <button type="button" id="settings-logout" onclick="doLogout()" style="
             width: 100%;
             background: white;
             border: 2px solid #E53935;
@@ -1934,7 +1934,8 @@
             font-size: 16px;
             cursor: pointer;
             margin-top: 8px;
-            margin-bottom: 100px;">
+            margin-bottom: 100px;
+            display: none;">
             <span data-ar="تسجيل الخروج" data-en="Log out">تسجيل الخروج</span>
           </button>
         </div>
@@ -3273,6 +3274,8 @@
       if (pi) pi.value = currentUser.phone || '';
       const sideLogout = document.getElementById('sidebar-logout');
       if (sideLogout) sideLogout.style.display = currentUser.isGuest ? 'none' : 'flex';
+      const setLogout = document.getElementById('settings-logout');
+      if (setLogout) setLogout.style.display = currentUser.isGuest ? 'none' : 'block';
     }
 
     function showLoginErr(msg) {
