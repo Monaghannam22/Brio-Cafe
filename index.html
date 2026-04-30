@@ -3260,7 +3260,7 @@
       document.getElementById('user-badge').textContent = initial;
       document.getElementById('set-avatar').textContent = initial;
       document.getElementById('settings-name').textContent = name;
-      document.getElementById('settings-office-display').textContent = currentUser.office || '';
+      document.getElementById('settings-office-display').textContent = currentUser.isGuest ? '' : (currentUser.office || '');
       const setPhone = document.getElementById('set-phone');
       if (setPhone) setPhone.textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
