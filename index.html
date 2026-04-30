@@ -1859,9 +1859,9 @@
             </div>
           </div>
 
-          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+          <div id="settings-edit-card" style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px;">تعديل بيانات الحساب</div>
-            
+
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الاسم</label>
             <input id="set-n" type="text" required minlength="2" maxlength="40" autocomplete="name" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
 
@@ -1888,7 +1888,7 @@
             <button type="button" onclick="saveSettings()" class="btn-primary" style="padding:12px; font-size:14px;">حفظ التعديلات</button>
           </div>
 
-          <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
+          <div id="settings-stats-card" style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:12px;">إحصائياتك</div>
             <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
               <span style="font-size:13px; font-weight:700; color:var(--char);">إجمالي الطلبات</span>
@@ -1902,23 +1902,15 @@
 
           <div style="background:white; border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:12px;">
             <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
-              <span style="font-size:13px; font-weight:700; color:var(--char);">الإصدار</span>
-              <span style="font-size:13px; color:var(--muted);">بريو v1.0</span>
+              <span style="font-size:13px; font-weight:700; color:var(--char);" data-ar="الإصدار" data-en="Version">الإصدار</span>
+              <span style="font-size:13px; color:var(--muted);" data-ar="بريو v1.0" data-en="Brewo v1.0">بريو v1.0</span>
             </div>
-            <div style="display:flex; justify-content:space-between; padding:10px 0;">
-              <span style="font-size:13px; font-weight:700; color:var(--char);">المنطقة</span>
-              <span style="font-size:13px; color:var(--muted); text-align:left;">مجمع المكاتب — عمّان</span>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span style="font-size:13px; font-weight:700; color:var(--char);" data-ar="المنطقة" data-en="Region">المنطقة</span>
+              <span style="font-size:13px; color:var(--muted); text-align:left;" data-ar="عمّان — الأردن" data-en="Amman — Jordan">عمّان — الأردن</span>
             </div>
-            <div class="set-row">
-              <span class="set-label"
-                data-ar="رقم الجوال"
-                data-en="Phone">
-                رقم الجوال
-              </span>
-              <span id="set-phone"
-                style="font-size:13px; color:var(--muted);">
-                —
-              </span>
+            <div style="display:flex; justify-content:center; padding:10px 0;">
+              <span style="font-size:13px; font-weight:800; color:var(--em); letter-spacing:0.3px;">Folowise</span>
             </div>
           </div>
 
@@ -3269,13 +3261,18 @@
       document.getElementById('set-avatar').textContent = initial;
       document.getElementById('settings-name').textContent = name;
       document.getElementById('settings-office-display').textContent = currentUser.office || '';
-      document.getElementById('set-phone').textContent = currentUser.phone || '—';
+      const setPhone = document.getElementById('set-phone');
+      if (setPhone) setPhone.textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
       if (pi) pi.value = currentUser.phone || '';
       const sideLogout = document.getElementById('sidebar-logout');
       if (sideLogout) sideLogout.style.display = currentUser.isGuest ? 'none' : 'flex';
       const setLogout = document.getElementById('settings-logout');
       if (setLogout) setLogout.style.display = currentUser.isGuest ? 'none' : 'block';
+      const editCard = document.getElementById('settings-edit-card');
+      if (editCard) editCard.style.display = currentUser.isGuest ? 'none' : 'block';
+      const statsCard = document.getElementById('settings-stats-card');
+      if (statsCard) statsCard.style.display = currentUser.isGuest ? 'none' : 'block';
     }
 
     function showLoginErr(msg) {
