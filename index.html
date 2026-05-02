@@ -1365,7 +1365,17 @@
       <p data-ar="اطلب قهوتك المفضلة وتوصلك لمكتبك" data-en="Order your favorite drink, delivered to your desk" style="font-size: 14px; color: #9FD4C0; font-weight: 700; margin-top: 0; margin-bottom: 32px; text-align: center;">اطلب قهوتك المفضلة وتوصلك لمكتبك</p>
       
       <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
-      <input id="li-office" class="login-input" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" data-ar="رقم المكتب (101-512)" data-en="Office Number (101-512)" placeholder="رقم المكتب (101-512)" />
+      <input id="li-office" class="login-input" type="text" inputmode="numeric" required minlength="1" maxlength="2" pattern="[0-9]{1,2}" autocomplete="off" data-ar="رقم المكتب" data-en="Office Number" placeholder="رقم المكتب" />
+      <select id="li-floor" class="login-input" required style="background:var(--soft);">
+        <option value="" data-ar="اختر الطابق" data-en="Select Floor">اختر الطابق</option>
+        <option value="B1" data-ar="بدروم B1" data-en="Basement B1">بدروم B1</option>
+        <option value="GF" data-ar="الطابق الأرضي GF" data-en="Ground Floor GF">الطابق الأرضي GF</option>
+        <option value="1" data-ar="الطابق 1" data-en="Floor 1">الطابق 1</option>
+        <option value="2" data-ar="الطابق 2" data-en="Floor 2">الطابق 2</option>
+        <option value="3" data-ar="الطابق 3" data-en="Floor 3">الطابق 3</option>
+        <option value="4" data-ar="الطابق 4" data-en="Floor 4">الطابق 4</option>
+        <option value="5" data-ar="الطابق 5" data-en="Floor 5">الطابق 5</option>
+      </select>
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
 
@@ -1774,8 +1784,19 @@
           <div class="card" id="checkout-delivery-info">
             <div style="font-size:14px; font-weight:800; color:var(--char); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">تأكيد بيانات التوصيل</div>
             <div style="margin-bottom:12px;">
-              <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;">رقم المكتب</label>
-              <input id="checkout-office-input" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" placeholder="101-512" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+              <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;" data-ar="رقم المكتب" data-en="Office Number">رقم المكتب</label>
+              <input id="checkout-office-input" type="text" inputmode="numeric" required minlength="1" maxlength="2" pattern="[0-9]{1,2}" autocomplete="off" placeholder="1-19" class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+              <label style="font-size:11px; font-weight:800; color:var(--muted); display:block; margin-bottom:6px;" data-ar="الطابق" data-en="Floor">الطابق</label>
+              <select id="checkout-floor" required class="login-input" style="padding:10px 14px; background:var(--soft); margin-bottom:12px;">
+                <option value="" data-ar="اختر الطابق" data-en="Select Floor">اختر الطابق</option>
+                <option value="B1" data-ar="بدروم B1" data-en="Basement B1">بدروم B1</option>
+                <option value="GF" data-ar="الطابق الأرضي GF" data-en="Ground Floor GF">الطابق الأرضي GF</option>
+                <option value="1" data-ar="الطابق 1" data-en="Floor 1">الطابق 1</option>
+                <option value="2" data-ar="الطابق 2" data-en="Floor 2">الطابق 2</option>
+                <option value="3" data-ar="الطابق 3" data-en="Floor 3">الطابق 3</option>
+                <option value="4" data-ar="الطابق 4" data-en="Floor 4">الطابق 4</option>
+                <option value="5" data-ar="الطابق 5" data-en="Floor 5">الطابق 5</option>
+              </select>
               <div id="checkout-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
 
             </div>
@@ -1860,8 +1881,19 @@
             <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">الاسم</label>
             <input id="set-n" type="text" required minlength="2" maxlength="40" autocomplete="name" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
 
-            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;">رقم المكتب</label>
-            <input id="set-o" type="text" inputmode="numeric" required minlength="3" maxlength="3" pattern="[1-5](0[1-9]|1[0-2])" autocomplete="off" placeholder="101-512" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
+            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;" data-ar="رقم المكتب" data-en="Office Number">رقم المكتب</label>
+            <input id="set-o" type="text" inputmode="numeric" required minlength="1" maxlength="2" pattern="[0-9]{1,2}" autocomplete="off" placeholder="1-19" class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
+            <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:5px;" data-ar="الطابق" data-en="Floor">الطابق</label>
+            <select id="set-floor" required class="login-input" style="padding:10px 14px; background:var(--soft); text-align:inherit;">
+              <option value="" data-ar="اختر الطابق" data-en="Select Floor">اختر الطابق</option>
+              <option value="B1" data-ar="بدروم B1" data-en="Basement B1">بدروم B1</option>
+              <option value="GF" data-ar="الطابق الأرضي GF" data-en="Ground Floor GF">الطابق الأرضي GF</option>
+              <option value="1" data-ar="الطابق 1" data-en="Floor 1">الطابق 1</option>
+              <option value="2" data-ar="الطابق 2" data-en="Floor 2">الطابق 2</option>
+              <option value="3" data-ar="الطابق 3" data-en="Floor 3">الطابق 3</option>
+              <option value="4" data-ar="الطابق 4" data-en="Floor 4">الطابق 4</option>
+              <option value="5" data-ar="الطابق 5" data-en="Floor 5">الطابق 5</option>
+            </select>
             <div id="set-o-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
             
             <label class="set-label"
@@ -2033,6 +2065,21 @@
       return o.cafeName;
     }
 
+    function formatOfficeForWa(order, isAr) {
+      const parts = parseOffice(order && order.office);
+      const floor = (order && order.floor) || parts.floor;
+      const room  = parts.room;
+      if (!floor && !room) return '';
+      const floorLabel = (() => {
+        if (floor === 'B1') return isAr ? 'بدروم B1' : 'Basement B1';
+        if (floor === 'GF') return isAr ? 'الطابق الأرضي' : 'Ground Floor';
+        if (/^[1-5]$/.test(floor)) return isAr ? 'الطابق ' + floor : 'Floor ' + floor;
+        return '';
+      })();
+      const roomLabel = room ? (isAr ? ' — مكتب ' : ' — Office ') + room : '';
+      return floorLabel + roomLabel;
+    }
+
     function buildOrderWhatsAppText(order, user) {
       order = order || {};
       const u = user || {};
@@ -2092,7 +2139,7 @@
         sep,
         L.name  + ': ' + sanitizeForWa(u.name || order.user || ''),
         L.phone + ': ' + ltr(sanitizeForWa(u.phone || '')),
-        L.office+ ': ' + sanitizeForWa(order.office),
+        L.office+ ': ' + sanitizeForWa(formatOfficeForWa(order, isAr)),
         sep,
         L.details + ':'
       ].concat(itemLines).concat([
@@ -2137,7 +2184,7 @@
         enterOffice: 'أدخل رقم المكتب',
         enterFloor: 'اختر طابقك',
         nameTooShort: 'الاسم قصير جداً (٢ حرف على الأقل)',
-        officeInvalid: 'رقم المكتب يجب أن يكون من 101–112، 201–212، 301–312، 401–412، أو 501–512',
+        officeInvalid: 'رقم المكتب غير صحيح للطابق المختار',
         phoneInvalid: 'رقم الجوال يجب أن يكون 10 أرقام بالضبط (مثال: 07XXXXXXXX)',
         phoneRequired: 'يرجى إدخال رقم الجوال (10 أرقام)',
         shareTitle: 'بريو — قهوتك لعندك',
@@ -2281,7 +2328,7 @@
         enterOffice: 'Please enter your office number',
         enterFloor: 'Please select your floor',
         nameTooShort: 'Name is too short (min 2 characters)',
-        officeInvalid: 'Office must be 101–112, 201–212, 301–312, 401–412, or 501–512',
+        officeInvalid: 'Office number is not valid for the selected floor',
         phoneInvalid: 'Phone number must be exactly 10 digits (e.g. 07XXXXXXXX)',
         phoneRequired: 'Please enter your phone number (10 digits)',
         shareTitle: 'Brewo — coffee to your desk',
@@ -2723,9 +2770,9 @@
         'set-phone-input': (v) => validatePhone(v),
         'checkout-office-input': validateOffice
       };
-      attachOfficeSuggest('li-office', 'li-office-hint');
-      attachOfficeSuggest('checkout-office-input', 'checkout-office-hint');
-      attachOfficeSuggest('set-o', 'set-o-hint');
+      attachOfficeSuggest('li-office', 'li-office-hint', 'li-floor');
+      attachOfficeSuggest('checkout-office-input', 'checkout-office-hint', 'checkout-floor');
+      attachOfficeSuggest('set-o', 'set-o-hint', 'set-floor');
 
       Object.keys(blurMap).forEach((id) => {
         const el = document.getElementById(id);
@@ -2978,23 +3025,54 @@
       if (s.length > 40) return { ok: false, msg: t('nameTooShort') };
       return { ok: true, value: s };
     }
-    function validateOffice(v) {
+    function validateOffice(v, floor) {
       const s = String(v || '').trim();
       if (!s) return { ok: false, msg: t('enterOffice') };
-      // Allowed: 1XX/2XX/3XX/4XX/5XX where XX is 01-12 (rooms 101-112,
-      // 201-212, ..., 501-512). Strip any non-digits so users can type
-      // "Office 305" or "rm-305" and still validate.
-      const digits = s.replace(/\D/g, '');
-      if (!/^[1-5](0[1-9]|1[0-2])$/.test(digits)) {
+      const room = parseInt(s.replace(/\D/g, ''), 10);
+      const f = String(floor || '').trim();
+      if (!f) return { ok: false, msg: t('enterFloor') };
+      const max = f === 'GF' ? 19 : 12;
+      if (!Number.isFinite(room) || room < 1 || room > max) {
         return { ok: false, msg: t('officeInvalid') };
       }
-      return { ok: true, value: digits };
+      // Composite identifier: floors 1-5 keep the legacy 3-digit format
+      // (e.g. "412"); B1/GF use "B1-7" / "GF-3".
+      const value = /^[1-5]$/.test(f)
+        ? f + String(room).padStart(2, '0')
+        : f + '-' + room;
+      return { ok: true, value: value, floor: f, room: room };
+    }
+    // Split a stored composite office value back into { floor, room }.
+    function parseOffice(stored) {
+      const s = String(stored || '').trim();
+      if (!s) return { floor: '', room: '' };
+      const dash = s.indexOf('-');
+      if (dash > -1) return { floor: s.slice(0, dash), room: s.slice(dash + 1) };
+      if (/^[1-5]\d{2}$/.test(s)) return { floor: s[0], room: s.slice(1).replace(/^0+/, '') };
+      return { floor: '', room: s };
     }
 
     // Office-number → tenant suggestions for مجمع الصالحين التجاري.
     const OFFICE_TENANTS = (() => {
       const t = {};
       const set = (rooms, ar, en) => rooms.forEach(r => { t[String(r)] = { ar: ar, en: en || ar }; });
+      const setFloor = (floor, rooms, ar, en) => rooms.forEach(r => { t[floor + '-' + r] = { ar: ar, en: en || ar }; });
+      // Basement (B1)
+      setFloor('B1', [1, 2, 3, 4, 5], 'طلبات مارت', 'Talabat Mart');
+      setFloor('B1', [6, 7], 'النخبة', 'Al-Nukhba');
+      setFloor('B1', [8, 9], 'مستودع الشاي', 'Tea Warehouse');
+      setFloor('B1', [10, 11], 'مصنع القطن', 'Cotton Factory');
+      setFloor('B1', [12], 'شركة الأقصى للتوصيل', 'Al-Aqsa Delivery');
+      // Ground Floor (GF)
+      setFloor('GF', [1], 'تأجير السيارات السياحية', 'Tourist Car Rental');
+      setFloor('GF', [4], 'فساتين أعراس', 'Wedding Dresses');
+      setFloor('GF', [5], 'JO Academy', 'JO Academy');
+      setFloor('GF', [6, 7, 8], 'قطن', 'Cotton');
+      setFloor('GF', [9, 10], 'معدات طبية محمود المحاميد', 'Mahmoud Al-Mahamid Medical Equipment');
+      setFloor('GF', [11, 12, 13], 'طلبات', 'Talabat');
+      setFloor('GF', [14], 'Skyline', 'Skyline');
+      setFloor('GF', [15, 16, 17], 'تبارك أونلاين', 'Tabarak Online');
+      setFloor('GF', [18, 19], 'معدات مختبرات الأسنان', 'Dental Laboratory Equipment');
       // 1st Floor
       set([101], 'نوافذ', 'Nawafez');
       set([102], 'Golden Value', 'Golden Value');
@@ -3005,7 +3083,6 @@
       set([108], 'الأفق العصري (امتداد)', 'Al-Ofok Al-Asri (Ext.)');
       set([109], 'شركة دلتا للتدريب والتطوير', 'Delta Training & Development');
       set([110], 'مركز مريم للاستشارات الغذائية', 'Maryam Nutrition Consulting');
-      set([111, 112], 'وجه القمر', 'Wajh Al-Qamar');
       // 2nd Floor
       set([201], 'مؤسسة عماد القضاة لتجارة السيارات', 'Imad Al-Qudah Auto Trading');
       set([202], 'مؤسسة الحاكورة لإعداد البرامج', 'Al-Hakoura Programs');
@@ -3028,7 +3105,6 @@
       set([306], 'مؤسسة علاء عودة لتجهيز المكاتب', 'Alaa Odeh Office Supplies');
       set([307], 'شركة وتد', 'Watad');
       set([308], 'شركة أزاد', 'Azad');
-      set([309], 'Project Studio', 'Project Studio');
       set([310], 'مكتب الدكتور خالد الدعجة', 'Dr. Khaled Al-Da\'ja Office');
       set([311, 312], 'شركة جوهرة الحياة', 'Jawharat Al-Hayat');
       // 4th Floor
@@ -3037,7 +3113,8 @@
       set([405], 'الأنظمة الرقمية — محاسبية وقانونية', 'Digital Systems (Accounting & Legal)');
       set([406, 407], 'Folowise', 'Folowise');
       set([408], 'شركة ماهر العوايشة العقارية', 'Maher Al-Awaysheh Real Estate');
-      set([409, 410, 411, 412], 'Falcon Engineering Solutions', 'Falcon Engineering Solutions');
+      set([409, 410, 411], 'Falcon Engineering Solutions', 'Falcon Engineering Solutions');
+      set([412], 'Sbody Men', 'Sbody Men');
       // 5th Floor
       set([501], 'Smart Chemical', 'Smart Chemical');
       set([502, 503], 'HALLA’S Studio', 'HALLA’S Studio');
@@ -3048,19 +3125,34 @@
       set([512], 'LEXAMJO', 'LEXAMJO');
       return t;
     })();
-    function lookupOfficeTenant(raw) {
-      const digits = String(raw || '').replace(/\D/g, '');
-      if (!digits) return null;
-      const hit = OFFICE_TENANTS[digits];
+    function lookupOfficeTenant(raw, floor) {
+      const room = String(raw || '').replace(/\D/g, '');
+      if (!room) return null;
+      const f = String(floor || '').trim();
+      let key;
+      if (/^[1-5]$/.test(f)) {
+        // Legacy 3-digit format (e.g. floor=4, room=12 → "412").
+        key = f + room.padStart(2, '0');
+      } else if (f === 'B1' || f === 'GF') {
+        key = f + '-' + parseInt(room, 10);
+      } else if (/^[1-5]\d{2}$/.test(room)) {
+        // No floor selected but the user typed a full 3-digit office.
+        key = room;
+      } else {
+        return null;
+      }
+      const hit = OFFICE_TENANTS[key];
       if (!hit) return null;
       return currentLang === 'ar' ? hit.ar : hit.en;
     }
-    function attachOfficeSuggest(inputId, hintId) {
+    function attachOfficeSuggest(inputId, hintId, floorId) {
       const input = document.getElementById(inputId);
       const hint = document.getElementById(hintId);
+      const floorSel = floorId ? document.getElementById(floorId) : null;
       if (!input || !hint) return;
       const update = () => {
-        const tenant = lookupOfficeTenant(input.value);
+        const floor = floorSel ? floorSel.value : '';
+        const tenant = lookupOfficeTenant(input.value, floor);
         if (tenant) {
           hint.textContent = t('tenantHint') + tenant + ' ✨';
           hint.style.display = 'block';
@@ -3071,6 +3163,7 @@
       };
       input.addEventListener('input', update);
       input.addEventListener('blur', update);
+      if (floorSel) floorSel.addEventListener('change', update);
       update();
     }
     function validateFloor(v) {
@@ -3107,19 +3200,22 @@
     function clearFieldErrors(ids) { ids.forEach(clearFieldError); }
 
     function doLogin() {
-      clearFieldErrors(['li-name', 'li-office', 'li-phone']);
+      clearFieldErrors(['li-name', 'li-office', 'li-floor', 'li-phone']);
 
       const nameRes   = validateName(document.getElementById('li-name').value);
-      const officeRes = validateOffice(document.getElementById('li-office').value);
+      const floorRes  = validateFloor(document.getElementById('li-floor').value);
+      const officeRes = validateOffice(document.getElementById('li-office').value, floorRes.ok ? floorRes.value : '');
       const phoneRes  = validatePhone(document.getElementById('li-phone').value);
 
       if (!nameRes.ok)   { setFieldError('li-name', nameRes.msg);     showLoginErr(nameRes.msg);   return; }
+      if (!floorRes.ok)  { setFieldError('li-floor', floorRes.msg);   showLoginErr(floorRes.msg);  return; }
       if (!officeRes.ok) { setFieldError('li-office', officeRes.msg); showLoginErr(officeRes.msg); return; }
       if (!phoneRes.ok)  { setFieldError('li-phone', phoneRes.msg);   showLoginErr(phoneRes.msg);  return; }
 
       currentUser = {
         name: nameRes.value,
         office: officeRes.value,
+        floor: floorRes.value,
         phone: phoneRes.value
       };
       try {
@@ -3217,6 +3313,8 @@
       document.getElementById('li-name').value    = '';
       document.getElementById('li-office').value  = '';
       document.getElementById('li-phone').value   = '';
+      const liFloor = document.getElementById('li-floor');
+      if (liFloor) liFloor.value = '';
       try {
         history.replaceState({ pageId: 'page-login' }, '', location.pathname + location.search);
       } catch (e) {}
@@ -3235,15 +3333,16 @@
       if (!currentUser) return;
       const name = displayUserName();
       const initial = (name || '·').charAt(0);
+      const officeLabel = currentUser.isGuest
+        ? ''
+        : formatOfficeForWa({ office: currentUser.office, floor: currentUser.floor }, currentLang === 'ar');
       document.getElementById('user-display-name').textContent = name;
       document.getElementById('user-display-office').textContent =
-        currentUser.isGuest
-          ? t('guestBadge')
-          : currentUser.office;
+        currentUser.isGuest ? t('guestBadge') : officeLabel;
       document.getElementById('user-badge').textContent = initial;
       document.getElementById('set-avatar').textContent = initial;
       document.getElementById('settings-name').textContent = name;
-      document.getElementById('settings-office-display').textContent = currentUser.isGuest ? '' : (currentUser.office || '');
+      document.getElementById('settings-office-display').textContent = officeLabel;
       const setPhone = document.getElementById('set-phone');
       if (setPhone) setPhone.textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
@@ -3561,8 +3660,11 @@
     // --- CHECKOUT & ORDERING ---
     function renderCheckoutPage() {
       if (!currentUser) return;
-      const office = currentUser.isGuest ? '' : (currentUser.office || '');
-      document.getElementById('checkout-office-input').value = office;
+      const stored = currentUser.isGuest ? '' : (currentUser.office || '');
+      const parts = parseOffice(stored);
+      document.getElementById('checkout-office-input').value = parts.room || '';
+      const cf = document.getElementById('checkout-floor');
+      if (cf) cf.value = currentUser.isGuest ? '' : (currentUser.floor || parts.floor || '');
       // Guests can't actually finish ordering — they're going to be
       // bounced to the sign-in modal at confirm time. Hide the
       // delivery-info form so guests aren't asked for an office number
@@ -3618,10 +3720,13 @@
         return;
       }
 
-      clearFieldErrors(['checkout-office-input']);
-      const officeRes = validateOffice(document.getElementById('checkout-office-input').value);
+      clearFieldErrors(['checkout-office-input', 'checkout-floor']);
+      const floorRes  = validateFloor(document.getElementById('checkout-floor').value);
+      const officeRes = validateOffice(document.getElementById('checkout-office-input').value, floorRes.ok ? floorRes.value : '');
+      if (!floorRes.ok)  { setFieldError('checkout-floor', floorRes.msg);   showToast(floorRes.msg);  return; }
       if (!officeRes.ok) { setFieldError('checkout-office-input', officeRes.msg); showToast(officeRes.msg); return; }
       const office = officeRes.value;
+      const floor  = floorRes.value;
       
       const total = cart.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const nowIso = new Date().toISOString();
@@ -3633,6 +3738,7 @@
         items: cart.items.map(i => ({ name: i.name, price: i.price, qty: i.qty, note: i.note || '' })),
         total: total,
         office: office,
+        floor: floor,
         user: currentUser.name,
         // Locale-neutral storage so past orders read correctly in either language.
         createdAt: nowIso,
@@ -3643,6 +3749,13 @@
       
       orders.unshift(order);
       try { saveOrders(); } catch (e) {}
+      // Persist office + floor on the user so subsequent checkouts pre-fill.
+      if (currentUser && !currentUser.isGuest) {
+        currentUser.office = office;
+        currentUser.floor = floor;
+        try { localStorage.setItem('brewoUser', JSON.stringify(currentUser)); } catch (e) {}
+        applyUser();
+      }
       // Order is now submitted — cart can be cleared. resetCartAndHome
       // (called when user taps "Continue") becomes a no-op for the cart.
       cart = { items: [] };
@@ -3883,19 +3996,24 @@
     function openSettingsForm() {
       if (!currentUser) return;
       document.getElementById('set-n').value = currentUser.name || '';
-      document.getElementById('set-o').value = currentUser.office || '';
+      const parts = parseOffice(currentUser.office);
+      document.getElementById('set-o').value = parts.room || '';
+      const sf = document.getElementById('set-floor');
+      if (sf) sf.value = currentUser.floor || parts.floor || '';
       const phoneInput = document.getElementById('set-phone-input');
       if (phoneInput) phoneInput.value = currentUser.phone || '';
       updateSettingsStats();
     }
 
     function saveSettings() {
-      clearFieldErrors(['set-n', 'set-o', 'set-phone-input']);
+      clearFieldErrors(['set-n', 'set-o', 'set-floor', 'set-phone-input']);
       const nameRes   = validateName(document.getElementById('set-n').value);
-      const officeRes = validateOffice(document.getElementById('set-o').value);
+      const floorRes  = validateFloor(document.getElementById('set-floor').value);
+      const officeRes = validateOffice(document.getElementById('set-o').value, floorRes.ok ? floorRes.value : '');
       const phoneRes  = validatePhone(document.getElementById('set-phone-input').value);
 
       if (!nameRes.ok)   { setFieldError('set-n', nameRes.msg);            showToast(nameRes.msg);   return; }
+      if (!floorRes.ok)  { setFieldError('set-floor', floorRes.msg);       showToast(floorRes.msg);  return; }
       if (!officeRes.ok) { setFieldError('set-o', officeRes.msg);          showToast(officeRes.msg); return; }
       if (!phoneRes.ok)  { setFieldError('set-phone-input', phoneRes.msg); showToast(phoneRes.msg);  return; }
 
@@ -3903,6 +4021,7 @@
         ...currentUser,
         name: nameRes.value,
         office: officeRes.value,
+        floor: floorRes.value,
         phone: phoneRes.value
       };
 
