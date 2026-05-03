@@ -2786,6 +2786,7 @@
     );
     const PUBLIC_PAGES = new Set(['page-home', 'page-drinks']);
     let _pendingHashAfterLogin = null;
+    let _autoConfirmAfterLogin = false;
 
     function pageFromHash() {
       const h = (location.hash || '').replace(/^#/, '').toLowerCase();
@@ -3235,12 +3236,21 @@
       const target = _pendingHashAfterLogin || 'page-home';
       _pendingHashAfterLogin = null;
       navTo(target, { replace: true });
+      if (_autoConfirmAfterLogin && target === 'page-checkout' && cart.items.length) {
+        _autoConfirmAfterLogin = false;
+        // Defer one tick so renderCheckoutPage finishes prefilling the
+        // delivery inputs before confirmOrder reads them back.
+        setTimeout(() => { confirmOrder(); }, 0);
+      } else {
+        _autoConfirmAfterLogin = false;
+      }
     }
 
     function guestLogin() {
       // Clear any pending checkout hop — guests can't complete an order, so
       // routing them to checkout would just re-open the sign-in prompt.
       _pendingHashAfterLogin = null;
+      _autoConfirmAfterLogin = false;
       currentUser = {
         name:   currentLang === 'ar' ? 'زائر' : 'Guest',
         office: currentLang === 'ar' ? 'مكتب 1' : 'Office 1',
@@ -3430,8 +3440,11 @@
         // so the user can finish the order they started.
         saveCart();
         // Remember they were trying to check out so doLogin lands them
-        // back on the checkout page after sign-in.
+        // back on the checkout page after sign-in. Auto-fire the order
+        // once the new user is set up so they don't have to tap confirm
+        // a second time.
         _pendingHashAfterLogin = cart.items.length ? 'page-checkout' : null;
+        _autoConfirmAfterLogin = cart.items.length > 0;
         currentUser = null;
         try { localStorage.removeItem('brewoUser'); } catch (e) {}
         document.body.classList.remove('app-logged-in');
