@@ -1740,7 +1740,7 @@
           <div class="drink-card">
             <div class="drink-card-top">
               <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
-                <div class="drink-card-icon">🥛</div>
+                <div class="drink-card-icon" style="background:transparent;padding:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="40" height="40" aria-hidden="true"><path d="M5 12h22v9c0 4.4-3.6 8-8 8h-6c-4.4 0-8-3.6-8-8v-9z" fill="#C8102E"/><path d="M27 14h2.5c2.5 0 4.5 1.7 4.5 4s-2 4-4.5 4H27z" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="16" cy="12" rx="11" ry="2.2" fill="#F4E4C8"/><ellipse cx="16" cy="11.6" rx="6.5" ry="1" fill="#A66A2C" opacity="0.6"/><text x="16" y="24" font-family="Arial, sans-serif" font-size="8" font-weight="900" fill="#FFFFFF" text-anchor="middle">N</text></svg></div>
                 <div class="drink-card-meta">
                   <div class="drink-card-name" data-ar="نسكافيه" data-en="Nescafe">نسكافيه</div>
                   <div class="drink-card-desc" data-ar="نسكافيه كلاسيكي — دافئ ومنعش" data-en="Classic nescafe — warm and refreshing">نسكافيه كلاسيكي — دافئ ومنعش</div>
@@ -3645,7 +3645,7 @@
     }
 
     const DRINK_BTN_ID = { 'قهوة تركية': 'turkish', 'نسكافيه': 'nescafe', 'ماء': 'water', 'شاي': 'tea' };
-    const DRINK_ICON   = { 'قهوة تركية': '☕',     'نسكافيه': '🥛',     'ماء': '💧', 'شاي': '🍵' };
+    const DRINK_ICON   = { 'قهوة تركية': '☕',     'نسكافيه': '☕',     'ماء': '💧', 'شاي': '🍵' };
     let _brewoAudioCtx = null;
     function brewoClickSound() {
       try {
