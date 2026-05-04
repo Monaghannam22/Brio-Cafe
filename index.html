@@ -22,6 +22,8 @@
       // After an explicit logout we want to land back on the guest home,
       // not the login page — so wipe the sticky-logout flag on load.
       try { localStorage.removeItem('brewoLoggedOut'); } catch (e2) {}
+      var __theme = localStorage.getItem('brewoTheme');
+      if (__theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
     } catch (e) {}
   </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D4F3C'/%3E%3Ctext x='50%25' y='54%25' font-size='38' text-anchor='middle' fill='%23D4A843' font-family='Arial' font-weight='800' dominant-baseline='middle'%3EB%3C/text%3E%3C/svg%3E">
@@ -86,7 +88,60 @@
       --border: #E8F0ED;
       --muted: #94A3B8;
       --char: #1E293B;
+      --surface: #FFFFFF;
     }
+    html[data-theme="dark"] {
+      --em: #2EAB85;
+      --em-light: #133A30;
+      --gold: #E5BD5C;
+      --gold-light: #2A2418;
+      --soft: #0E1715;
+      --border: #1E2C28;
+      --muted: #9CA9B5;
+      --char: #E8EFEC;
+      --surface: #182622;
+    }
+    html[data-theme="dark"] body { background: var(--soft); color: var(--char); }
+    html[data-theme="dark"] .card,
+    html[data-theme="dark"] .drink-card,
+    html[data-theme="dark"] #top-navbar,
+    html[data-theme="dark"] #sidebar,
+    html[data-theme="dark"] #main-nav,
+    html[data-theme="dark"] .login-card,
+    html[data-theme="dark"] .brewo-modal,
+    html[data-theme="dark"] [style*="background:white"],
+    html[data-theme="dark"] [style*="background: white"],
+    html[data-theme="dark"] [style*="background:#fff"],
+    html[data-theme="dark"] [style*="background: #fff"],
+    html[data-theme="dark"] [style*="background:#FFF"],
+    html[data-theme="dark"] [style*="background: #FFF"] {
+      background: var(--surface) !important;
+      color: var(--char);
+    }
+    html[data-theme="dark"] [style*="color:#1E293B"],
+    html[data-theme="dark"] [style*="color: #1E293B"],
+    html[data-theme="dark"] [style*="color:var(--char)"],
+    html[data-theme="dark"] [style*="color: var(--char)"] { color: var(--char) !important; }
+    html[data-theme="dark"] [style*="background:var(--soft)"],
+    html[data-theme="dark"] [style*="background: var(--soft)"] { background: #1A2522 !important; }
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] select,
+    html[data-theme="dark"] textarea {
+      background: #1A2522 !important;
+      color: var(--char) !important;
+      border-color: var(--border) !important;
+    }
+    html[data-theme="dark"] input::placeholder,
+    html[data-theme="dark"] textarea::placeholder { color: #6E7B82 !important; }
+    .theme-toggle-pill { /* matches .top-lang-pill geometry */
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+    }
+    .theme-icon {
+      display: inline-block;
+      transition: transform 320ms cubic-bezier(.4,1.6,.6,1);
+    }
+    html[data-theme="dark"] .theme-icon { transform: rotate(360deg); }
 
     * {
       box-sizing: border-box;
@@ -1413,6 +1468,22 @@
           font-weight: 800;
           font-size: 13px;
           cursor: pointer;">EN</button>
+      <button id="theme-toggle-login" type="button"
+        onclick="toggleTheme()" aria-label="Toggle theme"
+        style="
+          position: absolute;
+          top: 16px;
+          left: 76px;
+          background: var(--em-light);
+          border: 1.5px solid var(--em);
+          color: var(--em);
+          border-radius: 20px;
+          padding: 5px 12px;
+          font-family: 'Tajawal', sans-serif;
+          font-weight: 800;
+          font-size: 13px;
+          cursor: pointer;
+          line-height: 1;"><span class="theme-icon" id="theme-icon-login">🌙</span></button>
       <div style="font-size: 44px; margin-bottom: 16px;">☕</div>
       <h1 data-ar="اهلا بكم في بريو" data-en="Welcome to Brewo" style="font-size: 26px; font-weight: 800; color: var(--em); margin-bottom: 0; text-align: center;">اهلا بكم في بريو</h1>
       <p data-ar="هذا الموقع فقط لموظفي مجمع الصالحين" data-en="This site is for Al-Salheen Complex staff only" style="font-size: 12px; color: #8a8f98; font-weight: 600; margin-top: 6px; margin-bottom: 10px; text-align: center;">هذا الموقع فقط لموظفي مجمع الصالحين</p>
@@ -1482,6 +1553,10 @@
             onclick="toggleLang()" aria-label="Switch language">
             <span class="icon" aria-hidden="true">🌐</span>
             <span id="lang-toggle-top-label">EN</span>
+          </button>
+          <button type="button" id="theme-toggle-top" class="top-lang-pill theme-toggle-pill"
+            onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="icon theme-icon" id="theme-icon-top" aria-hidden="true">🌙</span>
           </button>
           <button type="button" id="top-cart" class="top-cart-pill is-empty" onclick="goCheckout()" aria-label="Cart">
             <span class="icon">🛒</span>
@@ -2657,6 +2732,27 @@
         }
       });
     }
+    function applyTheme(theme) {
+      const t = theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      const icon = t === 'dark' ? '☀️' : '🌙';
+      const top = document.getElementById('theme-icon-top');
+      const login = document.getElementById('theme-icon-login');
+      if (top) top.textContent = icon;
+      if (login) login.textContent = icon;
+      try { localStorage.setItem('brewoTheme', t); } catch (e) {}
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    }
+    // Sync icons on first paint with whatever the early-head script applied.
+    (function syncThemeIconsOnce() {
+      const ready = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+      if (document.readyState !== 'loading') ready();
+      else document.addEventListener('DOMContentLoaded', ready);
+    })();
+
     function toggleLang() {
       currentLang = currentLang === 'ar' ? 'en' : 'ar';
       document.documentElement.dir =
