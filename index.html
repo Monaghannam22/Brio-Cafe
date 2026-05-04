@@ -3007,6 +3007,11 @@
       if (pageId === 'page-admin' && !currentUser) {
         return;
       }
+      // Guests don't have order history — bounce them home if they
+      // try to deep-link into the orders page.
+      if (pageId === 'page-orders' && currentUser && currentUser.isGuest) {
+        pageId = 'page-home';
+      }
       document.querySelectorAll('.page')
         .forEach(p => {
           p.style.display = 'none';
@@ -3415,6 +3420,10 @@
       if (pi) pi.value = currentUser.phone || '';
       const sideLogout = document.getElementById('sidebar-logout');
       if (sideLogout) sideLogout.style.display = currentUser.isGuest ? 'none' : 'flex';
+      const sideOrders = document.getElementById('side-page-orders');
+      if (sideOrders) sideOrders.style.display = currentUser.isGuest ? 'none' : 'flex';
+      const navOrders = document.getElementById('nav-orders');
+      if (navOrders) navOrders.style.display = currentUser.isGuest ? 'none' : '';
       const setLogout = document.getElementById('settings-logout');
       if (setLogout) setLogout.style.display = currentUser.isGuest ? 'none' : 'block';
       const editCard = document.getElementById('settings-edit-card');
