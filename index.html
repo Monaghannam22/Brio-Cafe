@@ -2878,6 +2878,19 @@
         if (savedOrders) orders = JSON.parse(savedOrders);
       } catch (e) { console.error(e); }
 
+      // Background-sync the orders cache from Firestore once Firebase is
+      // ready. Fires-and-forgets so the rest of init isn't blocked.
+      if (window.brewoFirebase && window.brewoFirebase.ready) {
+        Promise.resolve(window.brewoFirebase.ready)
+          .then(() => syncOrdersFromFirestore())
+          .then(() => {
+            const active = document.querySelector('.page.active');
+            if (active && active.id === 'page-orders') renderOrders();
+            updateSettingsStats();
+          })
+          .catch(() => {});
+      }
+
       // Restore in-flight cart (e.g. guest started an order, signed in,
       // or reloaded mid-checkout).
       loadCart();
@@ -4205,7 +4218,37 @@
       showToast(t('orderDeleted'));
     }
 
-    function renderOrders() {
+    // Pull the current user's orders from Firestore and merge into the
+    // local `orders` array (de-duplicated by id). Best-effort — failures
+    // are logged but never block the local-first rendering.
+    async function syncOrdersFromFirestore() {
+      const fb = window.brewoFirebase;
+      if (!fb || typeof fb.getUserOrders !== 'function') return;
+      try {
+        const remote = await fb.getUserOrders();
+        if (!Array.isArray(remote) || !remote.length) return;
+        const byId = new Map(orders.map(o => [o.id, o]));
+        remote.forEach((r) => {
+          const id = r.id || r.localId;
+          if (!id) return;
+          // Firestore Timestamps → ISO strings so the existing date/time
+          // formatters keep working.
+          if (r.createdAt && typeof r.createdAt.toDate === 'function') {
+            r.createdAt = r.createdAt.toDate().toISOString();
+          }
+          if (!byId.has(id)) byId.set(id, r);
+        });
+        orders = Array.from(byId.values()).sort((a, b) =>
+          String(b.createdAt || '').localeCompare(String(a.createdAt || ''))
+        );
+        try { localStorage.setItem('brewoOrders', JSON.stringify(orders)); } catch (e) {}
+      } catch (err) {
+        console.warn('[brewoFirebase] syncOrdersFromFirestore failed', err);
+      }
+    }
+
+    async function renderOrders() {
+      await syncOrdersFromFirestore();
       const past = orders.filter(o =>
         ['delivered', 'cancelled', 'refunded'].includes(o.status));
 

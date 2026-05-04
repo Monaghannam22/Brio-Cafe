@@ -145,7 +145,9 @@ async function getUserOrders() {
     orderBy('createdAt', 'desc')
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+  // Preserve the app-side order id (e.g. "BRXXXX99") that lives in the doc
+  // data; expose the Firestore doc id separately as `_docId`.
+  return snap.docs.map((d) => Object.assign({ _docId: d.id }, d.data()));
 }
 
 // --- Public API ---------------------------------------------------------
