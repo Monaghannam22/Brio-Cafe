@@ -843,6 +843,60 @@
     .drink-card-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
     .drink-card-price { font-size: 18px; font-weight: 900; color: var(--em); white-space: nowrap; }
 
+    /* === Premium add-to-cart polish === */
+    .drink-card-icon { position: relative; transition: transform .35s cubic-bezier(.4,1.6,.6,1); }
+    .drink-card:hover .drink-card-icon { transform: translateY(-2px) rotate(-3deg); }
+    .drink-card-icon::before,
+    .drink-card-icon::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      width: 8px; height: 16px;
+      margin-left: -4px;
+      border-radius: 50% 50% 30% 30%;
+      background: linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,0.7));
+      filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (hover: hover) {
+      .drink-card:hover .drink-card-icon::before,
+      .drink-card:hover .drink-card-icon::after {
+        animation: brewoSteam 2.4s ease-out infinite;
+      }
+      .drink-card:hover .drink-card-icon::after { animation-delay: 1.1s; left: calc(50% + 5px); }
+    }
+    @keyframes brewoSteam {
+      0%   { opacity: 0; transform: translateY(0) scale(.6) rotate(0deg); }
+      18%  { opacity: 0.6; }
+      100% { opacity: 0; transform: translateY(-44px) scale(1.6) rotate(10deg); }
+    }
+    @keyframes brewoBtnPop {
+      0%   { transform: scale(1); }
+      35%  { transform: scale(0.94); }
+      60%  { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+    .btn-pop { animation: brewoBtnPop 360ms cubic-bezier(.4,1.6,.6,1); }
+    .fly-cup {
+      position: fixed;
+      z-index: 4000;
+      pointer-events: none;
+      font-size: 28px;
+      line-height: 1;
+      will-change: transform, opacity;
+      transition:
+        transform 720ms cubic-bezier(.55,-0.2,.4,1.4),
+        opacity 720ms ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .drink-card:hover .drink-card-icon,
+      .drink-card:hover .drink-card-icon::before,
+      .drink-card:hover .drink-card-icon::after { animation: none !important; transform: none !important; opacity: 0 !important; }
+      .btn-pop, .fly-cup { animation: none !important; transition: none !important; }
+    }
+
     .radio-group {
       display: flex;
       flex-wrap: wrap;
@@ -3485,6 +3539,66 @@
       } catch (e) {}
     }
 
+    const DRINK_BTN_ID = { 'قهوة تركية': 'turkish', 'نسكافيه': 'nescafe', 'ماء': 'water', 'شاي': 'tea' };
+    const DRINK_ICON   = { 'قهوة تركية': '☕',     'نسكافيه': '🥛',     'ماء': '💧', 'شاي': '🍵' };
+    let _brewoAudioCtx = null;
+    function brewoClickSound() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!_brewoAudioCtx) _brewoAudioCtx = new Ctx();
+        const ctx = _brewoAudioCtx;
+        if (ctx.state === 'suspended') ctx.resume();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(720, ctx.currentTime);
+        o.frequency.exponentialRampToValueAtTime(360, ctx.currentTime + 0.12);
+        g.gain.setValueAtTime(0.0001, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.16);
+        o.connect(g).connect(ctx.destination);
+        o.start();
+        o.stop(ctx.currentTime + 0.18);
+      } catch (e) {}
+    }
+    function flyToCart(fromEl, emoji) {
+      if (!fromEl) return;
+      const target = document.getElementById('top-cart');
+      if (!target || target.offsetParent === null) return;
+      const fr = fromEl.getBoundingClientRect();
+      const cr = target.getBoundingClientRect();
+      const fly = document.createElement('div');
+      fly.className = 'fly-cup';
+      fly.textContent = emoji || '☕';
+      fly.style.left = (fr.left + fr.width / 2 - 14) + 'px';
+      fly.style.top  = (fr.top - 6) + 'px';
+      document.body.appendChild(fly);
+      requestAnimationFrame(() => {
+        const dx = (cr.left + cr.width / 2) - (fr.left + fr.width / 2);
+        const dy = (cr.top  + cr.height / 2) - fr.top;
+        fly.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.35) rotate(20deg)';
+        fly.style.opacity = '0.05';
+      });
+      setTimeout(() => {
+        fly.remove();
+        target.classList.remove('bump');
+        void target.offsetWidth;
+        target.classList.add('bump');
+      }, 740);
+    }
+    function celebrateAddToCart(drinkName) {
+      const id = DRINK_BTN_ID[drinkName];
+      const btn = id ? document.getElementById(id + '-add-btn') : null;
+      if (btn) {
+        btn.classList.remove('btn-pop');
+        void btn.offsetWidth;
+        btn.classList.add('btn-pop');
+        flyToCart(btn, DRINK_ICON[drinkName]);
+      }
+      brewoClickSound();
+    }
+
     async function addCustomDrink(drinkName, option, price, qty, note) {
       if (!option) {
         showToast(t('selectDrinkType'));
@@ -3504,6 +3618,7 @@
       updateCartUI();
       showToast(t('addedToCart') + ': ' + translateItemName(fullName) + ' ×' + qty);
       resetDrinkForm(drinkName);
+      celebrateAddToCart(drinkName);
     }
 
     function resetDrinkForm(drinkName) {
