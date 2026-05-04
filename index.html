@@ -916,11 +916,11 @@
       pointer-events: none;
     }
     @media (hover: hover) {
-      .drink-card:hover .drink-card-icon::before,
-      .drink-card:hover .drink-card-icon::after {
+      .drink-card:hover .drink-card-icon:not(.no-steam)::before,
+      .drink-card:hover .drink-card-icon:not(.no-steam)::after {
         animation: brewoSteam 2.4s ease-out infinite;
       }
-      .drink-card:hover .drink-card-icon::after { animation-delay: 1.1s; left: calc(50% + 5px); }
+      .drink-card:hover .drink-card-icon:not(.no-steam)::after { animation-delay: 1.1s; left: calc(50% + 5px); }
     }
     @keyframes brewoSteam {
       0%   { opacity: 0; transform: translateY(0) scale(.6) rotate(0deg); }
@@ -1775,7 +1775,7 @@
           <div class="drink-card">
             <div class="drink-card-top">
               <div style="display:flex;gap:12px;align-items:flex-start;flex:1;">
-                <div class="drink-card-icon">💧</div>
+                <div class="drink-card-icon no-steam">💧</div>
                 <div class="drink-card-meta">
                   <div class="drink-card-name">ماء</div>
                   <div class="drink-card-desc">ماء معدني نقي</div>
