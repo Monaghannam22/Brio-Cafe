@@ -3384,6 +3384,11 @@
         localStorage.setItem('brewoUser', JSON.stringify(currentUser));
         localStorage.removeItem('brewoLoggedOut');
       } catch (e) {}
+      if (window.brewoFirebase && typeof window.brewoFirebase.saveUserProfile === 'function') {
+        window.brewoFirebase.saveUserProfile(currentUser).catch((err) => {
+          console.warn('[brewoFirebase] saveUserProfile failed', err);
+        });
+      }
       document.documentElement.classList.remove('logged-out');
 
       document.getElementById('page-login').style.display = 'none';
@@ -3450,6 +3455,9 @@
       cart = { items: [] };
       orders = [];
 
+      if (window.brewoFirebase && typeof window.brewoFirebase.signOutUser === 'function') {
+        window.brewoFirebase.signOutUser().catch(() => {});
+      }
       try {
         localStorage.removeItem('brewoUser');
         // Sticky logout: refreshing the login page should keep us on
@@ -3989,6 +3997,13 @@
       
       orders.unshift(order);
       try { saveOrders(); } catch (e) {}
+      // Best-effort: also persist the order to Firestore. Failures are
+      // ignored so the WhatsApp flow still goes through.
+      if (window.brewoFirebase && typeof window.brewoFirebase.saveOrder === 'function') {
+        window.brewoFirebase.saveOrder(order).catch((err) => {
+          console.warn('[brewoFirebase] saveOrder failed', err);
+        });
+      }
       // Persist office + floor on the user so subsequent checkouts pre-fill.
       if (currentUser && !currentUser.isGuest) {
         currentUser.office = office;

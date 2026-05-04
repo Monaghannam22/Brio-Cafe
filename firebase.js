@@ -24,6 +24,7 @@ import {
   browserLocalPersistence,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
   signOut,
   onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
@@ -54,10 +55,21 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Persist the session in localStorage so reloads keep the user signed in.
-const ready = setPersistence(auth, browserLocalPersistence).catch((err) => {
-  console.warn('[brewoFirebase] persistence init failed', err);
-});
+// Persist the session in localStorage so reloads keep the user signed in,
+// and auto-sign-in anonymously so every visitor has a uid we can attach to
+// orders without requiring an email/password UI.
+const ready = setPersistence(auth, browserLocalPersistence)
+  .then(() => new Promise((resolve) => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      unsub();
+      if (user) resolve(user);
+      else signInAnonymously(auth).then((c) => resolve(c.user)).catch((err) => {
+        console.warn('[brewoFirebase] anonymous sign-in failed', err);
+        resolve(null);
+      });
+    });
+  }))
+  .catch((err) => { console.warn('[brewoFirebase] init failed', err); });
 
 // --- Auth ---------------------------------------------------------------
 
@@ -98,15 +110,30 @@ function getCurrentUser() {
 // --- Orders -------------------------------------------------------------
 
 async function saveOrder(orderData) {
+  await ready;
   const user = auth.currentUser;
   if (!user) throw new Error('Not signed in');
   const payload = Object.assign({}, orderData, {
     userId: user.uid,
-    userEmail: user.email,
+    userEmail: user.email || null,
     createdAt: serverTimestamp()
   });
   const ref = await addDoc(collection(db, 'orders'), payload);
   return ref.id;
+}
+
+// Mirror the locally-collected profile (name/office/floor/phone) to
+// users/{uid} so the auth user has a matching profile doc in Firestore.
+async function saveUserProfile(profile) {
+  await ready;
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not signed in');
+  await setDoc(doc(db, 'users', user.uid), Object.assign({
+    uid: user.uid,
+    email: user.email || null,
+    isAnonymous: !!user.isAnonymous,
+    updatedAt: serverTimestamp()
+  }, profile || {}), { merge: true });
 }
 
 async function getUserOrders() {
@@ -131,5 +158,6 @@ window.brewoFirebase = {
   onAuthChanged,
   getCurrentUser,
   saveOrder,
+  saveUserProfile,
   getUserOrders
 };
