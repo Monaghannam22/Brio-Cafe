@@ -1502,6 +1502,8 @@
         <option value="GF" data-ar="الطابق الأرضي GF" data-en="Ground Floor GF">الطابق الأرضي GF</option>
       </select>
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
+      <input id="li-email" class="login-input" type="email" autocomplete="email" data-ar="البريد الإلكتروني" data-en="Email" placeholder="البريد الإلكتروني" />
+      <input id="li-password" class="login-input" type="password" autocomplete="current-password" minlength="6" data-ar="كلمة السر (6 أحرف على الأقل)" data-en="Password (6+ characters)" placeholder="كلمة السر" />
 
       <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
       
@@ -2301,6 +2303,10 @@
         enterName: 'أدخل اسمك الكامل',
         enterOffice: 'أدخل رقم المكتب',
         enterFloor: 'اختر طابقك',
+        emailInvalid: 'البريد الإلكتروني غير صحيح',
+        passwordTooShort: 'كلمة السر يجب أن تكون 6 أحرف على الأقل',
+        passwordWrong: 'كلمة السر غير صحيحة',
+        authFailed: 'تعذر تسجيل الدخول، حاول مرة أخرى',
         nameTooShort: 'الاسم قصير جداً (٢ حرف على الأقل)',
         officeInvalid: 'رقم المكتب غير صحيح للطابق المختار',
         phoneInvalid: 'رقم الجوال يجب أن يكون 10 أرقام بالضبط (مثال: 07XXXXXXXX)',
@@ -2445,6 +2451,10 @@
         enterName: 'Please enter your name',
         enterOffice: 'Please enter your office number',
         enterFloor: 'Please select your floor',
+        emailInvalid: 'Please enter a valid email',
+        passwordTooShort: 'Password must be at least 6 characters',
+        passwordWrong: 'Incorrect password',
+        authFailed: 'Sign-in failed, please try again',
         nameTooShort: 'Name is too short (min 2 characters)',
         officeInvalid: 'Office number is not valid for the selected floor',
         phoneInvalid: 'Phone number must be exactly 10 digits (e.g. 07XXXXXXXX)',
@@ -3376,29 +3386,72 @@
     }
     function clearFieldErrors(ids) { ids.forEach(clearFieldError); }
 
-    function doLogin() {
-      clearFieldErrors(['li-name', 'li-office', 'li-floor', 'li-phone']);
+    async function doLogin() {
+      clearFieldErrors(['li-name', 'li-office', 'li-floor', 'li-phone', 'li-email', 'li-password']);
 
       const nameRes   = validateName(document.getElementById('li-name').value);
       const officeRes = validateOffice(document.getElementById('li-office').value, document.getElementById('li-floor').value);
       const phoneRes  = validatePhone(document.getElementById('li-phone').value);
+      const email     = String(document.getElementById('li-email').value || '').trim();
+      const password  = String(document.getElementById('li-password').value || '');
 
       if (!nameRes.ok)   { setFieldError('li-name', nameRes.msg);     showLoginErr(nameRes.msg);   return; }
       if (!officeRes.ok) { setFieldError('li-office', officeRes.msg); showLoginErr(officeRes.msg); return; }
       if (!phoneRes.ok)  { setFieldError('li-phone', phoneRes.msg);   showLoginErr(phoneRes.msg);  return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError('li-email', t('emailInvalid')); showLoginErr(t('emailInvalid')); return;
+      }
+      if (password.length < 6) {
+        setFieldError('li-password', t('passwordTooShort')); showLoginErr(t('passwordTooShort')); return;
+      }
 
-      currentUser = {
+      const profile = {
         name: nameRes.value,
         office: officeRes.value,
         floor: officeRes.floor,
         phone: phoneRes.value
       };
+
+      // Try Firebase email/password sign-in; on user-not-found, sign up.
+      const fb = window.brewoFirebase;
+      if (fb && typeof fb.signIn === 'function') {
+        try {
+          await fb.signIn(email, password);
+        } catch (err) {
+          const code = err && err.code;
+          if (code === 'auth/user-not-found' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') {
+            try {
+              await fb.signUp(email, password, profile);
+            } catch (err2) {
+              const code2 = err2 && err2.code;
+              if (code2 === 'auth/email-already-in-use') {
+                setFieldError('li-password', t('passwordWrong'));
+                showLoginErr(t('passwordWrong'));
+              } else {
+                setFieldError('li-email', err2.message || t('authFailed'));
+                showLoginErr(err2.message || t('authFailed'));
+              }
+              return;
+            }
+          } else if (code === 'auth/wrong-password') {
+            setFieldError('li-password', t('passwordWrong'));
+            showLoginErr(t('passwordWrong'));
+            return;
+          } else {
+            setFieldError('li-email', err.message || t('authFailed'));
+            showLoginErr(err.message || t('authFailed'));
+            return;
+          }
+        }
+      }
+
+      currentUser = Object.assign({ email: email }, profile);
       try {
         localStorage.setItem('brewoUser', JSON.stringify(currentUser));
         localStorage.removeItem('brewoLoggedOut');
       } catch (e) {}
-      if (window.brewoFirebase && typeof window.brewoFirebase.saveUserProfile === 'function') {
-        window.brewoFirebase.saveUserProfile(currentUser).catch((err) => {
+      if (fb && typeof fb.saveUserProfile === 'function') {
+        fb.saveUserProfile(Object.assign({ email: email }, profile)).catch((err) => {
           console.warn('[brewoFirebase] saveUserProfile failed', err);
         });
       }
@@ -3505,6 +3558,10 @@
       document.getElementById('li-name').value    = '';
       document.getElementById('li-office').value  = '';
       document.getElementById('li-phone').value   = '';
+      const liEmail = document.getElementById('li-email');
+      if (liEmail) liEmail.value = '';
+      const liPass = document.getElementById('li-password');
+      if (liPass) liPass.value = '';
       const liFloor = document.getElementById('li-floor');
       if (liFloor) liFloor.value = '';
       try {
