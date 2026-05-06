@@ -9,7 +9,6 @@
   <meta name="author" content="Brewo / Brio Cafe">
   <meta name="theme-color" content="#0D4F3C">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://brewo.app/">
   <!-- Set lang/dir as early as possible so the document never paints
        in the wrong direction. Runs before <body> is rendered. -->
   <script>
@@ -36,8 +35,7 @@
   <meta property="og:site_name" content="Brewo (بريو)">
   <meta property="og:title" content="بريو | قهوتك لعندك في مجمع الصالحين">
   <meta property="og:description" content="اطلب قهوتك عبر واتساب وتوصلك لعندك في مجمع الصالحين">
-  <meta property="og:url" content="https://brewo.app/">
-  <meta property="og:image" content="https://brio-cafe-fo7a.vercel.app/og-image.png">
+  <meta property="og:image" content="./og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
@@ -49,7 +47,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="بريو | قهوتك لعندك في مجمع الصالحين">
   <meta name="twitter:description" content="اطلب قهوتك عبر واتساب وتوصلك لعندك في مجمع الصالحين">
-  <meta name="twitter:image" content="https://brio-cafe-fo7a.vercel.app/og-image.png">
+  <meta name="twitter:image" content="./og-image.png">
   <meta name="twitter:image:alt" content="Brio · بريو — Coffee delivered to your desk in Al-Saleheen Complex, Amman">
 
   <!-- Structured data: LocalBusiness -->
@@ -58,8 +56,6 @@
     "@context": "https://schema.org",
     "@type": "CafeOrCoffeeShop",
     "name": "Brewo (بريو) / Brio Cafe",
-    "image": "https://brewo.app/og-image.png",
-    "url": "https://brewo.app/",
     "telephone": "+962798252856",
     "servesCuisine": ["Coffee", "Tea"],
     "address": {
@@ -68,8 +64,7 @@
       "addressLocality": "Amman",
       "addressCountry": "JO"
     },
-    "areaServed": "Al-Saleheen Complex, Amman",
-    "menu": "https://brewo.app/#drinks"
+    "areaServed": "Al-Saleheen Complex, Amman"
   }
   </script>
 
@@ -465,7 +460,7 @@
       inset: 0;
       background:
         linear-gradient(rgba(13,79,60,0.55), rgba(0,0,0,0.65)),
-        url('./ChatGPT Image Apr 28, 2026, 03_48_52 PM.png') center/cover no-repeat,
+        url('./login-background.png') center/cover no-repeat,
         var(--em);
       z-index: 1000;
       display: none;
@@ -523,9 +518,13 @@
       color: var(--muted);
       font-size: 10px;
       font-weight: 800;
+      font-family: 'Tajawal', sans-serif;
       text-decoration: none;
       flex: 1;
       cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
     }
     #nav-home,
     #nav-drinks,
@@ -584,7 +583,7 @@
       display: none;
       position: fixed;
       top: calc(88px + env(safe-area-inset-top, 0px));
-      inset-inline-end: max(12px, env(safe-area-inset-end, 12px));
+      inset-inline-end: max(12px, env(safe-area-inset-right, 12px));
       inset-inline-start: auto;
       bottom: auto;
       transform: none;
@@ -1399,7 +1398,7 @@
 
   </style>
 </head>
-<body id="app-body" class="app-logged-in">
+<body id="app-body">
   <!-- Themed confirm modal -->
   <div id="brewo-modal" class="brewo-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="brewo-modal-title">
     <div class="brewo-modal">
@@ -1461,7 +1460,7 @@
         style="
           position: absolute;
           top: 16px;
-          left: 16px;
+          inset-inline-start: 16px;
           background: var(--em-light);
           border: 1.5px solid var(--em);
           color: var(--em);
@@ -1472,11 +1471,11 @@
           font-size: 13px;
           cursor: pointer;">EN</button>
       <button id="theme-toggle-login" type="button"
-        onclick="toggleTheme()" aria-label="Toggle theme"
+        onclick="toggleTheme()" aria-label="Toggle theme" data-aria-key="ariaToggleTheme"
         style="
           position: absolute;
           top: 16px;
-          left: 96px;
+          inset-inline-start: 96px;
           background: var(--em-light);
           border: 1.5px solid var(--em);
           color: var(--em);
@@ -1487,7 +1486,7 @@
           font-size: 13px;
           cursor: pointer;
           line-height: 1;"><span class="theme-icon" id="theme-icon-login">🌙</span></button>
-      <div style="font-size: 44px; margin-bottom: 16px;">☕</div>
+      <div aria-hidden="true" style="font-size: 44px; margin-bottom: 16px;">☕</div>
       <h1 data-ar="اهلا بكم في بريو" data-en="Welcome to Brewo" style="font-size: 26px; font-weight: 800; color: var(--em); margin-bottom: 0; text-align: center;">اهلا بكم في بريو</h1>
       <p data-ar="هذا الموقع فقط لموظفي مجمع الصالحين" data-en="This site is for Al-Salheen Complex staff only" style="font-size: 12px; color: #8a8f98; font-weight: 600; margin-top: 6px; margin-bottom: 10px; text-align: center;">هذا الموقع فقط لموظفي مجمع الصالحين</p>
       <p data-ar="اطلب قهوتك المفضلة وتوصلك لمكتبك" data-en="Order your favorite drink, delivered to your desk" style="font-size: 14px; color: #9FD4C0; font-weight: 700; margin-top: 0; margin-bottom: 14px; text-align: center;">اطلب قهوتك المفضلة وتوصلك لمكتبك</p>
@@ -1515,27 +1514,27 @@
     <!-- SIDEBAR -->
     <aside id="sidebar">
       <div class="sidebar-logo">
-        <div style="width:40px; height:40px; background:var(--gold); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px;">☕</div>
+        <div aria-hidden="true" style="width:40px; height:40px; background:var(--gold); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px;">☕</div>
         <div style="font-size:20px; font-weight:900; color:var(--em);">بريو</div>
       </div>
       
       <div style="margin-top:20px; flex:1;">
         <div class="nav-item active" id="side-page-home" onclick="navTo('page-home')">
-          <span style="font-size:20px;">🏠</span> الرئيسية
+          <span aria-hidden="true" style="font-size:20px;">🏠</span> الرئيسية
         </div>
-        <div class="nav-item" id="side-page-cafes" onclick="navTo('page-drinks')">
-          <span style="font-size:20px;">☕</span> المشروبات
+        <div class="nav-item" id="side-page-drinks" onclick="navTo('page-drinks')">
+          <span aria-hidden="true" style="font-size:20px;">☕</span> المشروبات
         </div>
         <div class="nav-item" id="side-page-orders" onclick="navTo('page-orders')">
-          <span style="font-size:20px;">📋</span> طلباتي
+          <span aria-hidden="true" style="font-size:20px;">📋</span> طلباتي
         </div>
         <div class="nav-item" id="side-page-settings" onclick="navTo('page-settings')">
-          <span style="font-size:20px;">⚙️</span> الإعدادات
+          <span aria-hidden="true" style="font-size:20px;">⚙️</span> الإعدادات
         </div>
       </div>
 
       <div id="sidebar-logout" class="nav-item" style="color:#E53935; margin-bottom:24px; display:none;" onclick="doLogout()">
-        <span style="font-size:20px;">🚪</span> تسجيل الخروج
+        <span aria-hidden="true" style="font-size:20px;">🚪</span> تسجيل الخروج
       </div>
     </aside>
 
@@ -1543,7 +1542,7 @@
       
       <!-- TOP NAV -->
       <nav id="top-navbar">
-        <button type="button" id="user-chip" onclick="navTo('page-settings')" aria-label="Settings"
+        <button type="button" id="user-chip" onclick="navTo('page-settings')" aria-label="Settings" data-aria-key="ariaSettings"
           style="display:flex; align-items:center; gap:8px; background:transparent; border:none; padding:4px 8px; border-radius:12px; cursor:pointer; font-family:'Tajawal',sans-serif; transition: background .15s;">
            <div id="user-badge" style="width:36px; height:36px; background:var(--gold-light); color:var(--em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:1px solid var(--gold);">·</div>
            <div style="display:flex; flex-direction:column; line-height:1; text-align:start;">
@@ -1554,15 +1553,15 @@
 
         <div style="display:flex; align-items:center; gap:14px;">
           <button type="button" id="lang-toggle-top" class="top-lang-pill"
-            onclick="toggleLang()" aria-label="Switch language">
+            onclick="toggleLang()" aria-label="Switch language" data-aria-key="ariaSwitchLang">
             <span class="icon" aria-hidden="true">🌐</span>
             <span id="lang-toggle-top-label">EN</span>
           </button>
           <button type="button" id="theme-toggle-top" class="top-lang-pill theme-toggle-pill"
-            onclick="toggleTheme()" aria-label="Toggle theme">
+            onclick="toggleTheme()" aria-label="Toggle theme" data-aria-key="ariaToggleTheme">
             <span class="icon theme-icon" id="theme-icon-top" aria-hidden="true">🌙</span>
           </button>
-          <button type="button" id="top-cart" class="top-cart-pill is-empty" onclick="goCheckout()" aria-label="Cart">
+          <button type="button" id="top-cart" class="top-cart-pill is-empty" onclick="goCheckout()" aria-label="Cart" data-aria-key="ariaCart">
             <span class="icon">🛒</span>
             <span class="count" id="nav-cart-badge">0</span>
             <span class="desktop-only" id="nav-cart-label">السلة</span>
@@ -1624,8 +1623,8 @@
               </div>
             </div>
             <div class="hero-dots">
-              <button type="button" class="hero-dot active" aria-label="شريحة 1" onclick="goSlide(0)"></button>
-              <button type="button" class="hero-dot" aria-label="شريحة 2" onclick="goSlide(1)"></button>
+              <button type="button" class="hero-dot active" data-aria-slide="1" aria-label="Slide 1" onclick="goSlide(0)"></button>
+              <button type="button" class="hero-dot" data-aria-slide="2" aria-label="Slide 2" onclick="goSlide(1)"></button>
             </div>
           </div>
 
@@ -1878,25 +1877,14 @@
               <div class="drink-note-label" data-ar="ملاحظة (اختياري)" data-en="Note (optional)">ملاحظة (اختياري)</div>
               <textarea id="tea-note" class="drink-note-input" maxlength="140" rows="2" data-ar="مثلاً: مع نعنع، أقل سكر..." data-en="e.g. with mint, less sugar..." placeholder="مثلاً: مع نعنع، أقل سكر..."></textarea>
             </div>
-            <button type="button" id="tea-add-btn" onclick="(function(){
-              const type = document.querySelector('input[name=\'tea-type\']:checked');
-              const sugar = document.querySelector('input[name=\'tea-sugar\']:checked');
-              if (!type || !sugar) {
-                showToast(t('selectOptions'));
-                return;
-              }
-              const typeLabel = currentLang === 'ar' ? type.value : (type.dataset.en || type.value);
-              const sugarLabel = currentLang === 'ar' ? sugar.value : (sugar.dataset.en || sugar.value);
-              const label = typeLabel + ' — ' + sugarLabel;
-              addCustomDrink('شاي', label, 0.50, drinkQty['tea'], readDrinkNote('tea'));
-            })()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
+            <button type="button" id="tea-add-btn" onclick="addTeaToCart()" style="width:100%;margin-top:8px;padding:14px;border-radius:14px;border:none;background:var(--em);color:white;font-weight:800;font-size:15px;font-family:'Tajawal',sans-serif;cursor:pointer;opacity:0.4;pointer-events:none;" data-ar="أضف للسلة +" data-en="Add to Cart +">أضف للسلة +</button>
           </div>
         </div>
 
         <!-- PAGE: CHECKOUT -->
         <div id="page-checkout" class="page">
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-            <button onclick="navTo('page-drinks')" style="background:white; border:1px solid var(--border); border-radius:10px; width:40px; height:40px; font-size:18px; cursor:pointer;">→</button>
+            <button id="checkout-back-btn" aria-label="Back" onclick="navTo('page-drinks')" style="background:white; border:1px solid var(--border); border-radius:10px; width:40px; height:40px; font-size:18px; cursor:pointer;">→</button>
             <h2 style="font-size:18px; font-weight:900; color:var(--em); margin:0;">سلة الطلبات</h2>
           </div>
           
@@ -2090,22 +2078,22 @@
 
       <!-- MOBILE BOTTOM NAV -->
       <nav id="main-nav">
-        <a onclick="navTo('page-home')" class="mobile-tab" id="nav-home">
-          <span style="font-size:20px;">🏠</span>
+        <button type="button" onclick="navTo('page-home')" class="mobile-tab" id="nav-home" aria-label="Home">
+          <span style="font-size:20px;" aria-hidden="true">🏠</span>
           <span data-ar="الرئيسية" data-en="Home">الرئيسية</span>
-        </a>
-        <a onclick="navTo('page-drinks')" class="mobile-tab active" id="nav-drinks">
-          <span style="font-size:20px;">🥤</span>
+        </button>
+        <button type="button" onclick="navTo('page-drinks')" class="mobile-tab active" id="nav-drinks" aria-label="Order">
+          <span style="font-size:20px;" aria-hidden="true">🥤</span>
           <span data-ar="اطلب" data-en="Order">اطلب</span>
-        </a>
-        <a onclick="navTo('page-orders')" class="mobile-tab" id="nav-orders">
-          <span style="font-size:20px;">📋</span>
+        </button>
+        <button type="button" onclick="navTo('page-orders')" class="mobile-tab" id="nav-orders" aria-label="Orders">
+          <span style="font-size:20px;" aria-hidden="true">📋</span>
           <span data-ar="طلباتي" data-en="Orders">طلباتي</span>
-        </a>
-        <a onclick="navTo('page-settings')" class="mobile-tab" id="nav-settings">
-          <span style="font-size:20px;">⚙️</span>
+        </button>
+        <button type="button" onclick="navTo('page-settings')" class="mobile-tab" id="nav-settings" aria-label="Settings">
+          <span style="font-size:20px;" aria-hidden="true">⚙️</span>
           <span data-ar="الإعدادات" data-en="Settings">الإعدادات</span>
-        </a>
+        </button>
       </nav>
 
       <!-- CART BAR -->
@@ -2135,11 +2123,13 @@
     }
 
     function sanitizeForWa(s) {
+      // 140 matches the textarea maxlength on each drink-note field, so the
+      // user never silently loses characters they typed and saw accepted.
       return String(s == null ? '' : s)
         .replace(/[\r\n\t]+/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
-        .slice(0, 120);
+        .slice(0, 140);
     }
 
     // LRM marker keeps Latin/numeric strings (IDs, phones, money) readable
@@ -2301,9 +2291,6 @@
         enterName: 'أدخل اسمك الكامل',
         enterOffice: 'أدخل رقم المكتب',
         enterFloor: 'اختر طابقك',
-        emailInvalid: 'البريد الإلكتروني غير صحيح',
-        passwordTooShort: 'كلمة السر يجب أن تكون 6 أحرف على الأقل',
-        passwordWrong: 'كلمة السر غير صحيحة',
         authFailed: 'تعذر تسجيل الدخول، حاول مرة أخرى',
         nameTooShort: 'الاسم قصير جداً (٢ حرف على الأقل)',
         officeInvalid: 'رقم المكتب غير صحيح للطابق المختار',
@@ -2326,20 +2313,18 @@
         qrTitle: 'كود استلام طلبك',
         qrSub: 'أظهر هذا الكود للمندوب عند التوصيل',
         downloadQr: 'تحميل الكود 📥',
-        continueBtn: 'متابعة',
         logoutBtn: 'تسجيل الخروج',
         adminTitle: 'لوحة التحكم',
         exitAdmin: 'خروج',
         drinksTitle:   'اختر مشروبك',
         drinksSub:     'خصّص طلبك واضغط أضف للسلة',
-        addToCart:     'أضف للسلة +',
         chooseType:    'اختر النوع:',
         sugarLevel:    'مستوى السكر',
         qty:           'الكمية',
         checkout:      'إتمام الطلب ←',
         reviewOrder:   'راجع طلبك',
         deliveryInfo:  'معلومات التوصيل',
-        officeLabel:   'رقم المكتبـ *',
+        officeLabel:   'رقم المكتب *',
         floorLabel:    'الطابق *',
         notes:         'ملاحظات إضافية...',
         subtotal:      'المجموع الفرعي',
@@ -2366,7 +2351,6 @@
         totalSpent:    'إجمالي الإنفاق د.أ',
         version:       'الإصدار',
         location:      'المنطقة',
-        locationVal:   'مجمع الصالحين — عمّان',
         logout:        'تسجيل الخروج',
         selectOptions: 'اختر نوع المشروب ومستوى السكر أولاً',
         logoutConfirm: 'هل تريد تسجيل الخروج من بريو؟',
@@ -2414,7 +2398,13 @@
         adminColStatus:'الحالة',
         adminColTotal: 'المجموع',
         adminEmpty:    'لا توجد طلبات',
-        tenantHint:    'يبدو أنك تطلب لـ ',
+        tenantHint:    'يبدو أنك تطلب لصالح',
+        syncUnavailable: 'تعذر مزامنة طلباتك — تحقق من اتصالك',
+        ariaSettings:  'الإعدادات',
+        ariaCart:      'السلة',
+        ariaSwitchLang:'تبديل اللغة',
+        ariaToggleTheme:'تبديل المظهر',
+        ariaSlide:     'شريحة',
         deliveryReceived: 'جاري تجهيز طلبك',
         freeGift:      'مجاني 🎁',
         guestModeTitle:'تصفح كزائر',
@@ -2449,9 +2439,6 @@
         enterName: 'Please enter your name',
         enterOffice: 'Please enter your office number',
         enterFloor: 'Please select your floor',
-        emailInvalid: 'Please enter a valid email',
-        passwordTooShort: 'Password must be at least 6 characters',
-        passwordWrong: 'Incorrect password',
         authFailed: 'Sign-in failed, please try again',
         nameTooShort: 'Name is too short (min 2 characters)',
         officeInvalid: 'Office number is not valid for the selected floor',
@@ -2474,13 +2461,11 @@
         qrTitle: 'Pickup code',
         qrSub: 'Show this code to the runner on delivery',
         downloadQr: 'Download code 📥',
-        continueBtn: 'Continue',
         logoutBtn: 'Log out',
         adminTitle: 'Admin panel',
         exitAdmin: 'Exit',
         drinksTitle:   'Choose Your Drink',
         drinksSub:     'Customize your order then add to cart',
-        addToCart:     'Add to Cart +',
         chooseType:    'Choose type:',
         sugarLevel:    'Sugar Level',
         qty:           'Quantity',
@@ -2514,7 +2499,6 @@
         totalSpent:    'Total Spent JD',
         version:       'Version',
         location:      'Location',
-        locationVal:   'Al-Salheen Complex — Amman',
         logout:        'Log Out',
         selectOptions: 'Please select drink type and sugar level first',
         logoutConfirm: 'Are you sure you want to log out?',
@@ -2562,7 +2546,13 @@
         adminColStatus:'Status',
         adminColTotal: 'Total',
         adminEmpty:    'No orders',
-        tenantHint:    'Looks like ',
+        tenantHint:    'Looks like an order for',
+        syncUnavailable: 'Could not sync your orders — check your connection',
+        ariaSettings:  'Settings',
+        ariaCart:      'Cart',
+        ariaSwitchLang:'Switch language',
+        ariaToggleTheme:'Toggle theme',
+        ariaSlide:     'Slide',
         deliveryReceived: 'Order processing',
         freeGift:      'Free 🎁',
         guestModeTitle:'Browsing as guest',
@@ -2822,6 +2812,15 @@
       document.querySelectorAll('.currency-unit').forEach((el) => {
         el.textContent = currencyUnit();
       });
+      // Translate aria-labels marked with data-aria-key (top nav, login
+      // controls, etc.) and the numbered hero-dot labels so screen readers
+      // hear the active language instead of always-English fallbacks.
+      document.querySelectorAll('[data-aria-key]').forEach((el) => {
+        el.setAttribute('aria-label', t(el.dataset.ariaKey));
+      });
+      document.querySelectorAll('[data-aria-slide]').forEach((el) => {
+        el.setAttribute('aria-label', t('ariaSlide') + ' ' + el.dataset.ariaSlide);
+      });
       const moneyNodes = ['cb-total', 'checkout-total', 'set-stat-spend'];
       moneyNodes.forEach((id) => {
         const el = document.getElementById(id);
@@ -2886,6 +2885,26 @@
         if (savedOrders) orders = JSON.parse(savedOrders);
       } catch (e) { console.error(e); }
 
+      // Heal orders left in `new` status from a previous session that was
+      // closed before the 10s "delivered" timer fired — otherwise they
+      // never appear in past-orders but still inflate the stats counter.
+      // 15-minute staleness window matches the simulated delivery SLA.
+      const STALE_NEW_MS = 15 * 60 * 1000;
+      const nowMs = Date.now();
+      let healed = false;
+      orders.forEach((o) => {
+        if (o && o.status === 'new' && o.createdAt) {
+          const createdMs = Date.parse(o.createdAt);
+          if (Number.isFinite(createdMs) && (nowMs - createdMs) > STALE_NEW_MS) {
+            o.status = 'delivered';
+            o.deliveredAt = o.deliveredAt || new Date(createdMs + STALE_NEW_MS).toISOString();
+            o.deliveredTime = formatOrderTime(o.deliveredAt);
+            healed = true;
+          }
+        }
+      });
+      if (healed) { try { saveOrders(); } catch (e) {} }
+
       // Background-sync the orders cache from Firestore once Firebase is
       // ready. Fires-and-forgets so the rest of init isn't blocked.
       if (window.brewoFirebase && window.brewoFirebase.ready) {
@@ -2906,6 +2925,22 @@
 
       initHeroSlider();
       ['turkish', 'nescafe', 'water', 'tea'].forEach(updateDrinkBtn);
+
+      // Mark purely-decorative emoji icons aria-hidden in one pass so screen
+      // readers don't dictate "coffee, water-drop, hot-beverage..." between
+      // every drink name. The labels next to these icons carry the meaning.
+      [
+        '.drink-card-icon',
+        '.info-card-icon',
+        '.how-step-icon',
+        '.empty-state-icon',
+        '.hero-float-cup',
+        '.hero-rotate-disc',
+        '.hero-sparkle',
+        '.hero-grain'
+      ].forEach((sel) => {
+        document.querySelectorAll(sel).forEach((el) => el.setAttribute('aria-hidden', 'true'));
+      });
 
       renderHomeDrinksQr();
       handleRoute({ replace: true });
@@ -3114,6 +3149,11 @@
       const slides = document.querySelectorAll('.hero-slide');
       if (!slides.length) return;
       if (heroSliderTimer) clearInterval(heroSliderTimer);
+      // Honour the OS reduced-motion preference — the auto-rotate plus the
+      // 0.8s opacity transition is exactly the kind of background motion
+      // users opting out want avoided. Dots remain clickable.
+      const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) return;
       heroSliderTimer = setInterval(() => goSlide(currentSlide + 1), 4000);
     }
 
@@ -3339,7 +3379,7 @@
         const floor = floorSel ? floorSel.value : '';
         const tenant = lookupOfficeTenant(input.value, floor);
         if (tenant) {
-          hint.textContent = t('tenantHint') + tenant + ' ✨';
+          hint.textContent = t('tenantHint') + ' ' + tenant + ' ✨';
           hint.style.display = 'block';
         } else {
           hint.textContent = '';
@@ -3408,6 +3448,7 @@
       if (window.brewoFirebase && typeof window.brewoFirebase.saveUserProfile === 'function') {
         window.brewoFirebase.saveUserProfile(currentUser).catch((err) => {
           console.warn('[brewoFirebase] saveUserProfile failed', err);
+          notifyFirebaseFailureOnce();
         });
       }
       document.documentElement.classList.remove('logged-out');
@@ -3481,6 +3522,11 @@
       }
       try {
         localStorage.removeItem('brewoUser');
+        // Match in-memory state: cart and orders are cleared above, so
+        // their persistence keys must be cleared too — otherwise the next
+        // login silently rehydrates the previous user's order history.
+        localStorage.removeItem('brewoCart');
+        localStorage.removeItem('brewoOrders');
         // Sticky logout: refreshing the login page should keep us on
         // the login page instead of silently auto-guesting back home.
         localStorage.setItem('brewoLoggedOut', '1');
@@ -3490,13 +3536,6 @@
       document.body.classList.remove('app-logged-in');
       document.getElementById('cart-bar')
         .style.display = 'none';
-
-      const cartTop = document.getElementById('cart-top');
-      if (cartTop) cartTop.style.display = 'none';
-
-      const cartSum = document.getElementById(
-        'cart-summary-home');
-      if (cartSum) cartSum.style.display = 'none';
 
       document.getElementById('top-navbar').style.display = 'none';
       document.getElementById('sidebar').style.display = 'none';
@@ -3543,8 +3582,6 @@
       document.getElementById('set-avatar').textContent = initial;
       document.getElementById('settings-name').textContent = name;
       document.getElementById('settings-office-display').textContent = officeLabel;
-      const setPhone = document.getElementById('set-phone');
-      if (setPhone) setPhone.textContent = currentUser.phone || '—';
       const pi = document.getElementById('set-phone-input');
       if (pi) pi.value = currentUser.phone || '';
       const sideLogout = document.getElementById('sidebar-logout');
@@ -3614,6 +3651,15 @@
       t.textContent = msg;
       t.style.display = 'block';
       setTimeout(() => { t.style.display = 'none'; }, 2400);
+    }
+
+    // Show the "sync unavailable" toast at most once per session — silent
+    // .catch(console.warn) was hiding broken Firestore writes from users.
+    let _firebaseFailureNotified = false;
+    function notifyFirebaseFailureOnce() {
+      if (_firebaseFailureNotified) return;
+      _firebaseFailureNotified = true;
+      try { showToast(t('syncUnavailable')); } catch (e) {}
     }
 
     // Guest visitors can browse but cannot order. When they hit an
@@ -3884,6 +3930,9 @@
       }
       if (cbTotal) cbTotal.textContent = fmtMoney(total);
       if (cbArrow) cbArrow.textContent = currentLang === 'ar' ? '←' : '→';
+      // Back-arrow points opposite of reading direction: → for RTL, ← for LTR.
+      const ckBack = document.getElementById('checkout-back-btn');
+      if (ckBack) ckBack.textContent = currentLang === 'ar' ? '→' : '←';
 
       const topCart = document.getElementById('top-cart');
       const navBadge = document.getElementById('nav-cart-badge');
@@ -3984,7 +4033,13 @@
     }
 
     async function confirmOrder() {
-      if (await requireRealLogin()) return;
+      // Guests: defer to the sign-in prompt. This is the only path that
+      // awaits, so non-guest callers stay synchronous through window.open
+      // and don't lose the user gesture (mobile Safari blocks otherwise).
+      if (currentUser && currentUser.isGuest) {
+        await requireRealLogin();
+        return;
+      }
       if (cart.items.length === 0) {
         showToast(t('emptyCartTitle'));
         navTo('page-drinks');
@@ -4019,10 +4074,13 @@
       orders.unshift(order);
       try { saveOrders(); } catch (e) {}
       // Best-effort: also persist the order to Firestore. Failures are
-      // ignored so the WhatsApp flow still goes through.
+      // ignored so the WhatsApp flow still goes through, but the FIRST
+      // failure surfaces a toast so the user (and dev) know cross-device
+      // sync is broken instead of silently losing data.
       if (window.brewoFirebase && typeof window.brewoFirebase.saveOrder === 'function') {
         window.brewoFirebase.saveOrder(order).catch((err) => {
           console.warn('[brewoFirebase] saveOrder failed', err);
+          notifyFirebaseFailureOnce();
         });
       }
       // Persist office + floor on the user so subsequent checkouts pre-fill.
@@ -4252,6 +4310,7 @@
         try { localStorage.setItem('brewoOrders', JSON.stringify(orders)); } catch (e) {}
       } catch (err) {
         console.warn('[brewoFirebase] syncOrdersFromFirestore failed', err);
+        notifyFirebaseFailureOnce();
       }
     }
 

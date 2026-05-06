@@ -32,7 +32,6 @@ import {
   getFirestore,
   doc,
   setDoc,
-  addDoc,
   collection,
   query,
   where,
@@ -55,6 +54,16 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Surface init/auth failures so the app can show a one-time toast instead
+// of silently dropping every Firestore write. `initError` is null while
+// healthy and an Error instance when sign-in or persistence failed.
+let initError = null;
+function recordInitError(err, where) {
+  initError = err instanceof Error ? err : new Error(String(err));
+  initError.where = where;
+  console.warn('[brewoFirebase] ' + where + ' failed', err);
+}
+
 // Persist the session in localStorage so reloads keep the user signed in,
 // and auto-sign-in anonymously so every visitor has a uid we can attach to
 // orders without requiring an email/password UI.
@@ -64,12 +73,15 @@ const ready = setPersistence(auth, browserLocalPersistence)
       unsub();
       if (user) resolve(user);
       else signInAnonymously(auth).then((c) => resolve(c.user)).catch((err) => {
-        console.warn('[brewoFirebase] anonymous sign-in failed', err);
+        recordInitError(err, 'anonymous sign-in');
         resolve(null);
       });
     });
   }))
-  .catch((err) => { console.warn('[brewoFirebase] init failed', err); });
+  .catch((err) => {
+    recordInitError(err, 'init');
+    return null;
+  });
 
 // --- Auth ---------------------------------------------------------------
 
@@ -118,8 +130,13 @@ async function saveOrder(orderData) {
     userEmail: user.email || null,
     createdAt: serverTimestamp()
   });
-  const ref = await addDoc(collection(db, 'orders'), payload);
-  return ref.id;
+  // Use the app-side order id (e.g. "BRXXXX99") as the Firestore doc id so
+  // the local cache and the remote doc stay in lock-step (idempotent retries
+  // overwrite the same doc, and `_docId` always matches `id`).
+  const docId = (orderData && orderData.id) ? String(orderData.id)
+                                            : ('o_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8));
+  await setDoc(doc(db, 'orders', docId), payload, { merge: true });
+  return docId;
 }
 
 // Mirror the locally-collected profile (name/office/floor/phone) to
@@ -137,6 +154,7 @@ async function saveUserProfile(profile) {
 }
 
 async function getUserOrders() {
+  await ready;
   const user = auth.currentUser;
   if (!user) throw new Error('Not signed in');
   const q = query(
@@ -161,5 +179,9 @@ window.brewoFirebase = {
   getCurrentUser,
   saveOrder,
   saveUserProfile,
-  getUserOrders
+  getUserOrders,
+  // Null when healthy, Error (with `.where`) when sign-in/init failed.
+  // The app reads this to surface a one-time toast instead of silently
+  // dropping every Firestore write.
+  getInitError: () => initError
 };
