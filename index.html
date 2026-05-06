@@ -1046,7 +1046,7 @@
         bottom: calc(88px + env(safe-area-inset-bottom, 0px));
       }
       .desktop-only { display: none !important; }
-      
+
       h1 { font-size: 32px !important; }
       h2 { font-size: 20px !important; }
       .card { padding: 24px; }
@@ -1056,6 +1056,89 @@
       .mobile-tab { font-size: 11px; }
       .mobile-tab span { font-size: 24px !important; }
     }
+
+    /* Mobile header — split into two rows so the avatar + brand sit on
+       top, and the cart/lang/theme cluster sits underneath. Keeps every
+       handler intact (only structural CSS changes). */
+    #mobile-brand { display: none; }
+    .mobile-only { display: none; }
+    @media (min-width: 769px) {
+      .desktop-only { display: inline-flex; }
+    }
+    @media (max-width: 768px) {
+      #top-navbar,
+      html[dir="ltr"] #top-navbar {
+        height: auto;
+        min-height: 104px;
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 8px;
+        row-gap: 6px;
+      }
+      .main-content,
+      html[dir="ltr"] .main-content { margin-top: 112px; }
+
+      #mobile-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        order: 1;
+        flex: 1 1 auto;
+        min-width: 0;
+        color: var(--em);
+        font-weight: 900;
+        font-family: 'Tajawal', sans-serif;
+      }
+      .mobile-brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: var(--gold);
+        font-size: 16px;
+        line-height: 1;
+      }
+      .mobile-brand-text { font-size: 17px; line-height: 1; }
+
+      #user-chip {
+        order: 2;
+        flex: 0 0 auto;
+        padding: 2px 4px !important;
+      }
+      /* On mobile the badge alone identifies the user; the name + office
+         line below would push the row over and crowd it. Tap target is
+         preserved via the chip's existing 36px badge. */
+      #user-chip .user-chip-text { display: none; }
+      #user-badge { width: 32px !important; height: 32px !important; font-size: 13px !important; }
+
+      #top-controls {
+        order: 3;
+        width: 100%;
+        gap: 8px !important;
+        justify-content: space-between;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+      }
+      /* Visual order on the bottom row: cart (balance) on the leading
+         edge, then language, then theme — independent of markup order so
+         desktop layout is untouched. */
+      #top-controls #top-cart       { order: 1; flex: 1 1 auto; min-width: 0; justify-content: center; }
+      #top-controls #lang-toggle-top { order: 2; flex: 0 0 auto; }
+      #top-controls #theme-toggle-top { order: 3; flex: 0 0 auto; }
+
+      .top-lang-pill { padding: 6px 10px; font-size: 12px; }
+      .top-lang-pill .icon { font-size: 13px; }
+      .top-cart-pill { padding: 6px 12px; gap: 6px; }
+      .top-cart-pill .icon { font-size: 16px; }
+      .top-cart-pill .count { min-width: 18px; height: 18px; font-size: 10px; padding: 0 5px; }
+      .top-cart-pill .total { font-size: 12px; }
+    }
+    /* Dark-mode parity for the mobile-only brand surface. */
+    html[data-theme="dark"] #mobile-brand { color: var(--em); }
+    html[data-theme="dark"] .mobile-brand-mark { background: var(--gold); color: var(--char); }
 
     @media (min-width: 901px) {
       #main-nav {
@@ -1542,16 +1625,23 @@
       
       <!-- TOP NAV -->
       <nav id="top-navbar">
+        <!-- Mobile-only brand on the leading edge — hidden on desktop where
+             the sidebar already shows the logo. -->
+        <div id="mobile-brand" class="mobile-only" aria-hidden="true">
+          <span class="mobile-brand-mark">☕</span>
+          <span class="mobile-brand-text">بريو</span>
+        </div>
+
         <button type="button" id="user-chip" onclick="navTo('page-settings')" aria-label="Settings" data-aria-key="ariaSettings"
           style="display:flex; align-items:center; gap:8px; background:transparent; border:none; padding:4px 8px; border-radius:12px; cursor:pointer; font-family:'Tajawal',sans-serif; transition: background .15s;">
            <div id="user-badge" style="width:36px; height:36px; background:var(--gold-light); color:var(--em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:1px solid var(--gold);">·</div>
-           <div style="display:flex; flex-direction:column; line-height:1; text-align:start;">
+           <div class="user-chip-text" style="display:flex; flex-direction:column; line-height:1; text-align:start;">
             <span id="user-display-name" style="font-size:13px; font-weight:800; color:var(--char);"></span>
             <span id="user-display-office" style="font-size:10px; color:var(--muted); font-weight:700;"></span>
            </div>
         </button>
 
-        <div style="display:flex; align-items:center; gap:14px;">
+        <div id="top-controls" style="display:flex; align-items:center; gap:14px;">
           <button type="button" id="lang-toggle-top" class="top-lang-pill"
             onclick="toggleLang()" aria-label="Switch language" data-aria-key="ariaSwitchLang">
             <span class="icon" aria-hidden="true">🌐</span>
@@ -2793,7 +2883,10 @@
         el.style.direction = isAr ? 'rtl' : 'ltr';
         el.style.textAlign = isAr ? 'right' : 'left';
       });
-      const langLabel = isAr ? 'English' : 'العربية';
+      // Short two-letter code (the language you'd switch TO) — keeps the
+      // top-nav pill compact on mobile and avoids a wider 'English' chip
+      // that crowded the header.
+      const langLabel = isAr ? 'EN' : 'AR';
       const loginBtn = document.getElementById('lang-toggle-login');
       if (loginBtn) loginBtn.textContent = langLabel;
       const topLabel = document.getElementById('lang-toggle-top-label');
