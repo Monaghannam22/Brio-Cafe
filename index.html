@@ -13,10 +13,24 @@
        in the wrong direction. Runs before <body> is rendered. -->
   <script>
     try {
-      var __savedLang = localStorage.getItem('brewoLang');
+      // QR codes / shared links can force a language via ?lang=en or ?lang=ar.
+      // Honor that first and persist it so the rest of the app picks it up.
+      var __qsLang = null;
+      try {
+        var __qs = new URLSearchParams(location.search);
+        var __q = (__qs.get('lang') || '').toLowerCase();
+        if (__q === 'en' || __q === 'ar') {
+          __qsLang = __q;
+          localStorage.setItem('brewoLang', __qsLang);
+        }
+      } catch (eQ) {}
+      var __savedLang = __qsLang || localStorage.getItem('brewoLang');
       if (__savedLang === 'en') {
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = 'en';
+      } else if (__savedLang === 'ar') {
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'ar';
       }
       // After an explicit logout we want to land back on the guest home,
       // not the login page — so wipe the sticky-logout flag on load.
@@ -3339,12 +3353,17 @@
     });
 
     function getDrinksDeepLink() {
+      // QR is printed/displayed in English context — force the menu into
+      // English when someone scans it. ?lang=en is honored by the early
+      // bootstrap script, which persists it to localStorage.
       try {
         const u = new URL(location.href);
+        u.searchParams.set('lang', 'en');
         u.hash = 'drinks';
         return u.href;
       } catch (e) {
-        return (location.href.split('#')[0] || location.href) + '#drinks';
+        const base = (location.href.split('#')[0] || location.href).split('?')[0];
+        return base + '?lang=en#drinks';
       }
     }
 
