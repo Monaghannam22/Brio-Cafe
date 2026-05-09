@@ -1576,9 +1576,9 @@
       <p data-ar="يرجى تعبئة بياناتك" data-en="Please fill in your information" style="font-size: 13px; color: var(--em); font-weight: 800; margin-top: 0; margin-bottom: 18px; text-align: center;">يرجى تعبئة بياناتك</p>
       
       <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
-      <input id="li-office" class="login-input" type="text" required minlength="3" maxlength="6" autocomplete="off" data-ar="أدخل رقم مكتبك هنا" data-en="Enter your office number here." placeholder="أدخل رقم مكتبك هنا" />
+      <input id="li-office" class="login-input" type="text" required minlength="1" maxlength="60" autocomplete="off" data-ar="أدخل اسم المكتب أو رقمه أو الطابق" data-en="Enter office name, office number, or floor" placeholder="أدخل اسم المكتب أو رقمه أو الطابق" />
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
-      <input id="li-floor" class="login-input" type="text" autocomplete="off" maxlength="20" data-ar="الطابق (اختياري)" data-en="Floor (optional)" placeholder="" />
+      <input id="li-floor" class="login-input" type="text" autocomplete="off" maxlength="40" placeholder="" />
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
 
       <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
@@ -3321,42 +3321,25 @@
       return { ok: true, value: s };
     }
     function validateOffice(v, floor) {
-      const s = String(v || '').trim().toUpperCase().replace(/\s+/g, '');
-      if (!s) return { ok: false, msg: t('enterOffice') };
-      const f = String(floor || '').trim().toUpperCase();
-      let resolvedFloor, room, value;
-      // Accept dashed format: B1-N, GF-N, 1-N .. 5-N (covers B1 through F5).
-      const dashed = s.match(/^(B1|GF|F?[1-5])-?0*([1-9]\d?)$/);
+      const raw = String(v || '').trim();
+      if (!raw) return { ok: false, msg: t('enterOffice') };
+      const f = String(floor || '').trim();
+      // Free-text: accept any non-empty office name, number, or floor.
+      // If the input matches a known tenant code, infer the floor; otherwise
+      // pass the text through verbatim and use the floor field as-is.
+      const compact = raw.toUpperCase().replace(/\s+/g, '');
+      const dashed = compact.match(/^(B1|GF|F?[1-5])-?0*([1-9]\d?)$/);
       if (dashed) {
-        resolvedFloor = dashed[1].replace(/^F/, '');
-        room = parseInt(dashed[2], 10);
-        const max = resolvedFloor === 'GF' ? 19 : 12;
-        if (room < 1 || room > max) return { ok: false, msg: t('officeInvalid') };
-        value = (resolvedFloor === 'B1' || resolvedFloor === 'GF')
-          ? resolvedFloor + '-' + room
-          : '' + resolvedFloor + (room < 10 ? '0' + room : room);
-      } else if (/^\d+$/.test(s) && (f === 'B1' || f === 'GF')) {
-        // Legacy: pure digits + floor hint for B1 / GF.
-        room = parseInt(s, 10);
-        const max = f === 'GF' ? 19 : 12;
-        if (!Number.isFinite(room) || room < 1 || room > max) {
-          return { ok: false, msg: t('officeInvalid') };
-        }
-        resolvedFloor = f;
-        value = f + '-' + room;
-      } else if (/^[1-5]\d{2}$/.test(s)) {
-        // Legacy: 3-digit office (e.g. "412" → floor 4, room 12).
-        resolvedFloor = s[0];
-        room = parseInt(s.slice(1), 10);
-        if (room < 1 || room > 12) return { ok: false, msg: t('officeInvalid') };
-        value = s;
-      } else {
-        return { ok: false, msg: t('officeInvalid') };
+        const fl = dashed[1].replace(/^F/, '');
+        const room = parseInt(dashed[2], 10);
+        const value = (fl === 'B1' || fl === 'GF') ? fl + '-' + room
+                                                   : '' + fl + (room < 10 ? '0' + room : room);
+        return { ok: true, value: value, floor: fl, room: room };
       }
-      if (!OFFICE_TENANTS[value]) {
-        return { ok: false, msg: t('officeInvalid') };
+      if (/^[1-5]\d{2}$/.test(compact)) {
+        return { ok: true, value: compact, floor: compact[0], room: parseInt(compact.slice(1), 10) };
       }
-      return { ok: true, value: value, floor: resolvedFloor, room: room };
+      return { ok: true, value: raw, floor: f, room: '' };
     }
     // Split a stored composite office value back into { floor, room }.
     function parseOffice(stored) {
