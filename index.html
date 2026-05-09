@@ -494,6 +494,128 @@
 
     .login-input:focus { border-color: var(--em); }
 
+    /* Office picker — login field */
+    .office-picker-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: #6b7280;
+      text-align: start;
+    }
+    .office-picker-btn.has-value { color: inherit; font-weight: 700; }
+    .office-picker-btn .op-icon { font-size: 18px; line-height: 1; }
+    .office-picker-btn .op-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .office-picker-btn .op-chevron { font-size: 14px; color: var(--em); }
+
+    .op-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+    .op-overlay[hidden] { display: none; }
+    .op-panel {
+      background: white;
+      width: 100%;
+      max-width: 460px;
+      max-height: 88vh;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    html[data-theme="dark"] .op-panel { background: #1d2a25; color: #e7efe9; }
+    .op-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .op-header h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--em); }
+    .op-close {
+      background: var(--soft); border: none; width: 32px; height: 32px;
+      border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer;
+      color: var(--em);
+    }
+    .op-floors {
+      display: flex; gap: 6px;
+      padding: 14px 16px 8px;
+      overflow-x: auto;
+      flex-wrap: wrap;
+    }
+    .op-floor-tab {
+      flex: 0 0 auto;
+      background: var(--soft);
+      border: 1.5px solid transparent;
+      color: var(--em);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .op-floor-tab.active {
+      background: var(--em);
+      color: white;
+      border-color: var(--em);
+    }
+    .op-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .op-room {
+      background: var(--soft);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      display: flex; flex-direction: column; gap: 2px;
+      min-height: 56px;
+    }
+    .op-room:hover { border-color: var(--em); }
+    .op-room.selected { background: var(--em); color: white; border-color: var(--em); }
+    .op-room-num { font-weight: 900; font-size: 15px; }
+    .op-room-name {
+      font-size: 11px; font-weight: 600; opacity: 0.8;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .op-fallback {
+      border-top: 1px solid var(--border);
+      padding: 12px 16px 16px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .op-fallback-btn {
+      background: transparent; border: none;
+      color: var(--em); font-weight: 800; font-size: 13px;
+      cursor: pointer; font-family: inherit; text-align: start;
+    }
+    .op-fallback-input { display: none; }
+    .op-fallback-input.show { display: flex; gap: 8px; }
+    .op-fallback-input input {
+      flex: 1;
+      background: var(--soft);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-family: inherit; font-size: 14px;
+      outline: none;
+    }
+    .op-fallback-input input:focus { border-color: var(--em); }
+    .op-fallback-input button {
+      background: var(--em); color: white; border: none;
+      border-radius: 12px; padding: 10px 16px;
+      font-weight: 800; font-size: 13px; cursor: pointer;
+      font-family: inherit;
+    }
+
     /* Mobile bottom nav only — hidden whenever layout uses the sidebar (min-width: 901px) */
     #main-nav {
       position: fixed;
@@ -1576,15 +1698,48 @@
       <p data-ar="يرجى تعبئة بياناتك" data-en="Please fill in your information" style="font-size: 13px; color: var(--em); font-weight: 800; margin-top: 0; margin-bottom: 18px; text-align: center;">يرجى تعبئة بياناتك</p>
       
       <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
-      <input id="li-office" class="login-input" type="text" required minlength="1" maxlength="60" autocomplete="off" data-ar="أدخل اسم المكتب أو رقمه أو الطابق" data-en="Enter office name, office number, or floor" placeholder="أدخل اسم المكتب أو رقمه أو الطابق" />
+      <button type="button" id="li-office-btn" class="login-input office-picker-btn" onclick="openOfficePicker()" aria-haspopup="dialog">
+        <span class="op-icon" aria-hidden="true">🏢</span>
+        <span class="op-label" id="li-office-label" data-ar="اختر مكتبك" data-en="Choose your office">اختر مكتبك</span>
+        <span class="op-chevron" aria-hidden="true">▾</span>
+      </button>
+      <input type="hidden" id="li-office" />
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
-      <input id="li-floor" class="login-input" type="text" autocomplete="off" maxlength="40" placeholder="" />
+      <input type="hidden" id="li-floor" />
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
 
       <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
       
       <button onclick="doLogin()" class="btn-primary" style="margin-bottom:12px;" data-ar="ابدأ الطلب ←" data-en="Start Order ←">ابدأ الطلب ←</button>
       <button onclick="guestLogin()" style="background:transparent; border:none; color:var(--muted); font-weight:700; font-size:13px; cursor:pointer;" data-ar="دخول سريع كزائر" data-en="Quick Guest Login">دخول سريع كزائر</button>
+    </div>
+  </div>
+
+  <!-- Office picker modal -->
+  <div id="office-picker-overlay" class="op-overlay" hidden onclick="if(event.target===this)closeOfficePicker()">
+    <div class="op-panel" role="dialog" aria-modal="true" aria-labelledby="op-title">
+      <div class="op-header">
+        <h3 id="op-title" data-ar="اختر مكتبك" data-en="Choose your office">اختر مكتبك</h3>
+        <button type="button" class="op-close" onclick="closeOfficePicker()" aria-label="Close">×</button>
+      </div>
+      <div class="op-floors" id="op-floors" role="tablist"></div>
+      <div class="op-grid" id="op-grid" role="listbox"></div>
+      <div class="op-fallback">
+        <button type="button" class="op-fallback-btn" id="op-fallback-toggle"
+                onclick="toggleOfficeFreeText()"
+                data-ar="لا تعرف رقم المكتب؟ اكتب اسم المكتب أو وصفه"
+                data-en="Don't know the number? Type the office name or description">
+          لا تعرف رقم المكتب؟ اكتب اسم المكتب أو وصفه
+        </button>
+        <div class="op-fallback-input" id="op-fallback-wrap">
+          <input type="text" id="op-fallback-text" maxlength="60"
+                 data-ar="مثال: شركة دلتا، الطابق الثالث"
+                 data-en="e.g. Delta Co., 3rd floor"
+                 placeholder="مثال: شركة دلتا، الطابق الثالث" />
+          <button type="button" onclick="confirmOfficeFreeText()"
+                  data-ar="تأكيد" data-en="Confirm">تأكيد</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2888,6 +3043,12 @@
       const topLabel = document.getElementById('lang-toggle-top-label');
       if (topLabel) topLabel.textContent = langLabel;
       document.querySelectorAll('[data-ar]').forEach(el => {
+        // Office-picker label: skip when user has chosen a value, otherwise
+        // we'd clobber the selected office name on every language toggle.
+        if (el.id === 'li-office-label') {
+          const btn = document.getElementById('li-office-btn');
+          if (btn && btn.classList.contains('has-value')) return;
+        }
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
           el.placeholder = isAr
             ? el.dataset.ar
@@ -3447,6 +3608,140 @@
       if (!hit) return null;
       return currentLang === 'ar' ? hit.ar : hit.en;
     }
+
+    // --- Office picker (login) -------------------------------------------
+    const OFFICE_PICKER_FLOORS = [
+      { id: 'B1', label: 'B1',  rooms: 12 },
+      { id: 'GF', label: 'G',   rooms: 19 },
+      { id: '1',  label: 'F1',  rooms: 12 },
+      { id: '2',  label: 'F2',  rooms: 12 },
+      { id: '3',  label: 'F3',  rooms: 12 },
+      { id: '4',  label: 'F4',  rooms: 12 },
+      { id: '5',  label: 'F5',  rooms: 12 }
+    ];
+    let _opActiveFloor = 'B1';
+    function _opTenantFor(floorId, room) {
+      const key = (floorId === 'B1' || floorId === 'GF')
+        ? floorId + '-' + room
+        : floorId + (room < 10 ? '0' + room : room);
+      const hit = OFFICE_TENANTS[key];
+      if (!hit) return '';
+      return currentLang === 'ar' ? hit.ar : hit.en;
+    }
+    function _opRoomCode(floorId, room) {
+      // Stored office value, matches the legacy format used by
+      // parseOffice / formatOfficeForWa elsewhere in the app.
+      return (floorId === 'B1' || floorId === 'GF')
+        ? floorId + '-' + room
+        : floorId + (room < 10 ? '0' + room : room);
+    }
+    function _opRoomDisplay(floorId, room) {
+      // Human-readable form shown in the field, e.g. "B1-3", "G-5", "F4-12".
+      const floorLabel = (OFFICE_PICKER_FLOORS.find(f => f.id === floorId) || {}).label || floorId;
+      return floorLabel + '-' + room;
+    }
+    function openOfficePicker() {
+      const overlay = document.getElementById('office-picker-overlay');
+      if (!overlay) return;
+      overlay.hidden = false;
+      _opRenderFloors();
+      _opRenderGrid();
+      // Reset the free-text panel each open.
+      const wrap = document.getElementById('op-fallback-wrap');
+      if (wrap) wrap.classList.remove('show');
+    }
+    function closeOfficePicker() {
+      const overlay = document.getElementById('office-picker-overlay');
+      if (overlay) overlay.hidden = true;
+    }
+    function _opRenderFloors() {
+      const host = document.getElementById('op-floors');
+      if (!host) return;
+      host.innerHTML = '';
+      OFFICE_PICKER_FLOORS.forEach((f) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'op-floor-tab' + (f.id === _opActiveFloor ? ' active' : '');
+        btn.textContent = f.label;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', f.id === _opActiveFloor ? 'true' : 'false');
+        btn.onclick = () => { _opActiveFloor = f.id; _opRenderFloors(); _opRenderGrid(); };
+        host.appendChild(btn);
+      });
+    }
+    function _opRenderGrid() {
+      const host = document.getElementById('op-grid');
+      if (!host) return;
+      const floor = OFFICE_PICKER_FLOORS.find(f => f.id === _opActiveFloor);
+      if (!floor) { host.innerHTML = ''; return; }
+      const selectedCode = document.getElementById('li-office').value;
+      host.innerHTML = '';
+      for (let r = 1; r <= floor.rooms; r++) {
+        const code = _opRoomCode(floor.id, r);
+        const tenant = _opTenantFor(floor.id, r);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'op-room' + (code === selectedCode ? ' selected' : '');
+        btn.setAttribute('role', 'option');
+        btn.setAttribute('aria-selected', code === selectedCode ? 'true' : 'false');
+        const num = document.createElement('span');
+        num.className = 'op-room-num';
+        num.textContent = _opRoomDisplay(floor.id, r);
+        btn.appendChild(num);
+        if (tenant) {
+          const name = document.createElement('span');
+          name.className = 'op-room-name';
+          name.textContent = tenant;
+          btn.appendChild(name);
+        }
+        btn.onclick = () => _opSelectRoom(floor.id, r);
+        host.appendChild(btn);
+      }
+    }
+    function _opSelectRoom(floorId, room) {
+      const code = _opRoomCode(floorId, room);
+      const tenant = _opTenantFor(floorId, room);
+      const display = _opRoomDisplay(floorId, room) + (tenant ? ' — ' + tenant : '');
+      _opSetSelection(code, floorId, display);
+      closeOfficePicker();
+    }
+    function toggleOfficeFreeText() {
+      const wrap = document.getElementById('op-fallback-wrap');
+      if (!wrap) return;
+      wrap.classList.toggle('show');
+      if (wrap.classList.contains('show')) {
+        const inp = document.getElementById('op-fallback-text');
+        if (inp) setTimeout(() => inp.focus(), 0);
+      }
+    }
+    function confirmOfficeFreeText() {
+      const inp = document.getElementById('op-fallback-text');
+      if (!inp) return;
+      const v = (inp.value || '').trim();
+      if (!v) return;
+      _opSetSelection(v, '', v);
+      closeOfficePicker();
+    }
+    function _opSetSelection(code, floor, display) {
+      const officeEl = document.getElementById('li-office');
+      const floorEl  = document.getElementById('li-floor');
+      const labelEl  = document.getElementById('li-office-label');
+      const btnEl    = document.getElementById('li-office-btn');
+      if (officeEl) officeEl.value = code;
+      if (floorEl)  floorEl.value  = floor || '';
+      if (labelEl)  labelEl.textContent = display;
+      if (btnEl)    btnEl.classList.add('has-value');
+    }
+    function _opResetSelection() {
+      const officeEl = document.getElementById('li-office');
+      const floorEl  = document.getElementById('li-floor');
+      const labelEl  = document.getElementById('li-office-label');
+      const btnEl    = document.getElementById('li-office-btn');
+      if (officeEl) officeEl.value = '';
+      if (floorEl)  floorEl.value  = '';
+      if (labelEl)  labelEl.textContent = currentLang === 'ar' ? 'اختر مكتبك' : 'Choose your office';
+      if (btnEl)    btnEl.classList.remove('has-value');
+    }
     function attachOfficeSuggest(inputId, hintId, floorId) {
       const input = document.getElementById(inputId);
       const hint = document.getElementById(hintId);
@@ -3627,10 +3922,8 @@
       loginPage.classList.add('active');
 
       document.getElementById('li-name').value    = '';
-      document.getElementById('li-office').value  = '';
       document.getElementById('li-phone').value   = '';
-      const liFloor = document.getElementById('li-floor');
-      if (liFloor) liFloor.value = '';
+      if (typeof _opResetSelection === 'function') _opResetSelection();
       try {
         history.replaceState({ pageId: 'page-login' }, '', location.pathname + location.search);
       } catch (e) {}
