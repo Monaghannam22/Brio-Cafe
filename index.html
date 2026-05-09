@@ -1576,13 +1576,9 @@
       <p data-ar="يرجى تعبئة بياناتك" data-en="Please fill in your information" style="font-size: 13px; color: var(--em); font-weight: 800; margin-top: 0; margin-bottom: 18px; text-align: center;">يرجى تعبئة بياناتك</p>
       
       <input id="li-name" class="login-input" type="text" required minlength="2" maxlength="40" autocomplete="name" data-ar="اسمك الكامل" data-en="Full Name" placeholder="اسمك الكامل" />
-      <input id="li-office" class="login-input" type="text" inputmode="numeric" required minlength="1" maxlength="3" pattern="[0-9]{1,3}" autocomplete="off" data-ar="رقم المكتب (1-512)" data-en="Office Number (1-512)" placeholder="رقم المكتب (1-512)" />
+      <input id="li-office" class="login-input" type="text" required minlength="3" maxlength="6" autocomplete="off" data-ar="رقم المكتب (مثال: GF-1)" data-en="Office Number (e.g. GF-1)" placeholder="(GF-1)" />
       <div id="li-office-hint" style="display:none; font-size:12px; font-weight:800; color:var(--em); margin:-8px 0 10px; text-align:start;"></div>
-      <select id="li-floor" class="login-input" style="background:var(--soft);">
-        <option value="" data-ar="الطابق (B1 / GF فقط)" data-en="Floor (B1 / GF only)">الطابق (B1 / GF فقط)</option>
-        <option value="B1" data-ar="بدروم B1" data-en="Basement B1">بدروم B1</option>
-        <option value="GF" data-ar="الطابق الأرضي GF" data-en="Ground Floor GF">الطابق الأرضي GF</option>
-      </select>
+      <input id="li-floor" class="login-input" type="text" autocomplete="off" maxlength="20" data-ar="الطابق (اختياري)" data-en="Floor (optional)" placeholder="" />
       <input id="li-phone" class="login-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="0[7][7-9][0-9]{7}" required data-ar="07XXXXXXXX" data-en="07XXXXXXXX" placeholder="07XXXXXXXX" />
 
       <div id="login-err" style="color:#E53935; font-size:12px; font-weight:700; margin-bottom:12px; display:none;"></div>
@@ -3325,33 +3321,38 @@
       return { ok: true, value: s };
     }
     function validateOffice(v, floor) {
-      const s = String(v || '').trim();
+      const s = String(v || '').trim().toUpperCase().replace(/\s+/g, '');
       if (!s) return { ok: false, msg: t('enterOffice') };
-      const digits = s.replace(/\D/g, '');
-      if (!digits) return { ok: false, msg: t('officeInvalid') };
-      const f = String(floor || '').trim();
+      const f = String(floor || '').trim().toUpperCase();
       let resolvedFloor, room, value;
-      if (f === 'B1' || f === 'GF') {
-        // Basement / ground floor: input is a 1-2 digit room number.
-        room = parseInt(digits, 10);
+      // Accept dashed format: B1-N, GF-N, 1-N .. 5-N (covers B1 through F5).
+      const dashed = s.match(/^(B1|GF|F?[1-5])-?0*([1-9]\d?)$/);
+      if (dashed) {
+        resolvedFloor = dashed[1].replace(/^F/, '');
+        room = parseInt(dashed[2], 10);
+        const max = resolvedFloor === 'GF' ? 19 : 12;
+        if (room < 1 || room > max) return { ok: false, msg: t('officeInvalid') };
+        value = (resolvedFloor === 'B1' || resolvedFloor === 'GF')
+          ? resolvedFloor + '-' + room
+          : '' + resolvedFloor + (room < 10 ? '0' + room : room);
+      } else if (/^\d+$/.test(s) && (f === 'B1' || f === 'GF')) {
+        // Legacy: pure digits + floor hint for B1 / GF.
+        room = parseInt(s, 10);
         const max = f === 'GF' ? 19 : 12;
         if (!Number.isFinite(room) || room < 1 || room > max) {
           return { ok: false, msg: t('officeInvalid') };
         }
         resolvedFloor = f;
         value = f + '-' + room;
-      } else if (/^[1-5]\d{2}$/.test(digits)) {
-        // Floors 1-5 are inferred from a 3-digit office number (e.g. "412").
-        resolvedFloor = digits[0];
-        room = parseInt(digits.slice(1), 10);
-        if (room < 1 || room > 12) {
-          return { ok: false, msg: t('officeInvalid') };
-        }
-        value = digits;
+      } else if (/^[1-5]\d{2}$/.test(s)) {
+        // Legacy: 3-digit office (e.g. "412" → floor 4, room 12).
+        resolvedFloor = s[0];
+        room = parseInt(s.slice(1), 10);
+        if (room < 1 || room > 12) return { ok: false, msg: t('officeInvalid') };
+        value = s;
       } else {
         return { ok: false, msg: t('officeInvalid') };
       }
-      // Restrict to known tenants — unlisted offices are rejected.
       if (!OFFICE_TENANTS[value]) {
         return { ok: false, msg: t('officeInvalid') };
       }
