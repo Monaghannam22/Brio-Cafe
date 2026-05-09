@@ -519,10 +519,9 @@
     .op-panel {
       background: white;
       width: 100%;
-      max-width: 560px;
-      height: 88vh;
-      max-height: 720px;
-      border-radius: 24px;
+      max-width: 420px;
+      max-height: min(640px, calc(100vh - 32px));
+      border-radius: 20px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.25);
       display: flex; flex-direction: column;
       overflow: hidden;
@@ -530,30 +529,34 @@
     html[data-theme="dark"] .op-panel { background: #1d2a25; color: #e7efe9; }
     .op-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 20px 12px;
+      padding: 14px 16px 10px;
       border-bottom: 1px solid var(--border);
+      flex: 0 0 auto;
     }
-    .op-header h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--em); }
+    .op-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--em); }
     .op-close {
-      background: var(--soft); border: none; width: 32px; height: 32px;
-      border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer;
+      background: var(--soft); border: none; width: 30px; height: 30px;
+      border-radius: 50%; font-size: 18px; line-height: 1; cursor: pointer;
       color: var(--em);
     }
     .op-floors {
       display: flex; gap: 6px;
-      padding: 14px 16px 8px;
+      padding: 10px 12px 6px;
       overflow-x: auto;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      flex: 0 0 auto;
     }
     .op-floor-tab {
       flex: 0 0 auto;
       background: var(--soft);
       border: 1.5px solid transparent;
       color: var(--em);
-      padding: 8px 14px;
+      padding: 7px 14px;
       border-radius: 999px;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       font-family: inherit;
     }
@@ -565,50 +568,61 @@
     .op-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding: 14px 18px;
+      gap: 8px;
+      padding: 10px 12px 12px;
       overflow-y: auto;
-      flex: 1;
+      flex: 1 1 auto;
       align-content: start;
+      min-height: 0;
     }
     .op-room {
       background: var(--soft);
       border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 12px;
+      border-radius: 12px;
+      padding: 10px 8px;
       cursor: pointer;
       font-family: inherit;
       text-align: center;
-      display: flex; flex-direction: column; justify-content: center; gap: 6px;
-      min-height: 84px;
+      display: flex; flex-direction: column; justify-content: center; gap: 4px;
+      min-height: 64px;
     }
     .op-room:hover { border-color: var(--em); }
     .op-room.selected { background: var(--em); color: white; border-color: var(--em); }
-    .op-room-num { font-weight: 900; font-size: 16px; }
+    .op-room-num { font-weight: 900; font-size: 14px; }
     .op-room-name {
-      font-size: 13px; font-weight: 700; opacity: 0.92;
-      line-height: 1.3;
+      font-size: 11px; font-weight: 700; opacity: 0.92;
+      line-height: 1.25;
       word-break: break-word;
       overflow-wrap: anywhere;
     }
-    @media (min-width: 520px) {
-      .op-grid { grid-template-columns: repeat(3, 1fr); }
+    @media (min-width: 480px) {
+      .op-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px 14px 14px; }
+      .op-room { min-height: 72px; padding: 12px 10px; }
+      .op-room-num { font-size: 15px; }
+      .op-room-name { font-size: 12px; }
     }
     .op-fallback {
       border-top: 1px solid var(--border);
-      padding: 12px 16px 16px;
+      padding: 12px 14px 14px;
       display: flex; flex-direction: column; gap: 8px;
+      flex: 0 0 auto;
+      background: var(--soft);
+    }
+    .op-fallback-title {
+      font-size: 12px; font-weight: 800; color: var(--em);
+      margin: 0; text-align: start;
     }
     .op-fallback-btn {
-      background: transparent; border: none;
+      background: white; border: 1.5px dashed var(--em);
       color: var(--em); font-weight: 800; font-size: 13px;
-      cursor: pointer; font-family: inherit; text-align: start;
+      cursor: pointer; font-family: inherit; text-align: center;
+      padding: 10px 12px; border-radius: 12px;
     }
     .op-fallback-input { display: none; }
-    .op-fallback-input.show { display: flex; gap: 8px; }
+    .op-fallback-input.show { display: flex; gap: 6px; }
     .op-fallback-input input {
-      flex: 1;
-      background: var(--soft);
+      flex: 1; min-width: 0;
+      background: white;
       border: 1.5px solid var(--border);
       border-radius: 12px;
       padding: 10px 12px;
@@ -617,10 +631,17 @@
     }
     .op-fallback-input input:focus { border-color: var(--em); }
     .op-fallback-input button {
+      flex: 0 0 auto;
       background: var(--em); color: white; border: none;
-      border-radius: 12px; padding: 10px 16px;
+      border-radius: 12px; padding: 10px 14px;
       font-weight: 800; font-size: 13px; cursor: pointer;
       font-family: inherit;
+    }
+    @media (max-width: 380px) {
+      .op-overlay { padding: 8px; }
+      .op-panel { border-radius: 16px; max-height: calc(100vh - 16px); }
+      .op-header { padding: 12px 14px 8px; }
+      .op-header h3 { font-size: 15px; }
     }
 
     /* Mobile bottom nav only — hidden whenever layout uses the sidebar (min-width: 901px) */
@@ -1732,11 +1753,16 @@
       <div class="op-floors" id="op-floors" role="tablist"></div>
       <div class="op-grid" id="op-grid" role="listbox"></div>
       <div class="op-fallback">
+        <p class="op-fallback-title"
+           data-ar="لا تعرف رقم مكتبك؟"
+           data-en="Don't know your office number?">
+          لا تعرف رقم مكتبك؟
+        </p>
         <button type="button" class="op-fallback-btn" id="op-fallback-toggle"
                 onclick="toggleOfficeFreeText()"
-                data-ar="لا تعرف رقم المكتب؟ اكتب اسم المكتب أو وصفه"
-                data-en="Don't know the number? Type the office name or description">
-          لا تعرف رقم المكتب؟ اكتب اسم المكتب أو وصفه
+                data-ar="✏️ اكتب اسم المكتب أو وصف موقعه"
+                data-en="✏️ Type the office name or describe its location">
+          ✏️ اكتب اسم المكتب أو وصف موقعه
         </button>
         <div class="op-fallback-input" id="op-fallback-wrap">
           <input type="text" id="op-fallback-text" maxlength="60"
